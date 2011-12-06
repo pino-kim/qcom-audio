@@ -473,16 +473,18 @@ SectionDevice
 		'RX2 MIX1 INP1':0:RX2
 		'HPHL DAC Switch':1:1
 		'HPHR DAC Switch':1:1
-		'HPHL Volume':1:80
-		'HPHR Volume':1:80
+		'HPHL Volume':1:70
+		'HPHR Volume':1:70
+		'RX1 Digital Volume':1:65
+		'RX2 Digital Volume':1:65
+		'ANC Slot':1:0
 		'ANC1 MUX':0:ADC4
-		'ANC2 MUX':0:ADC4
 		'ANC2 MUX':0:ADC3
-		'ANC3 Volume':1:100
-		'ANC4 Volume':1:100
+		'ANC1 FB MUX':0:EAR_HPH_L
+		'ADC3 Volume':1:85
+		'ADC4 Volume':1:85
 		'MICBIAS3 CAPLESS Switch':1:1
 		'MICBIAS1 CAPLESS Switch':1:1
-		'MICBIAS4 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
@@ -500,14 +502,14 @@ SectionDevice
 		'HPHR DAC Switch':1:0
 		'HPHL Volume':1:0
 		'HPHR Volume':1:0
+		'RX1 Digital Volume':1:0
+		'RX2 Digital Volume':1:0
 		'ANC1 MUX':0:ZERO
 		'ANC2 MUX':0:ZERO
-		'ANC2 MUX':0:ZERO
-		'ANC3 Volume':1:0
-		'ANC4 Volume':1:0
+		'ADC3 Volume':1:0
+		'ADC4 Volume':1:0
 		'MICBIAS3 CAPLESS Switch':1:0
 		'MICBIAS1 CAPLESS Switch':1:0
-		'MICBIAS4 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID	26:1
@@ -524,16 +526,18 @@ SectionDevice
 		'RX2 MIX1 INP1':0:RX2
 		'HPHL DAC Switch':1:1
 		'HPHR DAC Switch':1:1
-		'HPHL Volume':1:80
-		'HPHR Volume':1:80
+		'HPHL Volume':1:70
+		'HPHR Volume':1:70
+		'RX1 Digital Volume':1:65
+		'RX2 Digital Volume':1:65
+		'ANC Slot':1:0
 		'ANC1 MUX':0:ADC4
-		'ANC2 MUX':0:ADC4
 		'ANC2 MUX':0:ADC3
-		'ANC3 Volume':1:100
-		'ANC4 Volume':1:100
+		'ANC1 FB MUX':0:EAR_HPH_L
+		'ADC3 Volume':1:85
+		'ADC4 Volume':1:85
 		'MICBIAS3 CAPLESS Switch':1:1
 		'MICBIAS1 CAPLESS Switch':1:1
-		'MICBIAS4 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
@@ -543,14 +547,14 @@ SectionDevice
 		'HPHR DAC Switch':1:0
 		'HPHL Volume':1:0
 		'HPHR Volume':1:0
+		'RX1 Digital Volume':1:0
+		'RX2 Digital Volume':1:0
 		'ANC1 MUX':0:ZERO
 		'ANC2 MUX':0:ZERO
-		'ANC2 MUX':0:ZERO
-		'ANC3 Volume':1:0
-		'ANC4 Volume':1:0
+		'ADC3 Volume':1:0
+		'ADC4 Volume':1:0
 		'MICBIAS3 CAPLESS Switch':1:0
 		'MICBIAS1 CAPLESS Switch':1:0
-		'MICBIAS4 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID	26:1

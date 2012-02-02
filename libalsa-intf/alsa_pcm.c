@@ -721,7 +721,7 @@ int pcm_close(struct pcm *pcm)
 
 struct pcm *pcm_open(unsigned flags, char *device)
 {
-    char dname[17];
+    char dname[19];
     struct pcm *pcm;
     struct snd_pcm_info info;
     struct snd_pcm_hw_params params;
@@ -746,7 +746,7 @@ struct pcm *pcm_open(unsigned flags, char *device)
     }
 
     if (flags & PCM_IN) {
-        strncpy(dname, "/dev/snd/pcmC", 17);
+        strncpy(dname, "/dev/snd/pcmC", sizeof(dname));
         tmp = device+3;
         strncat(dname, tmp,1) ;
         pcm->card_no = atoi(tmp);
@@ -760,7 +760,7 @@ struct pcm *pcm_open(unsigned flags, char *device)
             strncat(dname, tmp, 1);
         strncat(dname, "c", sizeof("c"));
     } else {
-        strncpy(dname, "/dev/snd/pcmC", 17);
+        strncpy(dname, "/dev/snd/pcmC", sizeof(dname));
         tmp = device+3;
         strncat(dname, tmp,1) ;
         pcm->card_no = atoi(tmp);

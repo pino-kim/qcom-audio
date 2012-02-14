@@ -469,8 +469,11 @@ static int snd_use_case_apply_voice_acdb(snd_use_case_mgr_t *uc_mgr, int use_cas
             if ((rx_id != uc_mgr->current_rx_device) ||
                 (tx_id != uc_mgr->current_tx_device)) {
                 uc_mgr->current_rx_device = rx_id; uc_mgr->current_tx_device = tx_id;
+                uc_mgr->rx_acdb_id = rx_id; uc_mgr->tx_acdb_id = tx_id;
                 LOGD("Voice acdb: rx id %d tx id %d", uc_mgr->current_rx_device,
                       uc_mgr->current_tx_device);
+                LOGD("Voice acdb: rx acdb id %d tx acdb id %d", uc_mgr->rx_acdb_id,
+                      uc_mgr->tx_acdb_id);
                 acdb_loader_send_voice_cal(uc_mgr->current_rx_device, uc_mgr->current_tx_device);
             } else {
                 LOGV("Voice acdb: Required acdb already pushed rx id %d tx id %d",
@@ -1027,6 +1030,8 @@ int snd_use_case_mgr_open(snd_use_case_mgr_t **uc_mgr, const char *card_name)
         uc_mgr_ptr->current_modifier_list = NULL;
         uc_mgr_ptr->current_tx_device = -1;
         uc_mgr_ptr->current_rx_device = -1;
+        uc_mgr_ptr->tx_acdb_id = -1;
+        uc_mgr_ptr->rx_acdb_id = -1;
         pthread_mutexattr_init(&uc_mgr_ptr->card_ctxt_ptr->card_lock_attr);
         pthread_mutex_init(&uc_mgr_ptr->card_ctxt_ptr->card_lock,
             &uc_mgr_ptr->card_ctxt_ptr->card_lock_attr);

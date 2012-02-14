@@ -139,6 +139,8 @@ struct snd_use_case_mgr {
     char **current_modifier_list;
     int current_tx_device;
     int current_rx_device;
+    int tx_acdb_id;
+    int rx_acdb_id;
     card_ctxt_t *card_ctxt_ptr;
     pthread_t thr;
 };
@@ -149,6 +151,7 @@ struct snd_use_case_mgr {
 static const char *card_list[] = {
     "snd_soc_msm",
     "snd_soc_msm_2x",
+    "snd_soc_msm_2x_Fusion3",
 };
 
 typedef struct card_mapping {
@@ -160,6 +163,7 @@ typedef struct card_mapping {
 static card_mapping_t card_mapping_list[] = {
     {"snd_soc_msm", 0},
     {"snd_soc_msm_2x", 0},
+    {"snd_soc_msm_2x_Fusion3", 0},
 };
 
 /* New use cases, devices and modifiers added

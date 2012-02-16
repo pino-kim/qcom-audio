@@ -4,6 +4,10 @@ SectionUseCase."HiFi" {
 File "HiFi"
 Comment "Music playback use case"
 }
+SectionUseCase."HiFi2" {
+File "HiFi2"
+Comment "Music playback use case on MM2 FE"
+}
 SectionUseCase."HiFi Low Power" {
 File "HiFi_Low_Power"
 Comment "LPA use case"

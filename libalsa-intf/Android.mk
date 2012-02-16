@@ -371,6 +371,23 @@ LOCAL_SRC_FILES    := snd_soc_msm/snd_soc_msm_Sitar
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)
+LOCAL_MODULE       := HiFi2
+LOCAL_MODULE_TAGS  := optional
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_PATH  := $(TARGET_OUT_ETC)/snd_soc_msm
+LOCAL_SRC_FILES    := snd_soc_msm/HiFi2
+include $(BUILD_PREBUILT)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE       := HiFi2_2x
+LOCAL_MODULE_TAGS  := optional
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_PATH  := $(TARGET_OUT_ETC)/snd_soc_msm
+LOCAL_SRC_FILES    := snd_soc_msm/HiFi2_2x
+include $(BUILD_PREBUILT)
+
+
+include $(CLEAR_VARS)
 #LOCAL_SRC_FILES:= aplay.c alsa_pcm.c alsa_mixer.c
 LOCAL_SRC_FILES:= aplay.c
 LOCAL_MODULE:= aplay

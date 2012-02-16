@@ -179,6 +179,7 @@ static card_mapping_t card_mapping_list[] = {
 #define SND_USE_CASE_VERB_DL_REC	 "DL REC"
 #define SND_USE_CASE_VERB_UL_DL_REC      "UL DL REC"
 #define SND_USE_CASE_VERB_HIFI_TUNNEL    "HiFi Tunnel"
+#define SND_USE_CASE_VERB_HIFI2       "HiFi2"
 
 #define SND_USE_CASE_DEV_FM_TX           "FM Tx"
 #define SND_USE_CASE_DEV_ANC_HEADSET     "ANC Headset"
@@ -213,6 +214,7 @@ static card_mapping_t card_mapping_list[] = {
 #define SND_USE_CASE_MOD_CAPTURE_VOICE_DL       "Capture Voice Downlink"
 #define SND_USE_CASE_MOD_CAPTURE_VOICE_UL_DL    "Capture Voice Uplink Downlink"
 #define SND_USE_CASE_MOD_PLAY_TUNNEL     "Play Tunnel"
+#define SND_USE_CASE_MOD_PLAY_MUSIC2       "Play Music2"
 
 /* List utility functions for maintaining enabled devices and modifiers */
 static int snd_ucm_add_ident_to_list(struct snd_ucm_ident_node **head, const char *value);

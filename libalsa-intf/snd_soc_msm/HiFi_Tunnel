@@ -1,23 +1,124 @@
-# FM Radio use case config file for MSM8960
+# HiFi Tunnel Mode playback use case config file for MSM8960
 
 SectionVerb
-	Name "FM Digital Radio"
+	Name "HiFi Tunnel"
 
 	EnableSequence
-		'Internal FM RX Volume':1:0
-		'SLIMBUS_0_RX Port Mixer INTERNAL_FM_TX':1:1
-		'SLIMBUS_DL_HL Switch':1:1
+		'SLIMBUS_0_RX Audio Mixer MultiMedia4':1:1
 	EndSequence
 
 	DisableSequence
-		'SLIMBUS_0_RX Port Mixer INTERNAL_FM_TX':1:0
-		'SLIMBUS_DL_HL Switch':1:0
+		'SLIMBUS_0_RX Audio Mixer MultiMedia4':1:0
 	EndSequence
 
 	# ALSA PCMs
-	PlaybackPCM 5
-	capturePCM 6
+	PlaybackPCM 9
 	ACDBID 0:0
+
+EndSection
+
+SectionVerb
+	Name "HiFi TunnelSpeaker FM Tx"
+
+	EnableSequence
+		'SLIMBUS_0_RX Audio Mixer MultiMedia4':1:1
+		'INTERNAL_FM_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'SLIMBUS_0_RX Audio Mixer MultiMedia4':1:0
+		'INTERNAL_FM_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionVerb
+	Name "HiFi TunnelFM Tx"
+
+	EnableSequence
+		'INTERNAL_FM_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'INTERNAL_FM_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionVerb
+	Name "HiFi TunnelHDMI"
+
+	EnableSequence
+		'HDMI Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'HDMI Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionVerb
+	Name "HiFi TunnelBT SCO Rx"
+
+	EnableSequence
+		'"INTERNAL_BT_SCO_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'"INTERNAL_BT_SCO_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionVerb
+	Name "HiFi TunnelBT SCO WB Rx"
+
+	EnableSequence
+		'"INTERNAL_BT_SCO_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'"INTERNAL_BT_SCO_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionVerb
+        Name "HiFi TunnelPROXY Rx"
+
+        EnableSequence
+                'AFE_PCM_RX Audio Mixer MultiMedia4':1:1
+        EndSequence
+
+        DisableSequence
+                'AFE_PCM_RX Audio Mixer MultiMedia4':1:0
+        EndSequence
+
+        # ALSA PCMs
+        CapturePCM 0
+        PlaybackPCM 9
+        ACDBID 0:0
 
 EndSection
 
@@ -722,18 +823,16 @@ SectionDevice
 EndSection
 
 SectionDevice
-	Name "PROXY Rx"
-	Comment "PROXY Rx device"
+        Name "PROXY Rx"
+        Comment "PROXY Rx device"
 
-	EnableSequence
-		'AFE_PCM_RX Audio Mixer MultiMedia3':1:1
-	EndSequence
+        EnableSequence
+        EndSequence
 
-	DisableSequence
-		'AFE_PCM_RX Audio Mixer MultiMedia3':1:0
-	EndSequence
+        DisableSequence
+        EndSequence
 
-	ACDBID	0:0
+        ACDBID  0:0
 
 EndSection
 
@@ -1259,7 +1358,7 @@ SectionModifier
 	Name "Play VOIPBT SCO Tx"
 
 	EnableSequence
-                'Internal BTSCO SampleRate':0:8000
+                'Internal BTSCO SampleRate':1:8000
                 'INTERNAL_BT_SCO_RX_Voice Mixer Voip':1:1
                 'Voip_Tx Mixer INTERNAL_BT_SCO_TX_Voip':1:1
 	EndSequence
@@ -1297,7 +1396,7 @@ SectionModifier
         Name "Play VOIPBT SCO WB Tx"
 
         EnableSequence
-                'Internal BTSCO SampleRate':0:16000
+                'Internal BTSCO SampleRate':1:16000
                 'INTERNAL_BT_SCO_RX_Voice Mixer Voip':1:1
                 'Voip_Tx Mixer INTERNAL_BT_SCO_TX_Voip':1:1
         EndSequence

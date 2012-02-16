@@ -83,6 +83,14 @@ LOCAL_SRC_FILES    := snd_soc_msm/UL_DL_REC
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)
+LOCAL_MODULE       := HiFi_Tunnel
+LOCAL_MODULE_TAGS  := optional
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_PATH  := $(TARGET_OUT_ETC)/snd_soc_msm
+LOCAL_SRC_FILES    := snd_soc_msm/HiFi_Tunnel
+include $(BUILD_PREBUILT)
+
+include $(CLEAR_VARS)
 LOCAL_MODULE       := snd_soc_msm
 LOCAL_MODULE_TAGS  := optional
 LOCAL_MODULE_CLASS := ETC
@@ -168,6 +176,14 @@ LOCAL_MODULE_TAGS  := optional
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_PATH  := $(TARGET_OUT_ETC)/snd_soc_msm
 LOCAL_SRC_FILES    := snd_soc_msm/UL_DL_REC_2x
+include $(BUILD_PREBUILT)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE       := HiFi_Tunnel_2x
+LOCAL_MODULE_TAGS  := optional
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_PATH  := $(TARGET_OUT_ETC)/snd_soc_msm
+LOCAL_SRC_FILES    := snd_soc_msm/HiFi_Tunnel_2x
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)

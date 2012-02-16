@@ -40,4 +40,8 @@ SectionUseCase."UL DL REC" {
 File "UL_DL_REC_2x"
 Comment "Voice Uplink Downlink Recording use case"
 }
+SectionUseCase."HiFi Tunnel" {
+File "HiFi_Tunnel_2x"
+Comment "Tunnel mode playback use case"
+}
 # End of master file

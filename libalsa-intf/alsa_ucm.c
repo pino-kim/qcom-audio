@@ -28,8 +28,20 @@
  */
 #define LOG_TAG "alsa_ucm"
 #define LOG_NDDEBUG 0
+
+#ifdef ANDROID
+/* definitions for Android logging */
 #include <utils/Log.h>
 #include <cutils/properties.h>
+#else /* ANDROID */
+#include <math.h>
+#define strlcat g_strlcat
+#define strlcpy g_strlcpy
+#define LOGI(...)      fprintf(stdout, __VA_ARGS__)
+#define LOGE(...)      fprintf(stderr, __VA_ARGS__)
+#define LOGV(...)      fprintf(stderr, __VA_ARGS__)
+#define LOGD(...)      fprintf(stderr, __VA_ARGS__)
+#endif /* ANDROID */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,6 +57,7 @@
 #include <sys/mman.h>
 #include <sys/time.h>
 #include <sys/poll.h>
+#include <stdint.h>
 
 #include <linux/ioctl.h>
 #include "msm8960_use_cases.h"

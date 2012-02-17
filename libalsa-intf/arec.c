@@ -36,6 +36,11 @@
 
 #define FORMAT_PCM 1
 
+#ifndef ANDROID
+#define strlcat g_strlcat
+#define strlcpy g_strlcpy
+#endif
+
 static struct wav_header hdr;
 static int fd;
 static struct pcm *pcm;
@@ -375,7 +380,7 @@ int rec_raw(const char *fg, const char *device, int rate, int ch,
          count = rec_max_sz;
     } else {
          count = rate * ch * 2;
-         count *= (off64_t)duration;
+         count *= (uint32_t)duration;
     }
     count = count < rec_max_sz ? count : rec_max_sz;
     if (debug)
@@ -426,7 +431,7 @@ int rec_wav(const char *fg, const char *device, int rate, int ch, const char *fn
                 count = rec_max_sz;
             } else {
                 count = rate * ch * 2;
-                count *= (off64_t)duration;
+                count *= (uint32_t)duration;
             }
             hdr.riff_sz = hdr.data_sz + 44 - 8;
 	    if (write(fd, &hdr, sizeof(hdr)) != sizeof(hdr)) {

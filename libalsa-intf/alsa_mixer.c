@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <ctype.h>
@@ -35,7 +36,16 @@
 
 #define LOG_TAG "alsa_mixer"
 #define LOG_NDEBUG 0
+
+#ifdef ANDROID
+/* definitions for Android logging */
 #include <utils/Log.h>
+#else /* ANDROID */
+#include <math.h>
+#define LOGI(...)      fprintf(stdout, __VA_ARGS__)
+#define LOGE(...)      fprintf(stderr, __VA_ARGS__)
+#define LOGV(...)      fprintf(stderr, __VA_ARGS__)
+#endif /* ANDROID */
 
 #define check_range(val, min, max) \
         (((val < min) ? (min) : (val > max) ? (max) : (val)))

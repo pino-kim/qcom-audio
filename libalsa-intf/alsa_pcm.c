@@ -17,8 +17,15 @@
 
 #define LOG_TAG "alsa_pcm"
 #define LOG_NDEBUG 0
+#ifdef ANDROID
+/* definitions for Android logging */
 #include <utils/Log.h>
 #include <cutils/properties.h>
+#else /* ANDROID */
+#define LOGI(...)      fprintf(stdout, __VA_ARGS__)
+#define LOGE(...)      fprintf(stderr, __VA_ARGS__)
+#define LOGV(...)      fprintf(stderr, __VA_ARGS__)
+#endif /* ANDROID */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,13 +34,14 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
-
+#include <stdint.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <sys/time.h>
 #include <sys/poll.h>
-
 #include <linux/ioctl.h>
+#include <linux/types.h>
+
 #include "alsa_audio.h"
 
 #define __force

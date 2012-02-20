@@ -64,6 +64,15 @@ LOCAL_MODULE_TAGS:= debug
 include $(BUILD_EXECUTABLE)
 
 include $(CLEAR_VARS)
+LOCAL_SRC_FILES:= alsaucm_test.c
+LOCAL_MODULE:= alsaucm_test
+LOCAL_SHARED_LIBRARIES:= libc libcutils libalsa-intf
+LOCAL_C_INCLUDES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+LOCAL_MODULE_TAGS:= debug
+include $(BUILD_EXECUTABLE)
+
+include $(CLEAR_VARS)
 LOCAL_COPY_HEADERS_TO   := mm-audio/libalsa-intf
 LOCAL_COPY_HEADERS      := alsa_audio.h
 LOCAL_COPY_HEADERS      += alsa_ucm.h

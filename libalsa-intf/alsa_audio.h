@@ -44,6 +44,11 @@ struct pcm {
     int start;
 };
 
+enum decoder_alias {
+    FORMAT_MP3,
+    FORMAT_AC3_PASS_THROUGH = 2,
+};
+
 #define FORMAT(v) SNDRV_PCM_FORMAT_##v
 
 #define PCM_OUT        0x00000000

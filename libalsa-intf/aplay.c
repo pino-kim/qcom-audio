@@ -47,6 +47,7 @@ static uint32_t play_max_sz = 2147483648LL;
 static int format = SNDRV_PCM_FORMAT_S16_LE;
 static int period = 0;
 static int compressed = 0;
+static char *compr_codec;
 
 static struct option long_options[] =
 {
@@ -209,7 +210,17 @@ static int play_file(unsigned rate, unsigned channels, int fd,
        }
        if (!period)
            period = compr_cap.min_fragment_size;
-       compr_params.codec.id = compr_cap.codecs[0];
+           switch (get_compressed_format(compr_codec)) {
+           case FORMAT_MP3:
+               compr_params.codec.id = compr_cap.codecs[FORMAT_MP3];
+               break;
+           case FORMAT_AC3_PASS_THROUGH:
+               compr_params.codec.id = compr_cap.codecs[FORMAT_AC3_PASS_THROUGH];
+               printf("codec -d = %x\n", compr_params.codec.id);
+               break;
+           default:
+               break;
+           }
        if (ioctl(pcm->fd, SNDRV_COMPRESS_SET_PARAMS, &compr_params)) {
           fprintf(stderr, "Aplay: SNDRV_COMPRESS_SET_PARAMS,failed Error no %d \n", errno);
           pcm_close(pcm);
@@ -514,7 +525,7 @@ int main(int argc, char **argv)
                 "-V		-- verbose\n"
 		"-F             -- Format\n"
                 "-B             -- Period\n"
-                "-T             -- Compressed\n"
+                "-T <MP3, AAC, AC3_PASS_THROUGH>  -- Compressed\n"
                 "<file> \n");
            fprintf(stderr, "Formats Supported:\n");
            for (i = 0; i <= SNDRV_PCM_FORMAT_LAST; ++i)
@@ -544,6 +555,7 @@ int main(int argc, char **argv)
           ch = (int)strtol(optarg, NULL, 0);
           break;
        case 'F':
+          printf("optarg = %s\n", optarg);
           format = get_format(optarg);
           break;
        case 'B':
@@ -551,6 +563,8 @@ int main(int argc, char **argv)
           break;
        case 'T':
           compressed = 1;
+          printf("compressed codec type requested = %s\n", optarg);
+          compr_codec = optarg;
           break;
        default:
           printf("\nUsage: aplay [options] <file>\n"

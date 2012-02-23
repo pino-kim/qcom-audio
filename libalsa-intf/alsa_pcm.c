@@ -134,6 +134,22 @@ const char *formats_list[][2] = {
         {"U18_3BE", "Unsigned 18 bit Big Endian in 3bytes"},
 };
 
+int get_compressed_format(const char *format)
+{
+        const char *ch = format;
+        if (strcmp(ch, "MP3") == 0) {
+                printf("MP3 is selected\n");
+                return FORMAT_MP3;
+        } else if (strcmp(ch, "AC3_PASS_THROUGH") == 0) {
+                printf("AC3 PASS THROUGH is selected\n");
+                return FORMAT_AC3_PASS_THROUGH;
+        } else {
+                printf("invalid format\n");
+                return -1;
+        }
+        return 0;
+}
+
 int get_format(const char* name)
 {
         int format;

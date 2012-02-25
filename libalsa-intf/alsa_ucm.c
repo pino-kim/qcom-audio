@@ -1305,6 +1305,18 @@ void *second_stage_parsing_thread(void *uc_mgr_ptr)
     return NULL;
 }
 
+/* Function can be used by UCM clients to wait until parsing completes
+ * uc_mgr - use case manager structure
+ * Returns 0 on success, error number otherwise
+*/
+int snd_use_case_mgr_wait_for_parsing(snd_use_case_mgr_t *uc_mgr)
+{
+    int ret;
+
+    ret = pthread_join(uc_mgr->thr, NULL);
+    return ret;
+}
+
 /* Parse config files and update mixer controls for the use cases
  * 1st stage parsing done to parse HiFi config file
  * uc_mgr - use case manager structure

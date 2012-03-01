@@ -54,6 +54,7 @@
         ceil((val) * ((max) - (min)) * 0.01 + (min))
 
 #define DEFAULT_TLV_SIZE 4096
+#define SPDIF_CHANNEL_STATUS_SIZE 24
 
 enum ctl_type {
 	CTL_GLOBAL_VOLUME,
@@ -589,6 +590,12 @@ int mixer_ctl_set(struct mixer_ctl *ctl, unsigned percent)
              value = (long long)percent;
         for (n = 0; n < ctl->info->count; n++)
             ev.value.integer64.value[n] = value;
+        break;
+    }
+    case SNDRV_CTL_ELEM_TYPE_IEC958: {
+        struct snd_aes_iec958 *iec958;
+        iec958 = (struct snd_aes_iec958 *)percent;
+        memcpy(ev.value.iec958.status,iec958->status,SPDIF_CHANNEL_STATUS_SIZE);
         break;
     }
     default:

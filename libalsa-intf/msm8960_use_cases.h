@@ -218,6 +218,7 @@ static void snd_ucm_set_status_at_index(struct snd_ucm_ident_node *head, const c
 static int snd_ucm_get_status_at_index(struct snd_ucm_ident_node *head, const char *ident);
 static int snd_ucm_parse_verb(snd_use_case_mgr_t **uc_mgr, const char *file_name, int index);
 static int get_verb_count(const char *nxt_str);
+int snd_use_case_mgr_wait_for_parsing(snd_use_case_mgr_t *uc_mgr);
 /* Parse functions */
 static int snd_ucm_parse(snd_use_case_mgr_t **uc_mgr);
 static int snd_ucm_parse_section(snd_use_case_mgr_t **uc_mgr, char **cur_str, char **nxt_str, int verb_index);

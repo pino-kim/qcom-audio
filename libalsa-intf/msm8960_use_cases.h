@@ -67,6 +67,10 @@ extern "C" {
 #define DEVICE_TTY_VCO_HANDSET_TX_ACDB_ID		36 //TTY_VCO_HANDSET_MIC
 #define DEVICE_TTY_HCO_HANDSET_RX_ACDB_ID               37 //TTY_HCO_HANDSET_SPRK
 
+#define DEVICE_INCALL_VOICE_RECORD_STEREO_ACDB_ID       45
+#define DEVICE_INCALL_MUSIC_DELIVERY_MONO_ACDB_ID       46
+#define DEVICE_INCALL_VOICE_RECORD_MONO_ACDB_ID         47
+
 /* mixer control type */
 #define TYPE_INT            0
 #define TYPE_STR            1
@@ -178,6 +182,7 @@ static card_mapping_t card_mapping_list[] = {
 #define SND_USE_CASE_VERB_UL_DL_REC      "UL DL REC"
 #define SND_USE_CASE_VERB_HIFI_TUNNEL    "HiFi Tunnel"
 #define SND_USE_CASE_VERB_HIFI2       "HiFi2"
+#define SND_USE_CASE_VERB_INCALL_REC   "Incall REC"
 
 #define SND_USE_CASE_DEV_FM_TX           "FM Tx"
 #define SND_USE_CASE_DEV_ANC_HEADSET     "ANC Headset"

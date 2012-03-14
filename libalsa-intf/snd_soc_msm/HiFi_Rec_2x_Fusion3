@@ -1365,14 +1365,16 @@ SectionModifier
 	Name "Capture Voice"
 
 	EnableSequence
+		'MultiMedia1 Mixer SLIM_4_TX':1:1
 	EndSequence
 
 	DisableSequence
+		'MultiMedia1 Mixer SLIM_4_TX':1:0
 	EndSequence
 
 	# ALSA PCMs
-	PlaybackPCM 9
-	capturePCM 9
+	PlaybackPCM 0
+	capturePCM 0
 	ACDBID 0:0
 
 EndSection
@@ -1523,38 +1525,6 @@ SectionModifier
 	# ALSA PCMs
 	PlaybackPCM 3
 	capturePCM 3
-	ACDBID 0:0
-
-EndSection
-
-SectionModifier
-	Name "Capture Voice Downlink"
-
-	EnableSequence
-	EndSequence
-
-	DisableSequence
-	EndSequence
-
-	# ALSA PCMs
-	PlaybackPCM 0
-	capturePCM 0
-	ACDBID 0:0
-
-EndSection
-
-SectionModifier
-	Name "Capture Voice Uplink Downlink"
-
-	EnableSequence
-	EndSequence
-
-	DisableSequence
-	EndSequence
-
-	# ALSA PCMs
-	PlaybackPCM 0
-	capturePCM 0
 	ACDBID 0:0
 
 EndSection

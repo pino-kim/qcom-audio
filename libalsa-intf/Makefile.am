@@ -25,7 +25,6 @@ libalsa_intf_la_SOURCES = $(c_sources) $(h_sources)
 libalsa_intfdir = $(prefix)/snd_soc_msm
 dist_libalsa_intf_DATA    = snd_soc_msm/DL_REC \
                             snd_soc_msm/DL_REC_2x \
-                            snd_soc_msm/DL_REC_2x_Fusion3 \
                             snd_soc_msm/DL_REC_Sitar \
                             snd_soc_msm/FM_A2DP_REC \
                             snd_soc_msm/FM_A2DP_REC_2x \
@@ -59,7 +58,6 @@ dist_libalsa_intf_DATA    = snd_soc_msm/DL_REC \
                             snd_soc_msm/snd_soc_msm_Sitar \
                             snd_soc_msm/UL_DL_REC \
                             snd_soc_msm/UL_DL_REC_2x \
-                            snd_soc_msm/UL_DL_REC_2x_Fusion3 \
                             snd_soc_msm/UL_DL_REC_Sitar \
                             snd_soc_msm/Voice_Call \
                             snd_soc_msm/Voice_Call_2x \

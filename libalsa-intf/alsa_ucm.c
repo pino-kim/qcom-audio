@@ -329,6 +329,34 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
                 *value = NULL;
                 ret = -ENODEV;
             }
+        } else if (!strncmp(ident1, "ACDBID", 11)) {
+            ident2 = strtok_r(NULL, "/", &temp_ptr);
+            index = 0;
+            verb_index = uc_mgr->card_ctxt_ptr->current_verb_index;
+            if((verb_index < 0) || (!strncmp(uc_mgr->card_ctxt_ptr->current_verb, SND_UCM_END_OF_LIST, 3)) ||
+               (uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].card_ctrl == NULL)) {
+                LOGE("Invalid current verb value: %s - %d", uc_mgr->card_ctxt_ptr->current_verb, verb_index);
+                pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
+                return -EINVAL;
+            }
+            while(strncmp(uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].card_ctrl[index].case_name, ident2, MAX_STR_LEN)) {
+                if (!strncmp(uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].card_ctrl[index].case_name,
+                        SND_UCM_END_OF_LIST, MAX_STR_LEN)){
+                    ret = -EINVAL;
+                    break;
+                } else {
+                    index++;
+                }
+            }
+            if (ret < 0) {
+                LOGE("No valid device/modifier found with given identifier: %s", ident2);
+            } else {
+                if (uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].card_ctrl[index].acdb_id) {
+                    ret = uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].card_ctrl[index].acdb_id;
+                } else {
+                    ret = -ENODEV;
+                }
+            }
         } else {
             LOGE("Unsupported identifier value: %s", ident1);
             *value = NULL;

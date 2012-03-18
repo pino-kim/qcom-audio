@@ -620,7 +620,15 @@ int pcm_read(struct pcm *pcm, void *data, unsigned count)
         return -EINVAL;
 
     x.buf = data;
-    x.frames = (pcm->flags & PCM_MONO) ? (count / 2) : (count / 4);
+    if (pcm->flags & PCM_MONO) {
+        x.frames = (count / 2);
+    } else if (pcm->flags & PCM_QUAD) {
+        x.frames = (count / 8);
+    } else if (pcm->flags & PCM_5POINT1) {
+        x.frames = (count / 12);
+    } else {
+        x.frames = (count / 4);
+    }
 
     for (;;) {
         if (!pcm->running) {

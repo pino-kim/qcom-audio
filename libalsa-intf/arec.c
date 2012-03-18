@@ -26,6 +26,7 @@
 #include <sys/poll.h>
 #include <sys/ioctl.h>
 #include <getopt.h>
+#include <limits.h>
 
 #include "alsa_audio.h"
 
@@ -111,7 +112,7 @@ static int set_params(struct pcm *pcm)
          param_set_min(params, SNDRV_PCM_HW_PARAM_PERIOD_TIME, 10);
      param_set_int(params, SNDRV_PCM_HW_PARAM_SAMPLE_BITS, 16);
      param_set_int(params, SNDRV_PCM_HW_PARAM_FRAME_BITS,
-                    pcm->channels - 1 ? 32 : 16);
+                    pcm->channels * 16);
      param_set_int(params, SNDRV_PCM_HW_PARAM_CHANNELS,
                     pcm->channels);
      param_set_int(params, SNDRV_PCM_HW_PARAM_RATE, pcm->rate);
@@ -140,10 +141,23 @@ static int set_params(struct pcm *pcm)
      }
     sparams->tstamp_mode = SNDRV_PCM_TSTAMP_NONE;
     sparams->period_step = 1;
-    sparams->avail_min = (pcm->flags & PCM_MONO) ? pcm->period_size/2 : pcm->period_size/4;
+
+    if (pcm->flags & PCM_MONO) {
+        sparams->avail_min = pcm->period_size/2;
+        sparams->xfer_align = pcm->period_size/2;
+    } else if (pcm->flags & PCM_QUAD) {
+        sparams->avail_min = pcm->period_size/8;
+        sparams->xfer_align = pcm->period_size/8;
+    } else if (pcm->flags & PCM_5POINT1) {
+        sparams->avail_min = pcm->period_size/12;
+        sparams->xfer_align = pcm->period_size/12;
+    } else {
+        sparams->avail_min = pcm->period_size/4;
+        sparams->xfer_align = pcm->period_size/4;
+    }
+
     sparams->start_threshold = 1;
-    sparams->stop_threshold = (pcm->flags & PCM_MONO) ? pcm->buffer_size/2 : pcm->buffer_size/4;
-    sparams->xfer_align = (pcm->flags & PCM_MONO) ? pcm->period_size/2 : pcm->period_size/4; /* needed for old kernels */
+    sparams->stop_threshold = INT_MAX;
     sparams->silence_size = 0;
     sparams->silence_threshold = 0;
 
@@ -178,6 +192,10 @@ int record_file(unsigned rate, unsigned channels, int fd, unsigned count,  unsig
 
     if (channels == 1)
         flags |= PCM_MONO;
+    else if (channels == 4)
+        flags |= PCM_QUAD;
+    else if (channels == 6)
+        flags |= PCM_5POINT1;
     else
         flags |= PCM_STEREO;
 
@@ -247,8 +265,16 @@ int record_file(unsigned rate, unsigned channels, int fd, unsigned count,  unsig
         pfd[0].events = POLLIN;
 
         hdr.data_sz = 0;
-        frames = (pcm->flags & PCM_MONO) ? (bufsize / 2) : (bufsize / 4);
-        x.frames = (pcm->flags & PCM_MONO) ? (bufsize / 2) : (bufsize / 4);
+        if (pcm->flags & PCM_MONO) {
+                frames = bufsize / 2;
+        } else if (pcm->flags & PCM_QUAD) {
+                frames = bufsize / 8;
+        } else if (pcm->flags & PCM_5POINT1) {
+                frames = bufsize / 12;
+        } else{
+                frames = bufsize / 4;
+        }
+        x.frames = frames;
         for(;;) {
 		if (!pcm->running) {
                     if (pcm_prepare(pcm))

@@ -218,6 +218,7 @@ static card_mapping_t card_mapping_list[] = {
 #define SND_USE_CASE_DEV_HDMI_TX             "HDMI Tx"
 #define SND_USE_CASE_DEV_HDMI_SPDIF          "HDMI SPDIF"
 #define SND_USE_CASE_DEV_QUAD_MIC "QMIC"
+#define SND_USE_CASE_DEV_SSR_QUAD_MIC "SSR QMIC"
 #define SND_USE_CASE_DEV_PROXY_RX     "PROXY Rx"
 #define SND_USE_CASE_DEV_PROXY_TX     "PROXY Tx"
 #define SND_USE_CASE_DEV_SPDIF_SPEAKER     "SPDIF Speaker"

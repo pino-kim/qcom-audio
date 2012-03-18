@@ -1,6 +1,6 @@
 /*
 ** Copyright 2010, The Android Open-Source Project
-** Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+** Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -56,7 +56,8 @@ enum decoder_alias {
 
 #define PCM_STEREO     0x00000000
 #define PCM_MONO       0x01000000
-#define PCM_5POINT1    0x02000000
+#define PCM_QUAD       0x02000000
+#define PCM_5POINT1    0x04000000
 
 #define PCM_44100HZ    0x00000000
 #define PCM_48000HZ    0x00100000

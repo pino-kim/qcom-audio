@@ -703,24 +703,16 @@ SectionDevice
 		'SLIM_0_RX Channels':0:One
 		'RX1 MIX1 INP1':0:RX1
 		'RX1 MIX1 INP2':0:RX6
-		'RX2 MIX1 INP1':0:RX2
-		'RX2 MIX1 INP2':0:RX7
 		'HPHL DAC Switch':1:1
-		'HPHR DAC Switch':1:1
 		'HPHL Volume':1:80
-		'HPHR Volume':1:80
 	EndSequence
 
 	DisableSequence
 		'TTY Mode':0:ZERO
 		'RX1 MIX1 INP1':0:ZERO
 		'RX1 MIX1 INP2':0:ZERO
-		'RX2 MIX1 INP1':0:ZERO
-		'RX2 MIX1 INP2':0:ZERO
 		'HPHL DAC Switch':1:0
-		'HPHR DAC Switch':1:0
 		'HPHL Volume':1:0
-		'HPHR Volume':1:0
 	EndSequence
 
 	ACDBID	17:1
@@ -759,24 +751,16 @@ SectionDevice
 		'SLIM_0_RX Channels':0:One
 		'RX1 MIX1 INP1':0:RX1
 		'RX1 MIX1 INP2':0:RX6
-		'RX2 MIX1 INP1':0:RX2
-		'RX2 MIX1 INP2':0:RX7
 		'HPHL DAC Switch':1:1
-		'HPHR DAC Switch':1:1
 		'HPHL Volume':1:80
-		'HPHR Volume':1:80
 	EndSequence
 
 	DisableSequence
 		'TTY Mode':0:ZERO
 		'RX1 MIX1 INP1':0:ZERO
 		'RX1 MIX1 INP2':0:ZERO
-		'RX2 MIX1 INP1':0:ZERO
-		'RX2 MIX1 INP2':0:ZERO
 		'HPHL DAC Switch':1:0
-		'HPHR DAC Switch':1:0
 		'HPHL Volume':1:0
-		'HPHR Volume':1:0
 	EndSequence
 
 	ACDBID	17:1

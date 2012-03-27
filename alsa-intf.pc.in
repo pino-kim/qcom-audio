@@ -3,8 +3,8 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: alsa-intf
+Name: alsa_intf
 Description: alsa-intf library
 Version: @VERSION@
-Libs: -L${libdir} -lalsa-intf
+Libs: -L${libdir} -lalsa_intf
 Cflags: -I${includedir}/alsa-intf

@@ -64,6 +64,8 @@ extern "C" {
 #define DEVICE_ANC_HEADSET_STEREO_RX_ACDB_ID            26//ANC RX, same as regular headset
 #define DEVICE_QUADMIC_ACDB_ID                          19// QUADMIC_SKPR
 #define DEVICE_PROXY_RX_ACDB_ID   	               DEVICE_HDMI_STEREO_RX_ACDB_ID
+#define DEVICE_TTY_VCO_HANDSET_TX_ACDB_ID		36 //TTY_VCO_HANDSET_MIC
+#define DEVICE_TTY_HCO_HANDSET_RX_ACDB_ID               37 //TTY_HCO_HANDSET_SPRK
 
 /* mixer control type */
 #define TYPE_INT            0
@@ -191,6 +193,9 @@ static card_mapping_t card_mapping_list[] = {
 #define SND_USE_CASE_DEV_TTY_HEADSET_TX  "TTY Headset Tx"
 #define SND_USE_CASE_DEV_TTY_FULL_RX  "TTY Full Rx"
 #define SND_USE_CASE_DEV_TTY_FULL_TX  "TTY Full Tx"
+#define SND_USE_CASE_DEV_TTY_HANDSET_RX  "TTY Handset Rx"
+#define SND_USE_CASE_DEV_TTY_HANDSET_TX  "TTY Handset Tx"
+#define SND_USE_CASE_DEV_TTY_HANDSET_ANALOG_TX  "TTY Handset Analog Tx"
 #define SND_USE_CASE_DEV_DUAL_MIC_BROADSIDE "DMIC Broadside"
 #define SND_USE_CASE_DEV_DUAL_MIC_ENDFIRE "DMIC Endfire"
 #define SND_USE_CASE_DEV_SPEAKER_DUAL_MIC_BROADSIDE "Speaker DMIC Broadside"

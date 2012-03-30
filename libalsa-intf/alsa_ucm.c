@@ -303,15 +303,19 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
                 pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
                 return -EINVAL;
             }
-            while(strncmp(uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].card_ctrl[index].case_name, ident2, (strlen(ident2)+1))) {
-                if (!strncmp(uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].card_ctrl[index].case_name,
-                        SND_UCM_END_OF_LIST, strlen(SND_UCM_END_OF_LIST))){
-                    *value = NULL;
-                    ret = -EINVAL;
-                    break;
-                } else {
-                    index++;
+            if (ident2 != NULL) {
+                while(strncmp(uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].card_ctrl[index].case_name, ident2, (strlen(ident2)+1))) {
+                    if (!strncmp(uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].card_ctrl[index].case_name,
+                            SND_UCM_END_OF_LIST, strlen(SND_UCM_END_OF_LIST))){
+                        *value = NULL;
+                        ret = -EINVAL;
+                        break;
+                    } else {
+                        index++;
+                    }
                 }
+            } else {
+                ret = -EINVAL;
             }
             if (ret < 0) {
                 LOGE("No valid device/modifier found with given identifier: %s", ident2);
@@ -413,36 +417,42 @@ int snd_use_case_geti(snd_use_case_mgr_t *uc_mgr,
     } else {
         if (!strncmp(ident1, "_devstatus", 10)) {
             ident2 = strtok_r(NULL, "/", &temp_ptr);
-            list_size = snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->dev_list_head);
-            for (index = 0; index < list_size; index++) {
-                ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, index);
-                if (!strncmp(ident2, ident_value, (strlen(ident_value)+1))) {
-                    *value = 1;
-                    free(ident_value);
-                    ident_value = NULL;
-                    break;
-                } else {
-                    free(ident_value);
-                    ident_value = NULL;
+            if (ident2 != NULL) {
+                list_size = snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->dev_list_head);
+                for (index = 0; index < list_size; index++) {
+                    if ((ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, index))) {
+                        if (!strncmp(ident2, ident_value, (strlen(ident_value)+1))) {
+                            *value = 1;
+                            free(ident_value);
+                            ident_value = NULL;
+                            break;
+                        } else {
+                            free(ident_value);
+                            ident_value = NULL;
+                        }
+                    }
                 }
+                ret = 0;
             }
-            ret = 0;
         } else if (!strncmp(ident1, "_modstatus", 10)) {
             ident2 = strtok_r(NULL, "/", &temp_ptr);
-            list_size = snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->mod_list_head);
-            for (index = 0; index < list_size; index++) {
-                ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->mod_list_head, index);
-                if (!strncmp(ident2, ident_value, (strlen(ident_value)+1))) {
-                    *value = 1;
-                    free(ident_value);
-                    ident_value = NULL;
-                    break;
-                } else {
-                    free(ident_value);
-                    ident_value = NULL;
+            if (ident2 != NULL) {
+                list_size = snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->mod_list_head);
+                for (index = 0; index < list_size; index++) {
+                    if((ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->mod_list_head, index))) {
+                        if (!strncmp(ident2, ident_value, (strlen(ident_value)+1))) {
+                            *value = 1;
+                            free(ident_value);
+                            ident_value = NULL;
+                            break;
+                        } else {
+                            free(ident_value);
+                            ident_value = NULL;
+                        }
+                    }
                 }
+                ret = 0;
             }
-            ret = 0;
         } else {
             LOGE("Unknown identifier: %s", ident1);
         }
@@ -464,14 +474,15 @@ static int snd_use_case_apply_voice_acdb(snd_use_case_mgr_t *uc_mgr, int use_cas
     if (voice_acdb != 1) {
         list_size = snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->mod_list_head);
         for (index = 0; index < list_size; index++) {
-            ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->mod_list_head, index);
-            if ((!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_VOICE, strlen(SND_USE_CASE_MOD_PLAY_VOICE))) ||
-                (!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_VOIP, strlen(SND_USE_CASE_MOD_PLAY_VOIP)))) {
-                voice_acdb = 1;
+            if ((ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->mod_list_head, index))) {
+                if ((!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_VOICE, strlen(SND_USE_CASE_MOD_PLAY_VOICE))) ||
+                    (!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_VOIP, strlen(SND_USE_CASE_MOD_PLAY_VOIP)))) {
+                    voice_acdb = 1;
+                    free(ident_value);
+                    break;
+                }
                 free(ident_value);
-                break;
             }
-            free(ident_value);
         }
     }
 
@@ -483,13 +494,14 @@ static int snd_use_case_apply_voice_acdb(snd_use_case_mgr_t *uc_mgr, int use_cas
     if (voice_acdb == 1) {
         list_size = snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->dev_list_head);
         for (index = 0; index < list_size; index++) {
-            ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, index);
-            if (strncmp(ident_value, uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].card_ctrl[use_case_index].case_name,
-                (strlen(uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].card_ctrl[use_case_index].case_name)+1))) {
-                break;
+            if ((ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, index))) {
+                if (strncmp(ident_value, uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].card_ctrl[use_case_index].case_name,
+                    (strlen(uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].card_ctrl[use_case_index].case_name)+1))) {
+                    break;
+                }
+                free(ident_value);
+                ident_value = NULL;
             }
-            free(ident_value);
-            ident_value = NULL;
         }
         index = 0;
         if (ident_value != NULL) {
@@ -814,41 +826,42 @@ static int snd_use_case_set_device_for_all_ident(snd_use_case_mgr_t *uc_mgr,
     snd_ucm_print_list(uc_mgr->card_ctxt_ptr->mod_list_head);
     list_size = snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->mod_list_head);
     for (index = 0; index < list_size; index++) {
-        ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->mod_list_head, index);
-        strlcpy(use_case, ident_value, sizeof(use_case));
-        strlcat(use_case, device, sizeof(use_case));
-        if ((get_use_case_index(uc_mgr, use_case)) < 0) {
-            LOGV("No valid use case found: %s", use_case);
-            intdev_flag = 1;
-        } else {
-            if (enable && !flag) {
-                snd_use_case_apply_mixer_controls(uc_mgr, device, enable);
-                if (!ret)
-                    snd_ucm_set_status_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, device, enable);
-                flag = 1;
+        if ((ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->mod_list_head, index))) {
+            strlcpy(use_case, ident_value, sizeof(use_case));
+            strlcat(use_case, device, sizeof(use_case));
+            if ((get_use_case_index(uc_mgr, use_case)) < 0) {
+                LOGV("No valid use case found: %s", use_case);
+                intdev_flag = 1;
+            } else {
+                if (enable && !flag) {
+                    snd_use_case_apply_mixer_controls(uc_mgr, device, enable);
+                    if (!ret)
+                        snd_ucm_set_status_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, device, enable);
+                    flag = 1;
+                }
+                LOGV("set %d for use case value: %s", enable, use_case);
+                ret = snd_use_case_apply_mixer_controls(uc_mgr, use_case, enable);
+                if (ret != 0)
+                    LOGE("No valid controls exists for usecase %s and device %s, enable: %d", use_case, device, enable);
             }
-            LOGV("set %d for use case value: %s", enable, use_case);
-            ret = snd_use_case_apply_mixer_controls(uc_mgr, use_case, enable);
-            if (ret != 0)
-                LOGE("No valid controls exists for usecase %s and device %s, enable: %d", use_case, device, enable);
-        }
-        if (intdev_flag) {
-            if (enable && !flag) {
-                snd_use_case_apply_mixer_controls(uc_mgr, device, enable);
-                if (!ret)
-                    snd_ucm_set_status_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, device, enable);
-                flag = 1;
+            if (intdev_flag) {
+                if (enable && !flag) {
+                    snd_use_case_apply_mixer_controls(uc_mgr, device, enable);
+                    if (!ret)
+                        snd_ucm_set_status_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, device, enable);
+                    flag = 1;
+                 }
+                 use_case[0] = 0;
+                 strlcpy(use_case, ident_value, sizeof(use_case));
+                 LOGV("set %d for use case value: %s", enable, use_case);
+                 ret = snd_use_case_apply_mixer_controls(uc_mgr, use_case, enable);
+                if (ret != 0)
+                    LOGE("No valid controls exists for usecase %s and device %s, enable: %d", use_case, device, enable);
+                intdev_flag = 0;
             }
             use_case[0] = 0;
-            strlcpy(use_case, ident_value, sizeof(use_case));
-            LOGV("set %d for use case value: %s", enable, use_case);
-            ret = snd_use_case_apply_mixer_controls(uc_mgr, use_case, enable);
-            if (ret != 0)
-                LOGE("No valid controls exists for usecase %s and device %s, enable: %d", use_case, device, enable);
-            intdev_flag = 0;
+            free(ident_value);
         }
-        use_case[0] = 0;
-        free(ident_value);
     }
     if (!enable) {
         ret = snd_use_case_apply_mixer_controls(uc_mgr, device, enable);
@@ -937,10 +950,11 @@ static int snd_use_case_check_device_for_disable(snd_use_case_mgr_t *uc_mgr, con
         index = 0;
         list_size = snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->mod_list_head);
         for (index = 0; index < list_size; index++) {
-            ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->mod_list_head, index);
-            strlcpy(use_case, ident_value, sizeof(use_case));
-            strlcat(use_case, device, sizeof(use_case));
-            free(ident_value);
+            if ((ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->mod_list_head, index))) {
+                strlcpy(use_case, ident_value, sizeof(use_case));
+                strlcat(use_case, device, sizeof(use_case));
+                free(ident_value);
+            }
             case_index = 0;
             while(strncmp(uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].card_ctrl[case_index].case_name,
                          SND_UCM_END_OF_LIST, strlen(SND_UCM_END_OF_LIST))) {
@@ -1064,13 +1078,14 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
         index = 0; ret = 0;
         list_size = snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->dev_list_head);
         for (index = 0; index < list_size; index++) {
-            ident1 = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, index);
-            if (!strncmp(ident1, value, (strlen(value)+1))) {
-                LOGV("Ignore enable as %s device is already part of enabled list", value);
+            if ((ident1 = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, index))) {
+                if (!strncmp(ident1, value, (strlen(value)+1))) {
+                    LOGV("Ignore enable as %s device is already part of enabled list", value);
+                    free(ident1);
+                    break;
+                }
                 free(ident1);
-                break;
             }
-            free(ident1);
         }
         if (index == list_size) {
             LOGV("enadev: device value to be enabled: %s", value);
@@ -1495,12 +1510,13 @@ int snd_use_case_mgr_reset(snd_use_case_mgr_t *uc_mgr)
     /* Disable mixer controls of all the enabled modifiers */
     list_size = snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->mod_list_head);
     for (index = (list_size-1); index >= 0; index--) {
-        ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->mod_list_head, index);
-        snd_ucm_del_ident_from_list(&uc_mgr->card_ctxt_ptr->mod_list_head, ident_value);
-        ret = snd_use_case_ident_set_controls_for_all_devices(uc_mgr, ident_value, 0);
-	if (ret != 0)
-		LOGE("Failed to disable mixer controls for %s", ident_value);
-	free(ident_value);
+        if ((ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->mod_list_head, index))) {
+            snd_ucm_del_ident_from_list(&uc_mgr->card_ctxt_ptr->mod_list_head, ident_value);
+            ret = snd_use_case_ident_set_controls_for_all_devices(uc_mgr, ident_value, 0);
+	    if (ret != 0)
+                LOGE("Failed to disable mixer controls for %s", ident_value);
+            free(ident_value);
+        }
     }
     /* Clear the enabled modifiers list */
     if (uc_mgr->modifier_list_count) {
@@ -1522,12 +1538,13 @@ int snd_use_case_mgr_reset(snd_use_case_mgr_t *uc_mgr)
     /* Disable mixer controls of all the enabled devices */
     list_size = snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->dev_list_head);
     for (index = (list_size-1); index >= 0; index--) {
-        ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, index);
-        snd_ucm_del_ident_from_list(&uc_mgr->card_ctxt_ptr->dev_list_head, ident_value);
-        ret = snd_use_case_set_device_for_all_ident(uc_mgr, ident_value, 0);
-	if (ret != 0)
-            LOGE("Failed to disable or no mixer controls set for %s", ident_value);
-	free(ident_value);
+        if ((ident_value = snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, index))) {
+            snd_ucm_del_ident_from_list(&uc_mgr->card_ctxt_ptr->dev_list_head, ident_value);
+            ret = snd_use_case_set_device_for_all_ident(uc_mgr, ident_value, 0);
+	    if (ret != 0)
+                LOGE("Failed to disable or no mixer controls set for %s", ident_value);
+	    free(ident_value);
+        }
     }
     /* Clear the enabled devices list */
     if (uc_mgr->device_list_count) {
@@ -1551,7 +1568,8 @@ void *second_stage_parsing_thread(void *uc_mgr_ptr)
     char path[200];
     struct stat st;
     int fd, index = 0, ret = 0, rc = 0;
-    char *read_buf, *next_str, *current_str, *buf, *p, *verb_name, *file_name = NULL;
+    char *read_buf = NULL, *next_str = NULL, *current_str = NULL, *buf = NULL;
+    char *p = NULL, *verb_name = NULL, *file_name = NULL, *temp_ptr = NULL;
     snd_use_case_mgr_t **uc_mgr = (snd_use_case_mgr_t **)&uc_mgr_ptr;
 
     strlcpy(path, CONFIG_DIR, (strlen(CONFIG_DIR)+1));
@@ -1598,9 +1616,9 @@ void *second_stage_parsing_thread(void *uc_mgr_ptr)
                 else
                     continue;
             }
-            p = strtok(buf, ".");
+            p = strtok_r(buf, ".", &temp_ptr);
             while (p != NULL) {
-                p = strtok(NULL, "\"");
+                p = strtok_r(NULL, "\"", &temp_ptr);
                 if (p == NULL)
                     break;
                 verb_name = (char *)malloc((strlen(p)+1)*sizeof(char));
@@ -1619,9 +1637,9 @@ void *second_stage_parsing_thread(void *uc_mgr_ptr)
                 else
                     continue;
             }
-            p = strtok(buf, "\"");
+            p = strtok_r(buf, "\"", &temp_ptr);
             while (p != NULL) {
-                p = strtok(NULL, "\"");
+                p = strtok_r(NULL, "\"", &temp_ptr);
                 if (p == NULL)
                     break;
                 file_name = (char *)malloc((strlen(p)+1)*sizeof(char));
@@ -1750,14 +1768,22 @@ static int snd_ucm_parse(snd_use_case_mgr_t **uc_mgr)
                     break;
                 }
                 strlcpy(verb_name, p, (strlen(p)+1)*sizeof(char));
-                (*uc_mgr)->card_ctxt_ptr->use_case_verb_list[index].use_case_name =
-                    (char *)malloc((strlen(verb_name)+1)*sizeof(char));
-                strlcpy((*uc_mgr)->card_ctxt_ptr->use_case_verb_list[index].use_case_name,
-                    verb_name, ((strlen(verb_name)+1)*sizeof(char)));
-                (*uc_mgr)->card_ctxt_ptr->verb_list[index] =
-                    (char *)malloc((strlen(verb_name)+1)*sizeof(char));
-                strlcpy((*uc_mgr)->card_ctxt_ptr->verb_list[index], verb_name,
-                        ((strlen(verb_name)+1)*sizeof(char)));
+                if (((*uc_mgr)->card_ctxt_ptr->use_case_verb_list[index].use_case_name =
+                    (char *)malloc((strlen(verb_name)+1)*sizeof(char)))) {
+                    strlcpy((*uc_mgr)->card_ctxt_ptr->use_case_verb_list[index].use_case_name,
+                        verb_name, ((strlen(verb_name)+1)*sizeof(char)));
+                } else {
+                    ret = -ENOMEM;
+                    break;
+                }
+                if (((*uc_mgr)->card_ctxt_ptr->verb_list[index] =
+                    (char *)malloc((strlen(verb_name)+1)*sizeof(char)))) {
+                    strlcpy((*uc_mgr)->card_ctxt_ptr->verb_list[index], verb_name,
+                            ((strlen(verb_name)+1)*sizeof(char)));
+                } else {
+                    ret = -ENOMEM;
+                    break;
+                }
                 break;
             }
         } else {
@@ -1803,10 +1829,14 @@ static int snd_ucm_parse(snd_use_case_mgr_t **uc_mgr)
     }
     munmap(read_buf, st.st_size);
     close(fd);
-    (*uc_mgr)->card_ctxt_ptr->verb_list[index] =
-        (char *)malloc((strlen(SND_UCM_END_OF_LIST)+1)*sizeof(char));
-    strlcpy((*uc_mgr)->card_ctxt_ptr->verb_list[index], SND_UCM_END_OF_LIST,
-            ((strlen(SND_UCM_END_OF_LIST)+1)*sizeof(char)));
+    if (((*uc_mgr)->card_ctxt_ptr->verb_list[index] =
+        (char *)malloc((strlen(SND_UCM_END_OF_LIST)+1)*sizeof(char)))) {
+        strlcpy((*uc_mgr)->card_ctxt_ptr->verb_list[index], SND_UCM_END_OF_LIST,
+                ((strlen(SND_UCM_END_OF_LIST)+1)*sizeof(char)));
+    } else {
+        LOGE("Failed to allocate memory\n");
+        ret = -ENOMEM;
+    }
     if (!ret) {
         LOGD("Creating Parsing thread uc_mgr %p\n", uc_mgr);
         rc = pthread_create(&(*uc_mgr)->thr, 0, second_stage_parsing_thread, (void*)(*uc_mgr));
@@ -1816,6 +1846,10 @@ static int snd_ucm_parse(snd_use_case_mgr_t **uc_mgr)
             LOGV("Prasing thread created successfully\n");
         }
     }
+    if (verb_name)
+        free(verb_name);
+    if (file_name)
+        free(file_name);
     return ret;
 }
 
@@ -2315,7 +2349,7 @@ static int get_num_values(const char *buf)
  */
 static int snd_ucm_extract_controls(char *buf, mixer_control_t **mixer_list, int size)
 {
-    uint32_t temp;
+    unsigned long temp;
     int ret = -EINVAL, i, index = 0, count = 0;
     char *p, *ps, *pmv, temp_coeff[20];
     mixer_control_t *list;
@@ -2369,6 +2403,12 @@ static int snd_ucm_extract_controls(char *buf, mixer_control_t **mixer_list, int
             if (p != NULL) {
                 count = get_num_values(p);
                 list->mulval = (char **)malloc(count*sizeof(char *));
+                if (list->mulval == NULL) {
+                    ret = -ENOMEM;
+                    free((*mixer_list));
+                    free(list->control_name);
+                    break;
+                }
                 index = 0;
                 /* To support volume values in percentage */
                 if ((count == 1) && (strstr(p, "%") != NULL)) {
@@ -2384,7 +2424,7 @@ static int snd_ucm_extract_controls(char *buf, mixer_control_t **mixer_list, int
                 } else {
                     pmv = strtok_r(p, " ", &temp_vol_ptr);
                     while (pmv != NULL) {
-                        temp = (uint32_t)strtoul(pmv, &ps, 16);
+                        temp = strtoul(pmv, &ps, 16);
                         snprintf(temp_coeff, sizeof(temp_coeff),"%lu", temp);
                         list->mulval[index] = (char *)malloc((strlen(temp_coeff)+1)*sizeof(char));
                         strlcpy(list->mulval[index], temp_coeff, (strlen(temp_coeff)+1));

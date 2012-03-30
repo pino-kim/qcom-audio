@@ -152,10 +152,10 @@ static int set_params(struct pcm *pcm)
          return -errno;
     }
     if (debug) {
-        fprintf (stderr,"avail_min (%d)\n", sparams->avail_min);
-        fprintf (stderr,"start_threshold (%d)\n", sparams->start_threshold);
-        fprintf (stderr,"stop_threshold (%d)\n", sparams->stop_threshold);
-        fprintf (stderr,"xfer_align (%d)\n", sparams->xfer_align);
+        fprintf (stderr,"avail_min (%lu)\n", sparams->avail_min);
+        fprintf (stderr,"start_threshold (%lu)\n", sparams->start_threshold);
+        fprintf (stderr,"stop_threshold (%lu)\n", sparams->stop_threshold);
+        fprintf (stderr,"xfer_align (%lu)\n", sparams->xfer_align);
     }
     return 0;
 
@@ -163,8 +163,8 @@ static int set_params(struct pcm *pcm)
 
 int record_file(unsigned rate, unsigned channels, int fd, unsigned count,  unsigned flags, const char *device)
 {
-    unsigned avail, xfer, bufsize;
-    int r;
+    unsigned xfer, bufsize;
+    int r, avail;
     int nfds = 1;
     static int start = 0;
     struct snd_xferi x;
@@ -271,7 +271,7 @@ int record_file(unsigned rate, unsigned channels, int fd, unsigned count,  unsig
                 */
                 avail = pcm_avail(pcm);
                 if (debug)
-                     fprintf(stderr, "Arec:avail 1 = %d frames = %d\n",avail, frames);
+                     fprintf(stderr, "Arec:avail 1 = %d frames = %ld\n",avail, frames);
                 if (avail < 0)
                         return avail;
                 if (avail < pcm->sw_p->avail_min) {
@@ -399,7 +399,7 @@ int rec_wav(const char *fg, const char *device, int rate, int ch, const char *fn
 {
     unsigned flag = 0;
     uint32_t rec_max_sz = 2147483648LL;
-    uint32_t count;
+    uint32_t count = 0;
     int i = 0;
 
     if (pcm_flag) {

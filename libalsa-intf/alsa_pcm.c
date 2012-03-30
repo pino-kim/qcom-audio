@@ -22,6 +22,8 @@
 #include <utils/Log.h>
 #include <cutils/properties.h>
 #else /* ANDROID */
+#define strlcat g_strlcat
+#define strlcpy g_strlcpy
 #define LOGI(...)      fprintf(stdout, __VA_ARGS__)
 #define LOGE(...)      fprintf(stderr, __VA_ARGS__)
 #define LOGV(...)      fprintf(stderr, __VA_ARGS__)
@@ -750,37 +752,38 @@ struct pcm *pcm_open(unsigned flags, char *device)
     tmp = device+4;
     if ((strncmp(device, "hw:",3) != 0) || (strncmp(tmp, ",",1) != 0)){
         LOGE("Wrong device fromat\n");
+        free(pcm);
         return -EINVAL;
     }
 
     if (flags & PCM_IN) {
-        strncpy(dname, "/dev/snd/pcmC", sizeof(dname));
+        strlcpy(dname, "/dev/snd/pcmC", sizeof(dname));
         tmp = device+3;
-        strncat(dname, tmp,1) ;
+        strlcat(dname, tmp, (2+strlen(dname))) ;
         pcm->card_no = atoi(tmp);
-        strncat(dname, "D", sizeof("D"));
+        strlcat(dname, "D", (sizeof("D")+strlen(dname)));
         tmp = device+5;
         pcm->device_no = atoi(tmp);
 	/* should be safe to assume pcm dev ID never exceed 99 */
         if (pcm->device_no > 9)
-            strncat(dname, tmp, 2);
+            strlcat(dname, tmp, (3+strlen(dname)));
         else
-            strncat(dname, tmp, 1);
-        strncat(dname, "c", sizeof("c"));
+            strlcat(dname, tmp, (2+strlen(dname)));
+        strlcat(dname, "c", (sizeof("c")+strlen(dname)));
     } else {
-        strncpy(dname, "/dev/snd/pcmC", sizeof(dname));
+        strlcpy(dname, "/dev/snd/pcmC", sizeof(dname));
         tmp = device+3;
-        strncat(dname, tmp,1) ;
+        strlcat(dname, tmp, (2+strlen(dname))) ;
         pcm->card_no = atoi(tmp);
-        strncat(dname, "D", sizeof("D"));
+        strlcat(dname, "D", (sizeof("D")+strlen(dname)));
         tmp = device+5;
         pcm->device_no = atoi(tmp);
 	/* should be safe to assume pcm dev ID never exceed 99 */
         if (pcm->device_no > 9)
-            strncat(dname, tmp, 2);
+            strlcat(dname, tmp, (3+strlen(dname)));
         else
-            strncat(dname, tmp, 1);
-        strncat(dname, "p", sizeof("p"));
+            strlcat(dname, tmp, (2+strlen(dname)));
+        strlcat(dname, "p", (sizeof("p")+strlen(dname)));
     }
     if (pcm->flags & DEBUG_ON)
         LOGV("Device name %s\n", dname);

@@ -123,6 +123,22 @@ SectionVerb
 EndSection
 
 SectionVerb
+        Name "HiFi TunnelPROXY Tx"
+
+        EnableSequence
+        EndSequence
+
+        DisableSequence
+        EndSequence
+
+        # ALSA PCMs
+        CapturePCM 0
+        PlaybackPCM 9
+        ACDBID 0:0
+
+EndSection
+
+SectionVerb
 	Name "HiFi TunnelSPDIF"
 
 	EnableSequence
@@ -2709,7 +2725,7 @@ SectionModifier
 EndSection
 
 SectionModifier
-	Name "Play VOIPROXY Rx"
+	Name "Play VOIPPROXY Rx"
 
 	EnableSequence
 	EndSequence
@@ -2741,5 +2757,69 @@ SectionModifier
 	PlaybackPCM 2
 	capturePCM 2
 	ACDBID 0:0
+
+EndSection
+
+SectionModifier
+	Name "Play MusicPROXY Tx"
+
+	EnableSequence
+	EndSequence
+
+	DisableSequence
+	EndSequence
+
+	# ALSA PCMs
+	CapturePCM 0
+	PlaybackPCM 0
+	ACDBID	0:0
+
+EndSection
+
+SectionModifier
+	Name "Play LPAPROXY Tx"
+
+	EnableSequence
+	EndSequence
+
+	DisableSequence
+	EndSequence
+
+	# ALSA PCMs
+	CapturePCM 0
+	PlaybackPCM 0
+	ACDBID	0:0
+
+EndSection
+
+SectionModifier
+	Name "Play FMPROXY Tx"
+
+	EnableSequence
+	EndSequence
+
+	DisableSequence
+	EndSequence
+
+	# ALSA PCMs
+	CapturePCM 0
+	PlaybackPCM 0
+	ACDBID	0:0
+
+EndSection
+
+SectionModifier
+	Name "Capture MusicPROXY Rx"
+
+	EnableSequence
+	EndSequence
+
+	DisableSequence
+	EndSequence
+
+	# ALSA PCMs
+	CapturePCM 0
+	PlaybackPCM 0
+	ACDBID	0:0
 
 EndSection

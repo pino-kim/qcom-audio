@@ -717,15 +717,23 @@ int mixer_ctl_select(struct mixer_ctl *ctl, const char *value)
 {
     unsigned n, max;
     struct snd_ctl_elem_value ev;
+    unsigned int  input_str_len, str_len;
 
     if (ctl->info->type != SNDRV_CTL_ELEM_TYPE_ENUMERATED) {
         errno = EINVAL;
         return -1;
     }
 
+    input_str_len =  strnlen(value,64);
+
     max = ctl->info->value.enumerated.items;
     for (n = 0; n < max; n++) {
-        if (!strncmp(value, ctl->ename[n], strnlen(ctl->ename[n],64))) {
+
+        str_len = strnlen(ctl->ename[n], 64);
+        if (str_len < input_str_len)
+            str_len = input_str_len;
+
+        if (!strncmp(value, ctl->ename[n], str_len)) {
             memset(&ev, 0, sizeof(ev));
             ev.value.enumerated.item[0] = n;
             ev.id.numid = ctl->info->id.numid;

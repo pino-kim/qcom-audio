@@ -537,20 +537,16 @@ SectionDevice
 	Comment "Handset Tx device"
 
 	EnableSequence
-		'DAC1 MUX':0:RX1
-		'SLIM_0_RX Channels':0:One
-		'RX1 MIX1 INP1':0:RX1
-		'EAR PA Gain':0:POS_2_DB
-		'DAC1 Switch':1:1
-		'RX1 Digital Volume':1:66
+		'SLIM_0_TX Channels':0:One
+		'SLIM TX1 MUX':0:DEC1
+		'DEC1 MUX':0:DMIC1
+		'MICBIAS1 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
-		'DAC1 MUX':0:ZERO
-		'RX1 MIX1 INP1':0:ZERO
-		'EAR PA Gain':0:POS_6_DB
-		'DAC1 Switch':1:0
-		'RX1 Digital Volume':1:0
+		'SLIM TX1 MUX':0:ZERO
+		'DEC1 MUX':0:ZERO
+		'MICBIAS1 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID	4:2
@@ -587,20 +583,16 @@ SectionDevice
 	Comment "Speaker Tx device"
 
 	EnableSequence
-		'DAC1 MUX':0:RX1
-		'SLIM_0_RX Channels':0:One
-		'RX1 MIX1 INP1':0:RX1
-		'EAR PA Gain':0:POS_2_DB
-		'DAC1 Switch':1:1
-		'RX1 Digital Volume':1:66
+		'SLIM_0_TX Channels':0:One
+		'SLIM TX1 MUX':0:DEC1
+		'DEC1 MUX':0:DMIC1
+		'MICBIAS1 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
-		'DAC1 MUX':0:ZERO
-		'RX1 MIX1 INP1':0:ZERO
-		'EAR PA Gain':0:POS_6_DB
-		'DAC1 Switch':1:0
-		'RX1 Digital Volume':1:0
+		'SLIM TX1 MUX':0:ZERO
+		'DEC1 MUX':0:ZERO
+		'MICBIAS1 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID	4:2

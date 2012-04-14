@@ -150,11 +150,11 @@ static int set_params(struct pcm *pcm)
         return -errno;
     }
     if (debug) {
-       fprintf (stderr,"sparams->avail_min= %d\n", sparams->avail_min);
-       fprintf (stderr," sparams->start_threshold= %d\n", sparams->start_threshold);
-       fprintf (stderr," sparams->stop_threshold= %d\n", sparams->stop_threshold);
-       fprintf (stderr," sparams->xfer_align= %d\n", sparams->xfer_align);
-       fprintf (stderr," sparams->boundary= %d\n", sparams->boundary);
+       fprintf (stderr,"sparams->avail_min= %lu\n", sparams->avail_min);
+       fprintf (stderr," sparams->start_threshold= %lu\n", sparams->start_threshold);
+       fprintf (stderr," sparams->stop_threshold= %lu\n", sparams->stop_threshold);
+       fprintf (stderr," sparams->xfer_align= %lu\n", sparams->xfer_align);
+       fprintf (stderr," sparams->boundary= %lu\n", sparams->boundary);
     }
     return 0;
 }

@@ -509,7 +509,7 @@ int mixer_ctl_mulvalues(struct mixer_ctl *ctl, int count, char ** argv)
     case SNDRV_CTL_ELEM_TYPE_INTEGER64: {
         for (n = 0; n < ctl->info->count; n++) {
              long long value_ll = scale_int64(ctl->info, atoi(argv[n]));
-             fprintf( stderr, "ll_value = %d\n", value_ll);
+             fprintf( stderr, "ll_value = %lld\n", value_ll);
              ev.value.integer64.value[n] = value_ll;
         }
         break;

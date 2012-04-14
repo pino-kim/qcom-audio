@@ -28,7 +28,7 @@ struct pcm {
     unsigned channels;
     unsigned flags;
     unsigned format;
-    int running:1;
+    unsigned running:1;
     int underruns;
     unsigned buffer_size;
     unsigned period_size;

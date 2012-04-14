@@ -202,6 +202,7 @@ static card_mapping_t card_mapping_list[] = {
 #define SND_USE_CASE_DEV_SPEAKER_DUAL_MIC_BROADSIDE "Speaker DMIC Broadside"
 #define SND_USE_CASE_DEV_SPEAKER_DUAL_MIC_ENDFIRE "Speaker DMIC Endfire"
 #define SND_USE_CASE_DEV_HDMI_TX             "HDMI Tx"
+#define SND_USE_CASE_DEV_HDMI_SPDIF          "HDMI SPDIF"
 #define SND_USE_CASE_DEV_QUAD_MIC "QMIC"
 #define SND_USE_CASE_DEV_PROXY_RX     "PROXY Rx"
 #define SND_USE_CASE_DEV_PROXY_TX     "PROXY Tx"

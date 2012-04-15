@@ -141,8 +141,6 @@ struct snd_use_case_mgr {
     char **current_modifier_list;
     int current_tx_device;
     int current_rx_device;
-    int tx_acdb_id;
-    int rx_acdb_id;
     card_ctxt_t *card_ctxt_ptr;
     pthread_t thr;
 };

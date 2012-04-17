@@ -113,6 +113,7 @@ typedef struct card_mctrl {
     char *capture_dev_name;
     int acdb_id;
     int capability;
+    char *effects_mixer_ctl;
 }card_mctrl_t;
 
 /* identifier node structure for identifier list*/
@@ -274,6 +275,7 @@ static int snd_ucm_parse(snd_use_case_mgr_t **uc_mgr);
 static int snd_ucm_parse_section(snd_use_case_mgr_t **uc_mgr, char **cur_str, char **nxt_str, int verb_index, int ctrl_list_type);
 static int snd_ucm_extract_name(char *buf, char **case_name);
 static int snd_ucm_extract_acdb(char *buf, int *id, int *cap);
+static int snd_ucm_extract_effects_mixer_ctl(char *buf, char **mixer_name);
 static int snd_ucm_extract_dev_name(char *buf, char **dev_name);
 static int snd_ucm_extract_controls(char *buf, mixer_control_t **mixer_list, int count);
 static int snd_ucm_print(snd_use_case_mgr_t *uc_mgr);

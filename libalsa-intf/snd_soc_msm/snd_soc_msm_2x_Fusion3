@@ -911,6 +911,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	7:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -933,6 +934,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	37:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -962,6 +964,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	30:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1001,6 +1004,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	15:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1036,6 +1040,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	10:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1091,6 +1096,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	10:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1164,6 +1170,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	26:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1217,6 +1224,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	26:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1256,6 +1264,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	15:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1281,6 +1290,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	8:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1308,6 +1318,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	4:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1331,6 +1342,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	36:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1356,6 +1368,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	4:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1377,6 +1390,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	36:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1398,6 +1412,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	4:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1434,6 +1449,7 @@ SectionDevice
         EndSequence
 
         ACDBID  19:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1463,6 +1479,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	5:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1494,6 +1511,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	6:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1519,6 +1537,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	12:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1546,6 +1565,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	13:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1571,6 +1591,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	17:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1594,6 +1615,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	16:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1619,6 +1641,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	17:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1640,6 +1663,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	16:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1654,6 +1678,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	22:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1668,6 +1693,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	21:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1682,6 +1708,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	39:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1696,6 +1723,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	38:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1710,6 +1738,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	18:1
+	EffectsMixerCTL "SRS TruMedia HDMI"
 
 EndSection
 
@@ -1725,6 +1754,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	0:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1739,6 +1769,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	0:1
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1753,6 +1784,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	0:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1790,6 +1822,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID  46:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 
@@ -1804,6 +1837,7 @@ SectionDevice
 	EndSequence
 
 	ACDBID	0:2
+	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
 

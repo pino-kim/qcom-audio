@@ -410,6 +410,42 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
                     ret = -ENODEV;
                 }
             }
+        } else if (!strncmp(ident1, "EffectsMixerCTL", 11)) {
+            ident2 = strtok_r(NULL, "/", &temp_ptr);
+            index = 0; verb_index = 0;
+            verb_list = uc_mgr->card_ctxt_ptr->use_case_verb_list;
+            if((verb_index < 0) ||
+               (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
+                SND_UCM_END_OF_LIST, 3)) ||
+                (verb_list[verb_index].verb_ctrls == NULL)) {
+                LOGE("Invalid current verb value: %s - %d",
+                     uc_mgr->card_ctxt_ptr->current_verb, verb_index);
+                pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
+                return -EINVAL;
+            }
+            ctrl_list = verb_list[verb_index].device_ctrls;
+            if (ident2 != NULL) {
+                while(strncmp(ctrl_list[index].case_name, ident2, strlen(ident2)+1)) {
+                    if (!strncmp(ctrl_list[index].case_name, SND_UCM_END_OF_LIST,
+                        strlen(SND_UCM_END_OF_LIST))){
+                        ret = -EINVAL;
+                        break;
+                    } else {
+                        index++;
+                    }
+                }
+            }
+            if (ret < 0) {
+                LOGE("No valid device/modifier found with given identifier: %s",
+                      ident2);
+            } else {
+                if (verb_list[verb_index].device_ctrls[index].effects_mixer_ctl) {
+                    *value = strdup(verb_list[verb_index].device_ctrls[index].effects_mixer_ctl);
+                } else {
+                    *value = NULL;
+                    ret = -ENODEV;
+                }
+            }
         } else {
             LOGE("Unsupported identifier value: %s", ident1);
             *value = NULL;
@@ -3101,6 +3137,7 @@ char **nxt_str, int verb_index, int ctrl_list_type)
     list->capture_dev_name = NULL;
     list->acdb_id = 0;
     list->capability = 0;
+    list->effects_mixer_ctl = NULL;
     current_str = *cur_str; next_str = *nxt_str;
     while(strncasecmp(current_str, "EndSection", 10)) {
         current_str = next_str;
@@ -3153,6 +3190,12 @@ char **nxt_str, int verb_index, int ctrl_list_type)
                 break;
             LOGV("ACDB ID: %d CAPABILITY: %d\n", list->acdb_id,
                 list->capability);
+        } else if (strcasestr(current_str, "EffectsMixerCTL") != NULL) {
+            ret = snd_ucm_extract_effects_mixer_ctl(current_str,
+                      &list->effects_mixer_ctl);
+            if (ret < 0)
+                break;
+            LOGV("Effects mixer ctl: %s: %d\n", list->effects_mixer_ctl);
         }
         if (strcasestr(current_str, "EnableSequence") != NULL) {
             controls_count = get_controls_count(next_str);
@@ -3261,6 +3304,31 @@ static int snd_ucm_extract_acdb(char *buf, int *id, int *cap)
         }
     }
     return 0;
+}
+
+/* Extract Effects Mixer ID of device from config file
+ * Returns 0 on sucess, negative error code otherwise
+ */
+static int snd_ucm_extract_effects_mixer_ctl(char *buf, char **mixer_name)
+{
+    int ret = 0;
+    char *p, *name = *mixer_name, *temp_ptr;
+
+    p = strtok_r(buf, "\"", &temp_ptr);
+    while (p != NULL) {
+        p = strtok_r(NULL, "\"", &temp_ptr);
+        if (p == NULL)
+            break;
+        name = (char *)malloc((strlen(p)+1)*sizeof(char));
+        if(name == NULL) {
+            ret = -ENOMEM;
+            break;
+        }
+        strlcpy(name, p, (strlen(p)+1)*sizeof(char));
+        *mixer_name = name;
+        break;
+    }
+    return ret;
 }
 
 /* Extract a playback and capture device name of use case from config file

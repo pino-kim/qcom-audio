@@ -1107,8 +1107,14 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
         ret = snd_use_case_set_device_for_all_ident(uc_mgr, value, 1);
     } else if (!strncmp(identifier, "_disdev", 7)) {
         ret = snd_ucm_get_status_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, value);
-        if ((ret < 0) || (ret == 0)) {
-            LOGD("disdev: device %s not enabled or not active, no need to disable", value);
+        if (ret < 0) {
+            LOGD("disdev: device %s not enabled, no need to disable", value);
+        } else if (ret == 0) {
+            LOGV("disdev: device %s not active, remove from the list", value);
+            ret = snd_ucm_del_ident_from_list(&uc_mgr->card_ctxt_ptr->dev_list_head, value);
+            if (ret < 0) {
+                LOGE("Invalid device: Device not part of enabled device list");
+            }
         } else {
             ret = snd_ucm_del_ident_from_list(&uc_mgr->card_ctxt_ptr->dev_list_head, value);
             if (ret < 0) {
@@ -1281,8 +1287,14 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
         ret = snd_use_case_set_device_for_ident(uc_mgr, value, usecase, 1);
     } else if (!strncmp(identifier, "_disdev", 7)) {
         ret = snd_ucm_get_status_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, value);
-        if ((ret < 0) || (ret == 0)) {
-            LOGD("disdev: device %s not enabled or not active, no need to disable", value);
+        if (ret < 0) {
+            LOGD("disdev: device %s not enabled, no need to disable", value);
+        } else if (ret == 0) {
+            LOGV("disdev: device %s not active, remove from the list", value);
+            ret = snd_ucm_del_ident_from_list(&uc_mgr->card_ctxt_ptr->dev_list_head, value);
+            if (ret < 0) {
+                LOGE("Invalid device: Device not part of enabled device list");
+            }
         } else {
             ret = snd_ucm_del_ident_from_list(&uc_mgr->card_ctxt_ptr->dev_list_head, value);
             if (ret < 0) {

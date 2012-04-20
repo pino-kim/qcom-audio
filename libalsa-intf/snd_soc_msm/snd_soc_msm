@@ -1399,6 +1399,25 @@ SectionVerb
 EndSection
 
 SectionVerb
+        Name "HiFi TunnelHDMI SPDIF"
+
+        EnableSequence
+                'HDMI Mixer MultiMedia4':1:1
+		'SEC_RX Audio Mixer MultiMedia4':1:1
+        EndSequence
+
+        DisableSequence
+                'HDMI Mixer MultiMedia4':1:0
+		'SEC_RX Audio Mixer MultiMedia4':1:0
+        EndSequence
+
+        # ALSA PCMs
+        PlaybackPCM 9
+        ACDBID 0:0
+
+EndSection
+
+SectionVerb
 	Name "HiFi TunnelBT SCO Rx"
 
 	EnableSequence
@@ -3576,6 +3595,25 @@ SectionModifier
 	# ALSA PCMs
 	PlaybackPCM 9
 	ACDBID 0:0
+
+EndSection
+
+SectionModifier
+        Name "Play TunnelHDMI SPDIF"
+
+        EnableSequence
+                'HDMI Mixer MultiMedia4':1:1
+		'SEC_RX Audio Mixer MultiMedia4':1:1
+        EndSequence
+
+        DisableSequence
+                'HDMI Mixer MultiMedia4':1:0
+		'SEC_RX Audio Mixer MultiMedia4':1:0
+        EndSequence
+
+        # ALSA PCMs
+        PlaybackPCM 9
+        ACDBID 0:0
 
 EndSection
 

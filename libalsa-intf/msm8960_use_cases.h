@@ -81,6 +81,13 @@ extern "C" {
 /* Maximum string length of use case or device */
 #define MAX_STR_LEN 50
 
+/* Mixer control list type enum*/
+enum {
+    CTRL_LIST_VERB,
+    CTRL_LIST_DEVICE,
+    CTRL_LIST_MODIFIER,
+};
+
 /* mixer control structure */
 typedef struct mixer_control {
     char *control_name;
@@ -116,8 +123,12 @@ typedef struct use_case_verb {
     char *use_case_name;
     char **device_list;
     char **modifier_list;
-    int use_case_count;
-    card_mctrl_t *card_ctrl;
+    int verb_count;
+    int device_count;
+    int mod_count;
+    card_mctrl_t *verb_ctrls;
+    card_mctrl_t *device_ctrls;
+    card_mctrl_t *mod_ctrls;
 }use_case_verb_t;
 
 /* SND card context structure */
@@ -241,9 +252,10 @@ static int get_verb_count(const char *nxt_str);
 int snd_use_case_mgr_wait_for_parsing(snd_use_case_mgr_t *uc_mgr);
 int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr, const char *identifier,
                           const char *value, const char *usecase);
+static int get_usecase_type(snd_use_case_mgr_t *uc_mgr, const char *usecase);
 /* Parse functions */
 static int snd_ucm_parse(snd_use_case_mgr_t **uc_mgr);
-static int snd_ucm_parse_section(snd_use_case_mgr_t **uc_mgr, char **cur_str, char **nxt_str, int verb_index);
+static int snd_ucm_parse_section(snd_use_case_mgr_t **uc_mgr, char **cur_str, char **nxt_str, int verb_index, int ctrl_list_type);
 static int snd_ucm_extract_name(char *buf, char **case_name);
 static int snd_ucm_extract_acdb(char *buf, int *id, int *cap);
 static int snd_ucm_extract_dev_name(char *buf, char **dev_name);

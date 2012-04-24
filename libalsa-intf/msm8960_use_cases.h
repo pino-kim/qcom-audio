@@ -254,6 +254,11 @@ int snd_use_case_mgr_wait_for_parsing(snd_use_case_mgr_t *uc_mgr);
 int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr, const char *identifier,
                           const char *value, const char *usecase);
 static int get_usecase_type(snd_use_case_mgr_t *uc_mgr, const char *usecase);
+static int parse_single_config_format(snd_use_case_mgr_t **uc_mgr, char *current_str, int num_verbs);
+static int get_num_verbs_config_format(const char *nxt_str);
+static int get_num_device_config_format(const char *nxt_str);
+static int get_num_mod_config_format(const char *nxt_str);
+static int is_single_config_format(const char *nxt_str);
 /* Parse functions */
 static int snd_ucm_parse(snd_use_case_mgr_t **uc_mgr);
 static int snd_ucm_parse_section(snd_use_case_mgr_t **uc_mgr, char **cur_str, char **nxt_str, int verb_index, int ctrl_list_type);

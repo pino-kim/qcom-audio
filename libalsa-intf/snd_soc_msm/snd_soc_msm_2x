@@ -1626,6 +1626,86 @@ SectionVerb
 
 EndSection
 }
+SectionUseCase."MI2S" {
+Comment "MI2S use case"
+
+SectionVerb
+        Name "MI2S"
+
+        EnableSequence
+                'SLIMBUS_0_RX Port Mixer MI2S_TX':1:1
+        EndSequence
+
+        DisableSequence
+                'SLIMBUS_0_RX Port Mixer MI2S_TX':1:0
+        EndSequence
+
+        # ALSA PCMs
+        CapturePCM 11
+        PlaybackPCM 5
+        ACDBID 0:0
+
+EndSection
+
+SectionVerb
+        Name "MI2SSpeaker"
+
+        EnableSequence
+                'SLIMBUS_0_RX Audio Mixer MultiMedia1':1:1
+                'SLIMBUS_DL_HL Switch':1:1
+                'SLIMBUS_0_RX Port Mixer MI2S_TX':1:1
+        EndSequence
+
+        DisableSequence
+                'SLIMBUS_0_RX Audio Mixer MultiMedia1':1:0
+                'SLIMBUS_DL_HL Switch':1:0
+                'SLIMBUS_0_RX Port Mixer MI2S_TX':1:0
+        EndSequence
+
+        # ALSA PCMs
+        CapturePCM 11
+        PlaybackPCM 5
+        ACDBID 0:0
+
+EndSection
+
+SectionVerb
+        Name "MI2SHDMI"
+
+        EnableSequence
+                'HDMI_RX Port Mixer MI2S_TX':1:1
+        EndSequence
+
+        DisableSequence
+                'HDMI_RX Port Mixer MI2S_TX':1:0
+        EndSequence
+
+        # ALSA PCMs
+        CapturePCM 11
+        PlaybackPCM 12
+        ACDBID 0:0
+
+EndSection
+
+SectionVerb
+        Name "MI2SSPDIF"
+
+        EnableSequence
+                'SEC_I2S_RX Port Mixer MI2S_TX':1:1
+        EndSequence
+
+        DisableSequence
+                'SEC_I2S_RX Port Mixer MI2S_TX':1:0
+        EndSequence
+
+        # ALSA PCMs
+        CapturePCM 11
+        PlaybackPCM 13
+        ACDBID 0:0
+
+EndSection
+
+}
 SectionDevice
 	Name "Earpiece"
 	Comment "Handset Rx device"
@@ -4242,4 +4322,81 @@ SectionModifier
 	ACDBID 0:0
 
 EndSection
+
+SectionModifier
+        Name "Play MI2S"
+
+        EnableSequence
+                'SLIMBUS_0_RX Port Mixer MI2S_TX':1:1
+        EndSequence
+
+        DisableSequence
+                'SLIMBUS_0_RX Port Mixer MI2S_TX':1:0
+        EndSequence
+
+        # ALSA PCMs
+        CapturePCM 11
+        PlaybackPCM 5
+        ACDBID 0:0
+
+EndSection
+
+SectionModifier
+        Name "Play MI2SSpeaker"
+
+        EnableSequence
+		'SLIMBUS_0_RX Audio Mixer MultiMedia1':1:1
+		'SLIMBUS_DL_HL Switch':1:1
+		'SLIMBUS_0_RX Port Mixer MI2S_TX':1:1
+        EndSequence
+
+        DisableSequence
+		'SLIMBUS_0_RX Audio Mixer MultiMedia1':1:0
+		'SLIMBUS_DL_HL Switch':1:0
+		'SLIMBUS_0_RX Port Mixer MI2S_TX':1:0
+        EndSequence
+
+        # ALSA PCMs
+        CapturePCM 11
+        PlaybackPCM 5
+        ACDBID 0:0
+
+EndSection
+
+SectionModifier
+        Name "Play MI2SHDMI"
+
+        EnableSequence
+                'HDMI_RX Port Mixer MI2S_TX':1:1
+        EndSequence
+
+        DisableSequence
+                'HDMI_RX Port Mixer MI2S_TX':1:0
+        EndSequence
+
+        # ALSA PCMs
+        CapturePCM 11
+        PlaybackPCM 12
+        ACDBID 0:0
+
+EndSection
+
+SectionModifier
+        Name "Play MI2SSPDIF"
+
+        EnableSequence
+                'SEC_I2S_RX Port Mixer MI2S_TX':1:1
+        EndSequence
+
+        DisableSequence
+                'SEC_I2S_RX Port Mixer MI2S_TX':1:0
+        EndSequence
+
+        # ALSA PCMs
+        CapturePCM 11
+        PlaybackPCM 13
+        ACDBID 0:0
+
+EndSection
+
 # End of master file

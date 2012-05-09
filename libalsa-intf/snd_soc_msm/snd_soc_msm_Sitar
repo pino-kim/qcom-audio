@@ -729,6 +729,147 @@ SectionVerb
 
 EndSection
 }
+SectionUseCase."HiFi Tunnel" {
+Comment "Tunnel use case"
+SectionVerb
+	Name "HiFi Tunnel"
+
+	EnableSequence
+		'SLIMBUS_0_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'SLIMBUS_0_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionVerb
+	Name "HiFi TunnelFM Tx"
+
+	EnableSequence
+		'SLIMBUS_0_RX Audio Mixer MultiMedia4':1:1
+		'INTERNAL_FM_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'SLIMBUS_0_RX Audio Mixer MultiMedia4':1:0
+		'INTERNAL_FM_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionVerb
+	Name "HiFi TunnelFM Tx"
+
+	EnableSequence
+		'INTERNAL_FM_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'INTERNAL_FM_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionVerb
+	Name "HiFi TunnelHDMI"
+
+	EnableSequence
+		'HDMI Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'HDMI Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionVerb
+	Name "HiFi TunnelBT SCO Rx"
+
+	EnableSequence
+		'"INTERNAL_BT_SCO_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'"INTERNAL_BT_SCO_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionVerb
+	Name "HiFi TunnelBT SCO WB Rx"
+
+	EnableSequence
+		'"INTERNAL_BT_SCO_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'"INTERNAL_BT_SCO_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionVerb
+	Name "HiFi TunnelPROXY Rx"
+
+	EnableSequence
+		'AFE_PCM_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'AFE_PCM_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	CapturePCM 0
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionVerb
+        Name "HiFi TunnelPROXY Tx"
+
+        EnableSequence
+        EndSequence
+
+        DisableSequence
+        EndSequence
+
+        # ALSA PCMs
+        CapturePCM 0
+        PlaybackPCM 9
+        ACDBID 0:0
+
+EndSection
+}
+
 SectionDevice
 	Name "Earpiece"
 	Comment "Handset Rx device"
@@ -2218,6 +2359,127 @@ SectionModifier
 	# ALSA PCMs
 	CapturePCM 0
 	PlaybackPCM 0
+
+EndSection
+
+SectionModifier
+	Name "Play Tunnel"
+
+	EnableSequence
+		'SLIMBUS_0_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'SLIMBUS_0_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionModifier
+	Name "Play TunnelSpeaker FM Tx"
+
+	EnableSequence
+		'SLIMBUS_0_RX Audio Mixer MultiMedia4':1:1
+		'INTERNAL_FM_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'SLIMBUS_0_RX Audio Mixer MultiMedia4':1:0
+		'INTERNAL_FM_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionModifier
+	Name "Play TunnelFM Tx"
+
+	EnableSequence
+		'INTERNAL_FM_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'INTERNAL_FM_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionModifier
+	Name "Play TunnelHDMI"
+
+	EnableSequence
+		'HDMI Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'HDMI Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionModifier
+	Name "Play TunnelBT SCO Rx"
+
+	EnableSequence
+		'"INTERNAL_BT_SCO_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'"INTERNAL_BT_SCO_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionModifier
+	Name "Play TunnelBT SCO WB Rx"
+
+	EnableSequence
+		'"INTERNAL_BT_SCO_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'"INTERNAL_BT_SCO_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
+
+EndSection
+
+SectionModifier
+	Name "Play TunnelPROXY Rx"
+
+	EnableSequence
+		'AFE_PCM_RX Audio Mixer MultiMedia4':1:1
+	EndSequence
+
+	DisableSequence
+		'AFE_PCM_RX Audio Mixer MultiMedia4':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 9
+	ACDBID 0:0
 
 EndSection
 # End of master file

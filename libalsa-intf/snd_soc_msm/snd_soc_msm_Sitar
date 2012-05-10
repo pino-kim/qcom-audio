@@ -950,22 +950,21 @@ SectionDevice
 	Comment "Speaker Rx device"
 
 	EnableSequence
-		'DAC1 MUX':0:RX1
+		'DAC3 MUX':0:INV_RX1
+		'DAC2 MUX':0:RX1
+		'LINEOUT1 Volume':1:100
+		'LINEOUT2 Volume':1:100
 		'SLIM_0_RX Channels':0:One
 		'RX1 MIX1 INP1':0:RX1
-		'EAR PA Gain':0:POS_2_DB
-		'DAC1 Switch':1:1
-		'RX1 Digital Volume':1:66
+		'RX1 Digital Volume':1:100
 	EndSequence
 
 	DisableSequence
-		'DAC1 MUX':0:ZERO
 		'RX1 MIX1 INP1':0:ZERO
-		'EAR PA Gain':0:POS_6_DB
-		'DAC1 Switch':1:0
+		'DAC3 MUX':0:ZERO
+		'DAC2 MUX':0:ZERO
 		'RX1 Digital Volume':1:0
 	EndSequence
-
 	ACDBID	15:1
 
 EndSection

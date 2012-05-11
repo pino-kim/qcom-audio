@@ -875,20 +875,20 @@ SectionDevice
 	Comment "Headset Rx device"
 
 	EnableSequence
-		'DAC1 MUX':0:RX1
-		'SLIM_0_RX Channels':0:One
-		'RX1 MIX1 INP1':0:RX1
-		'EAR PA Gain':0:POS_2_DB
-		'DAC1 Switch':1:1
-		'RX1 Digital Volume':1:66
+		'SLIM_0_RX Channels':0:Two
+		'RX2 MIX1 INP1':0:RX1
+		'RX3 MIX1 INP1':0:RX2
+		'DAC4 MUX':0:ON
+		'HPHL Volume':1:80
+		'HPHR Volume':1:80
 	EndSequence
 
 	DisableSequence
-		'DAC1 MUX':0:ZERO
-		'RX1 MIX1 INP1':0:ZERO
-		'EAR PA Gain':0:POS_6_DB
-		'DAC1 Switch':1:0
-		'RX1 Digital Volume':1:0
+		'RX2 MIX1 INP1':0:ZERO
+		'RX3 MIX1 INP1':0:ZERO
+		'DAC4 MUX':0:ZERO
+		'HPHL Volume':1:0
+		'HPHR Volume':1:0
 	EndSequence
 
 	ACDBID	10:1
@@ -1000,20 +1000,18 @@ SectionDevice
 	Comment "Headset Tx device"
 
 	EnableSequence
-		'DAC1 MUX':0:RX1
-		'SLIM_0_RX Channels':0:One
-		'RX1 MIX1 INP1':0:RX1
-		'EAR PA Gain':0:POS_2_DB
-		'DAC1 Switch':1:1
-		'RX1 Digital Volume':1:66
+		'SLIM_0_TX Channels':0:One
+		'SLIM TX1 MUX':0:DEC1
+		'DEC1 MUX':0:ADC2
+		'ADC2 Volume':1:100
+		'MICBIAS2 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
-		'DAC1 MUX':0:ZERO
-		'RX1 MIX1 INP1':0:ZERO
-		'EAR PA Gain':0:POS_6_DB
-		'DAC1 Switch':1:0
-		'RX1 Digital Volume':1:0
+		'SLIM TX1 MUX':0:ZERO
+		'DEC1 MUX':0:ZERO
+		'ADC2 Volume':1:0
+		'MICBIAS2 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID	8:2

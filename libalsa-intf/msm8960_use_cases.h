@@ -84,6 +84,9 @@ extern "C" {
 /* Maximum string length of use case or device */
 #define MAX_STR_LEN 50
 
+/* Returns maximum length of strings x and y */
+#define MAX_LEN(x,y) ((strlen(x)>strlen(y))?strlen(x):strlen(y))
+
 /* Mixer control list type enum*/
 enum {
     CTRL_LIST_VERB,

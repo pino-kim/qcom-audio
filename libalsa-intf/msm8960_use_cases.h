@@ -37,7 +37,6 @@ extern "C" {
 #include "alsa_audio.h"
 #include <pthread.h>
 #define SND_UCM_END_OF_LIST "end"
-#define CONFIG_DIR "/system/etc/snd_soc_msm/"
 
 /* ACDB Device ID macros */
 #define CAP_RX 0x1

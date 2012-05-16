@@ -348,6 +348,7 @@ SectionVerb
 	EnableSequence
 		'STUB_RX Mixer Voice Stub':1:1
 		'Voice Stub Tx Mixer STUB_TX_HL':1:1
+		'Voice Stub Tx Mixer STUB_1_TX_HL':1:1
 		'IIR1 Band1':2:0x10000000 0x0 0x0 0x0 0x0
 		'IIR1 Band2':2:0x10000000 0x0 0x0 0x0 0x0
 		'IIR1 Band3':2:0x10000000 0x0 0x0 0x0 0x0
@@ -365,6 +366,7 @@ SectionVerb
 	DisableSequence
 		'STUB_RX Mixer Voice Stub':1:0
 		'Voice Stub Tx Mixer STUB_TX_HL':1:0
+		'Voice Stub Tx Mixer STUB_1_TX_HL':1:0
 		'IIR1 Enable Band1':1:0
 		'IIR1 Enable Band2':1:0
 		'IIR1 Enable Band3':1:0
@@ -429,6 +431,8 @@ SectionVerb
 		'INTERNAL_BT_SCO_RX_Voice Mixer Voice Stub':1:0
 		'SLIMBUS_1_RX Port Mixer INTERNAL_BT_SCO_TX':1:0
 		'INTERNAL_BT_SCO_RX Port Mixer SLIM_1_TX':1:0
+		'SLIMBUS_3_RX_Voice Mixer Voice Stub':1:0
+		'SLIMBUS_3_RX Port Mixer INTERNAL_BT_SCO_RX':1:0
 	EndSequence
 
 	# ALSA PCMs
@@ -448,6 +452,9 @@ SectionVerb
 		'INTERNAL_BT_SCO_RX_Voice Mixer Voice Stub':1:1
 		'SLIMBUS_1_RX Port Mixer INTERNAL_BT_SCO_TX':1:1
 		'INTERNAL_BT_SCO_RX Port Mixer SLIM_1_TX':1:1
+		'SLIM_3_RX Channels':0:One
+		'SLIMBUS_3_RX_Voice Mixer Voice Stub':1:1
+		'SLIMBUS_3_RX Port Mixer INTERNAL_BT_SCO_RX':1:1
 	EndSequence
 
 	DisableSequence
@@ -473,6 +480,8 @@ SectionVerb
 		'INTERNAL_BT_SCO_RX_Voice Mixer Voice Stub':1:0
 		'SLIMBUS_1_RX Port Mixer INTERNAL_BT_SCO_TX':1:0
 		'INTERNAL_BT_SCO_RX Port Mixer SLIM_1_TX':1:0
+		'SLIMBUS_3_RX_Voice Mixer Voice Stub':1:0
+		'SLIMBUS_3_RX Port Mixer INTERNAL_BT_SCO_RX':1:0
 	EndSequence
 
 	# ALSA PCMs
@@ -492,6 +501,9 @@ SectionVerb
 		'INTERNAL_BT_SCO_RX_Voice Mixer Voice Stub':1:1
 		'SLIMBUS_1_RX Port Mixer INTERNAL_BT_SCO_TX':1:1
 		'INTERNAL_BT_SCO_RX Port Mixer SLIM_1_TX':1:1
+		'SLIM_3_RX Channels':0:One
+		'SLIMBUS_3_RX_Voice Mixer Voice Stub':1:1
+		'SLIMBUS_3_RX Port Mixer INTERNAL_BT_SCO_RX':1:1
 	EndSequence
 
 	DisableSequence
@@ -771,12 +783,14 @@ SectionDevice
 		'RX1 MIX1 INP2':0:RX6
 		'EAR PA Gain':0:POS_2_DB
 		'DAC1 Switch':1:1
+		'SLIM TX3 MUX':0:RMIX1
 	EndSequence
 
 	DisableSequence
 		'RX1 MIX1 INP1':0:ZERO
 		'RX1 MIX1 INP2':0:ZERO
 		'DAC1 Switch':1:0
+		'SLIM TX3 MUX':0:ZERO
 	EndSequence
 
 	ACDBID	7:1
@@ -817,6 +831,7 @@ SectionDevice
 		'ANC Slot':1:1
 		'ANC1 MUX':0:DMIC1
 		'MICBIAS1 CAPLESS Switch':1:1
+		'SLIM TX3 MUX':0:RMIX1
 	EndSequence
 
 	DisableSequence
@@ -826,6 +841,7 @@ SectionDevice
 		'ANC Slot':1:0
 		'ANC1 MUX':0:ZERO
 		'MICBIAS1 CAPLESS Switch':1:0
+		'SLIM TX3 MUX':0:ZERO
 	EndSequence
 
 	ACDBID	30:1
@@ -848,6 +864,8 @@ SectionDevice
 		'LINEOUT2 Volume':1:66
 		'LINEOUT3 Volume':1:66
 		'LINEOUT4 Volume':1:66
+		'SLIM TX3 MUX':0:RMIX3
+		'SLIM TX5 MUX':0:RMIX5
 	EndSequence
 
 	DisableSequence
@@ -861,6 +879,8 @@ SectionDevice
 		'LINEOUT2 Volume':1:0
 		'LINEOUT3 Volume':1:0
 		'LINEOUT4 Volume':1:0
+		'SLIM TX3 MUX':0:ZERO
+		'SLIM TX5 MUX':0:ZERO
 	EndSequence
 
 	ACDBID	15:1
@@ -881,6 +901,8 @@ SectionDevice
 		'HPHR DAC Switch':1:1
 		'HPHL Volume':1:80
 		'HPHR Volume':1:80
+		'SLIM TX3 MUX':0:RMIX1
+		'SLIM TX5 MUX':0:RMIX2
 	EndSequence
 
 	DisableSequence
@@ -892,6 +914,8 @@ SectionDevice
 		'HPHR DAC Switch':1:0
 		'HPHL Volume':1:0
 		'HPHR Volume':1:0
+		'SLIM TX3 MUX':0:ZERO
+		'SLIM TX5 MUX':0:ZERO
 	EndSequence
 
 	ACDBID	10:1
@@ -922,6 +946,8 @@ SectionDevice
 		'HPHR DAC Switch':1:1
 		'HPHL Volume':1:80
 		'HPHR Volume':1:80
+		'SLIM TX3 MUX':0:RMIX1
+		'SLIM TX5 MUX':0:RMIX2
 	EndSequence
 
 	DisableSequence
@@ -943,6 +969,8 @@ SectionDevice
 		'HPHR DAC Switch':1:0
 		'HPHL Volume':1:0
 		'HPHR Volume':1:0
+		'SLIM TX3 MUX':0:ZERO
+		'SLIM TX5 MUX':0:ZERO
 	EndSequence
 
 	ACDBID	10:1
@@ -983,6 +1011,8 @@ SectionDevice
 		'ADC4 Volume':1:85
 		'MICBIAS3 CAPLESS Switch':1:1
 		'MICBIAS1 CAPLESS Switch':1:1
+		'SLIM TX3 MUX':0:RMIX1
+		'SLIM TX5 MUX':0:RMIX2
 	EndSequence
 
 	DisableSequence
@@ -1012,6 +1042,8 @@ SectionDevice
 		'ADC4 Volume':1:0
 		'MICBIAS3 CAPLESS Switch':1:0
 		'MICBIAS1 CAPLESS Switch':1:0
+		'SLIM TX3 MUX':0:ZERO
+		'SLIM TX5 MUX':0:ZERO
 	EndSequence
 
 	ACDBID	26:1
@@ -1042,6 +1074,8 @@ SectionDevice
 		'ADC4 Volume':1:85
 		'MICBIAS3 CAPLESS Switch':1:1
 		'MICBIAS1 CAPLESS Switch':1:1
+		'SLIM TX3 MUX':0:RMIX1
+		'SLIM TX5 MUX':0:RMIX2
 	EndSequence
 
 	DisableSequence
@@ -1061,6 +1095,8 @@ SectionDevice
 		'ADC4 Volume':1:0
 		'MICBIAS3 CAPLESS Switch':1:0
 		'MICBIAS1 CAPLESS Switch':1:0
+		'SLIM TX3 MUX':0:ZERO
+		'SLIM TX5 MUX':0:ZERO
 	EndSequence
 
 	ACDBID	26:1
@@ -1083,6 +1119,8 @@ SectionDevice
 		'LINEOUT2 Volume':1:66
 		'LINEOUT3 Volume':1:66
 		'LINEOUT4 Volume':1:66
+		'SLIM TX3 MUX':0:RMIX3
+		'SLIM TX5 MUX':0:RMIX5
 	EndSequence
 
 	DisableSequence
@@ -1096,6 +1134,8 @@ SectionDevice
 		'LINEOUT2 Volume':1:0
 		'LINEOUT3 Volume':1:0
 		'LINEOUT4 Volume':1:0
+		'SLIM TX3 MUX':0:ZERO
+		'SLIM TX5 MUX':0:ZERO
 	EndSequence
 
 	ACDBID	15:1
@@ -1957,6 +1997,7 @@ SectionModifier
 	EnableSequence
 		'STUB_RX Mixer Voice Stub':1:1
 		'Voice Stub Tx Mixer STUB_TX_HL':1:1
+		'Voice Stub Tx Mixer STUB_1_TX_HL':1:1
 		'IIR1 Band1':2:0x10000000 0x0 0x0 0x0 0x0
 		'IIR1 Band2':2:0x10000000 0x0 0x0 0x0 0x0
 		'IIR1 Band3':2:0x10000000 0x0 0x0 0x0 0x0
@@ -1974,6 +2015,7 @@ SectionModifier
 	DisableSequence
 		'STUB_RX Mixer Voice Stub':1:0
 		'Voice Stub Tx Mixer STUB_TX_HL':1:0
+		'Voice Stub Tx Mixer STUB_1_TX_HL':1:0
 		'RX1 MIX2 INP1':0:ZERO
 		'RX2 MIX2 INP1':0:ZERO
 		'IIR1 Enable Band1':1:0
@@ -2008,6 +2050,8 @@ SectionModifier
 		'INTERNAL_BT_SCO_RX_Voice Mixer Voice Stub':1:0
 		'SLIMBUS_1_RX Port Mixer INTERNAL_BT_SCO_TX':1:0
 		'INTERNAL_BT_SCO_RX Port Mixer SLIM_1_TX':1:0
+		'SLIMBUS_3_RX_Voice Mixer Voice Stub':1:0
+		'SLIMBUS_3_RX Port Mixer INTERNAL_BT_SCO_RX':1:0
 	EndSequence
 
 	# ALSA PCMs
@@ -2027,6 +2071,9 @@ SectionModifier
 		'INTERNAL_BT_SCO_RX_Voice Mixer Voice Stub':1:1
 		'SLIMBUS_1_RX Port Mixer INTERNAL_BT_SCO_TX':1:1
 		'INTERNAL_BT_SCO_RX Port Mixer SLIM_1_TX':1:1
+		'SLIM_3_RX Channels':0:One
+		'SLIMBUS_3_RX_Voice Mixer Voice Stub':1:1
+		'SLIMBUS_3_RX Port Mixer INTERNAL_BT_SCO_RX':1:1
 	EndSequence
 
 	DisableSequence
@@ -2052,6 +2099,8 @@ SectionModifier
 		'INTERNAL_BT_SCO_RX_Voice Mixer Voice Stub':1:0
 		'SLIMBUS_1_RX Port Mixer INTERNAL_BT_SCO_TX':1:0
 		'INTERNAL_BT_SCO_RX Port Mixer SLIM_1_TX':1:0
+		'SLIMBUS_3_RX_Voice Mixer Voice Stub':1:0
+		'SLIMBUS_3_RX Port Mixer INTERNAL_BT_SCO_RX':1:0
 	EndSequence
 
 	# ALSA PCMs
@@ -2071,6 +2120,9 @@ SectionModifier
 		'INTERNAL_BT_SCO_RX_Voice Mixer Voice Stub':1:1
 		'SLIMBUS_1_RX Port Mixer INTERNAL_BT_SCO_TX':1:1
 		'INTERNAL_BT_SCO_RX Port Mixer SLIM_1_TX':1:1
+		'SLIM_3_RX Channels':0:One
+		'SLIMBUS_3_RX_Voice Mixer Voice Stub':1:1
+		'SLIMBUS_3_RX Port Mixer INTERNAL_BT_SCO_RX':1:1
 	EndSequence
 
 	DisableSequence

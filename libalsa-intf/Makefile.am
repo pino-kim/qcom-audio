@@ -35,7 +35,7 @@ libalsa_intf_la_LDFLAGS = $(ACDBLOADER_LIBS) -lm -lpthread @GLIB_LIBS@ -shared -
 
 requiredlibs = libalsa_intf.la
 
-bin_PROGRAMS = aplay amix arec
+bin_PROGRAMS = aplay amix arec alsaucm_test
 
 aplay_SOURCES = aplay.c
 aplay_LDADD = -lpthread $(requiredlibs)
@@ -45,3 +45,6 @@ amix_LDADD = -lpthread $(requiredlibs)
 
 arec_SOURCES = arec.c
 arec_LDADD = -lpthread $(requiredlibs)
+
+alsaucm_test_SOURCES = alsaucm_test.c
+alsaucm_test_LDADD = -lpthread $(requiredlibs)

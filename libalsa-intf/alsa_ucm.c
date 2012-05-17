@@ -946,6 +946,17 @@ const char *ident, const char *device, int enable, int ctrl_list_type)
     LOGV("set_use_case_ident_for_device(): use case %s device %s", ident,
         device);
     if (device != NULL) {
+        if (enable) {
+            dev_index = get_use_case_index(uc_mgr, device, CTRL_LIST_DEVICE);
+            if (!snd_ucm_get_status_at_index(
+                uc_mgr->card_ctxt_ptr->dev_list_head, device)) {
+                ret = snd_use_case_apply_mixer_controls(uc_mgr, device,
+                         enable, CTRL_LIST_DEVICE, dev_index);
+                if (!ret)
+                    snd_ucm_set_status_at_index(
+                    uc_mgr->card_ctxt_ptr->dev_list_head, device, enable);
+            }
+        }
         strlcpy(use_case, ident, sizeof(use_case));
         strlcat(use_case, device, sizeof(use_case));
 	LOGV("Applying mixer controls for use case: %s", use_case);
@@ -958,17 +969,6 @@ const char *ident, const char *device, int enable, int ctrl_list_type)
                      ident);
             }
         } else {
-            if (enable) {
-                dev_index = get_use_case_index(uc_mgr, device, CTRL_LIST_DEVICE);
-                if (!snd_ucm_get_status_at_index(
-                    uc_mgr->card_ctxt_ptr->dev_list_head, device)) {
-                    ret = snd_use_case_apply_mixer_controls(uc_mgr, device,
-                              enable, CTRL_LIST_DEVICE, dev_index);
-                    if (!ret)
-                        snd_ucm_set_status_at_index(
-                        uc_mgr->card_ctxt_ptr->dev_list_head, device, enable);
-                }
-            }
             ret = snd_use_case_apply_mixer_controls(uc_mgr, use_case, enable,
                       ctrl_list_type, uc_index);
         }
@@ -1583,6 +1583,26 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
             if (strncmp(uc_mgr->card_ctxt_ptr->current_verb,
                 SND_USE_CASE_VERB_INACTIVE, MAX_STR_LEN)) {
                uc_mgr->card_ctxt_ptr->current_verb_index = index;
+               index = 0;
+               list_size =
+               snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->dev_list_head);
+               for (index = 0; index < list_size; index++) {
+                   if ((ident1 = snd_ucm_get_value_at_index(
+                       uc_mgr->card_ctxt_ptr->dev_list_head, index))) {
+                       if (!strncmp(ident1, usecase, MAX_STR_LEN)) {
+                           LOGV("Device already part of enabled list: %s",
+                               usecase);
+                           free(ident1);
+                           break;
+                       }
+                       free(ident1);
+                   }
+               }
+               if (index == list_size) {
+                   LOGV("enadev: device value to be enabled: %s", usecase);
+                   snd_ucm_add_ident_to_list(&uc_mgr->card_ctxt_ptr->dev_list_head,
+                        usecase);
+               }
                ret = set_controls_of_usecase_for_device(uc_mgr,
                          uc_mgr->card_ctxt_ptr->current_verb, usecase,
                          1, CTRL_LIST_VERB);
@@ -1674,6 +1694,26 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
             if (ret < 0) {
                 LOGE("Invalid modifier identifier value");
             } else {
+                index = 0;
+                list_size =
+                snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->dev_list_head);
+                for (index = 0; index < list_size; index++) {
+                    if ((ident1 = snd_ucm_get_value_at_index(
+                        uc_mgr->card_ctxt_ptr->dev_list_head, index))) {
+                        if (!strncmp(ident1, usecase, MAX_STR_LEN)) {
+                            LOGV("Device already part of enabled list: %s",
+                                usecase);
+                            free(ident1);
+                            break;
+                        }
+                        free(ident1);
+                    }
+                }
+                if (index == list_size) {
+                    LOGV("enadev: device value to be enabled: %s", usecase);
+                    snd_ucm_add_ident_to_list(&uc_mgr->card_ctxt_ptr->dev_list_head,
+                         usecase);
+                }
                 snd_ucm_add_ident_to_list(&uc_mgr->card_ctxt_ptr->mod_list_head,
                     value);
                 /* Enable the mixer controls for the new use case

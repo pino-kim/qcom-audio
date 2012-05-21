@@ -1724,7 +1724,7 @@ SectionDevice
 	DisableSequence
 	EndSequence
 
-	ACDBID	0:0
+	ACDBID	0:1
 
 EndSection
 
@@ -1738,7 +1738,21 @@ SectionDevice
 	DisableSequence
 	EndSequence
 
-	ACDBID	0:0
+	ACDBID	0:1
+
+EndSection
+
+SectionDevice
+	Name "PROXY Tx"
+	Comment "PROXY Tx device"
+
+	EnableSequence
+	EndSequence
+
+	DisableSequence
+	EndSequence
+
+	ACDBID	0:2
 
 EndSection
 

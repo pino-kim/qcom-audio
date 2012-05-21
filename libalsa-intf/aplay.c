@@ -504,6 +504,7 @@ int play_wav(const char *fg, int rate, int ch, const char *device, const char *f
         if (compressed) {
             hdr.sample_rate = rate;
             hdr.num_channels = ch;
+            hdr.data_sz = 0;
             goto ignore_header;
         }
 

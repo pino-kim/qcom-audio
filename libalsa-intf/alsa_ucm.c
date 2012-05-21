@@ -623,7 +623,11 @@ int use_case_index)
                 if(rx_id == DEVICE_SPEAKER_RX_ACDB_ID &&
                    tx_id == DEVICE_HANDSET_TX_ACDB_ID) {
                     tx_id = DEVICE_SPEAKER_TX_ACDB_ID;
+                } else if (rx_id == DEVICE_SPEAKER_RX_ACDB_ID &&
+                           tx_id == DEVICE_HANDSET_TX_FV5_ACDB_ID) {
+                    tx_id = DEVICE_SPEAKER_TX_FV5_ACDB_ID;
                 }
+
                 if ((rx_id != uc_mgr->current_rx_device) ||
                     (tx_id != uc_mgr->current_tx_device)) {
                     uc_mgr->current_rx_device = rx_id;

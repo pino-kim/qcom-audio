@@ -851,7 +851,7 @@ const char *ident, int enable, int ctrl_list_type)
     card_mctrl_t *dev_list, *uc_list;
     char *current_device, use_case[MAX_UC_LEN];
     int list_size, index, uc_index, ret = 0, intdev_flag = 0;
-    int verb_index, capability = 0;
+    int verb_index, capability = 0, ident_cap = 0;
 
     LOGV("set_use_case_ident_for_all_devices(): %s", ident);
     if ((verb_index = uc_mgr->card_ctxt_ptr->current_verb_index) < 0)
@@ -867,6 +867,7 @@ const char *ident, int enable, int ctrl_list_type)
     } else {
         uc_list = NULL;
     }
+    ident_cap = getUseCaseType(ident);
     list_size = snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->dev_list_head);
     for (index = 0; index < list_size; index++) {
         current_device =
@@ -892,6 +893,8 @@ const char *ident, int enable, int ctrl_list_type)
                               uc_mgr->card_ctxt_ptr->dev_list_head,
                               current_device, enable);
                     }
+                } else if (ident_cap == CAP_VOICE) {
+                    snd_use_case_apply_voice_acdb(uc_mgr, uc_index);
                 }
             }
             strlcpy(use_case, ident, sizeof(use_case));
@@ -902,9 +905,8 @@ const char *ident, int enable, int ctrl_list_type)
                 LOGV("No valid use case found: %s", use_case);
                 intdev_flag++;
             } else {
-                if (capability == CAP_VOICE ||
-                    getUseCaseType(ident) == CAP_VOICE ||
-                    capability == getUseCaseType(ident)) {
+                if (capability == CAP_VOICE || ident_cap == CAP_VOICE ||
+                    capability == ident_cap) {
                     ret = snd_use_case_apply_mixer_controls(uc_mgr, use_case,
                           enable, ctrl_list_type, uc_index);
                 }
@@ -917,9 +919,8 @@ const char *ident, int enable, int ctrl_list_type)
         if ((uc_index = get_use_case_index(uc_mgr, ident, ctrl_list_type)) < 0) {
             LOGE("use case %s not valid without device combination", ident);
         } else {
-            if (capability == CAP_VOICE ||
-                capability == getUseCaseType(ident) ||
-                getUseCaseType(ident) == CAP_VOICE) {
+            if (capability == CAP_VOICE || capability == ident_cap ||
+                ident_cap == CAP_VOICE) {
                 snd_use_case_apply_mixer_controls(uc_mgr, ident, enable,
                 ctrl_list_type, uc_index);
             }

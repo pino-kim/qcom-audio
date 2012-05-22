@@ -746,13 +746,13 @@ const char *use_case, int enable, int ctrl_list_type, int uc_index)
             LOGD("Set mixer controls for %s enable %d", use_case, enable);
             if (ctrl_list[uc_index].acdb_id && ctrl_list[uc_index].capability) {
                 if (enable) {
-                    if (snd_use_case_apply_voice_acdb(uc_mgr, uc_index)) {
-                        LOGD("acdb_id %d cap %d enable %d",
-                            ctrl_list[uc_index].acdb_id,
+                    snd_use_case_apply_voice_acdb(uc_mgr, uc_index);
+                    LOGD("acdb_id %d cap %d enable %d",
+                                        ctrl_list[uc_index].acdb_id,
                             ctrl_list[uc_index].capability, enable);
-                        acdb_loader_send_audio_cal(ctrl_list[uc_index].acdb_id,
+                    acdb_loader_send_audio_cal(
+                            ctrl_list[uc_index].acdb_id,
                             ctrl_list[uc_index].capability);
-                    }
                 }
             }
             if (enable) {

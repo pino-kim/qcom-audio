@@ -2703,6 +2703,20 @@ SectionDevice
 
 EndSection
 
+SectionDevice
+	Name "Dummy Tx"
+	Comment "Dummy Tx device, not a physical device just for routing"
+
+	EnableSequence
+	EndSequence
+
+	DisableSequence
+	EndSequence
+
+	ACDBID	0:2
+
+EndSection
+
 SectionModifier
 	Name "Play Music"
 	Comment "Modifier for music playback"

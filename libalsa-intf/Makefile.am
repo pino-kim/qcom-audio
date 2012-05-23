@@ -4,9 +4,11 @@ AM_CFLAGS = -Wundef \
         -g -O0 \
         -fno-inline \
         -fno-short-enums \
-        -fpic
+        -fpic \
+        -DQC_PROP
 
-AM_CPPFLAGS = -I.
+AM_CPPFLAGS = -I. \
+               $(ACDBLOADER_CFLAGS)
 
 c_sources = alsa_mixer.c \
             alsa_pcm.c \
@@ -29,7 +31,7 @@ dist_libalsa_intf_DATA    = snd_soc_msm/snd_soc_msm \
                             snd_soc_msm/snd_soc_msm_Sitar
 libalsa_intf_la_CFLAGS = $(AM_CFLAGS) -DUSE_GLIB @GLIB_CFLAGS@
 libalsa_intf_la_CPPFLAGS = $(AM_CPPFLAGS) -DUSE_GLIB @GLIB_CFLAGS@
-libalsa_intf_la_LDFLAGS = -lm -lpthread @GLIB_LIBS@ -shared -version-info 1:0:0
+libalsa_intf_la_LDFLAGS = $(ACDBLOADER_LIBS) -lm -lpthread @GLIB_LIBS@ -shared -version-info 1:0:0
 
 requiredlibs = libalsa_intf.la
 

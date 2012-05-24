@@ -169,6 +169,11 @@ static int process_cmd(char *cmdStr)
     command = strtok_r(cmdStr, " ", &value);
     identifier = strtok_r(NULL, " ", &value);
 
+    if (command == NULL) {
+        fprintf(stderr, "NULL pointer encountered. Invalid value for command");
+        return -1;
+    }
+
     for (cmd = cmds; cmd->cmd_str != NULL; cmd++) {
         if (strncmp(cmd->cmd_str, command, strlen(cmd->cmd_str)) == 0)
             break;
@@ -177,6 +182,14 @@ static int process_cmd(char *cmdStr)
     if (cmd->cmd_str == NULL) {
         fprintf(stderr, "Unknown command '%s'\n", command);
         return -EINVAL;
+    }
+
+    if ((identifier == NULL) && ((cmd->code != UCM_HELP) &&
+        (cmd->code != UCM_LISTCARDS) && (cmd->code != UCM_RESET) &&
+        (cmd->code != UCM_RELOAD)))
+    {
+        fprintf(stderr, "NULL pointer encountered. Invalid value for identifier");
+        return -1;
     }
 
     switch (cmd->code) {
@@ -261,7 +274,7 @@ static int process_cmd(char *cmdStr)
         snd_use_case_free_list(list, err);
         break;
 
-        case UCM_SET:
+    case UCM_SET:
         if (!uc_mgr) {
             fprintf(stderr, "No card is opened before. %s command can't be executed\n", cmd->cmd_str);
             return -EINVAL;
@@ -301,6 +314,9 @@ static int process_cmd(char *cmdStr)
             return lval;
         }
         printf("  %s=%li\n", identifier, lval);
+        break;
+
+    default:
         break;
     }
     return 0;

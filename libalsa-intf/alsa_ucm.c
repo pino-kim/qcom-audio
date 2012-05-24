@@ -312,20 +312,20 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
             index = 0;
             verb_index = uc_mgr->card_ctxt_ptr->current_verb_index;
             verb_list = uc_mgr->card_ctxt_ptr->use_case_verb_list;
-            if((get_usecase_type(uc_mgr, ident2)) == CTRL_LIST_VERB) {
-                ctrl_list = verb_list[verb_index].verb_ctrls;
-            } else {
-                ctrl_list = verb_list[verb_index].mod_ctrls;
-            }
-            if((verb_index < 0) ||
-               (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
-                SND_UCM_END_OF_LIST, 3)) || (ctrl_list == NULL)) {
-                LOGE("Invalid current verb value: %s - %d",
-                     uc_mgr->card_ctxt_ptr->current_verb, verb_index);
-                pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
-                return -EINVAL;
-            }
             if (ident2 != NULL) {
+                if((get_usecase_type(uc_mgr, ident2)) == CTRL_LIST_VERB) {
+                    ctrl_list = verb_list[verb_index].verb_ctrls;
+                } else {
+                    ctrl_list = verb_list[verb_index].mod_ctrls;
+                }
+                if((verb_index < 0) ||
+                    (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
+                    SND_UCM_END_OF_LIST, 3)) || (ctrl_list == NULL)) {
+                    LOGE("Invalid current verb value: %s - %d",
+                         uc_mgr->card_ctxt_ptr->current_verb, verb_index);
+                    pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
+                    return -EINVAL;
+                }
                 while(strncmp(ctrl_list[index].case_name, ident2,
                     (strlen(ident2)+1))) {
                     if (!strncmp(ctrl_list[index].case_name,

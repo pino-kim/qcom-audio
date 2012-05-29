@@ -4209,7 +4209,7 @@ SectionModifier
         EndSequence
 
         # ALSA PCMs
-        CapturePCM 11
+        CapturePCM 12
         PlaybackPCM 5
 
 EndSection
@@ -4230,7 +4230,7 @@ SectionModifier
         EndSequence
 
         # ALSA PCMs
-        CapturePCM 11
+        CapturePCM 12
         PlaybackPCM 5
 
 EndSection
@@ -4247,8 +4247,8 @@ SectionModifier
         EndSequence
 
         # ALSA PCMs
-        CapturePCM 11
-        PlaybackPCM 12
+        CapturePCM 12
+        PlaybackPCM 11
 
 EndSection
 
@@ -4264,7 +4264,7 @@ SectionModifier
         EndSequence
 
         # ALSA PCMs
-        CapturePCM 11
+        CapturePCM 12
         PlaybackPCM 13
 
 EndSection

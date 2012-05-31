@@ -1756,6 +1756,24 @@ SectionVerb
 	# ALSA PCMs
 	PlaybackPCM 12
 	capturePCM 12
+}
+SectionUseCase."ADSP testfwk" {
+Comment "ADSP testfwk use case"
+
+SectionVerb
+        Name "ADSP testfwk"
+
+        EnableSequence
+		'SLIMBUS_DL_HL Switch':1:1
+        EndSequence
+
+        DisableSequence
+		'SLIMBUS_DL_HL Switch':1:0
+        EndSequence
+
+        # ALSA PCMs
+        PlaybackPCM 5
+        CapturePCM 5
 
 EndSection
 }

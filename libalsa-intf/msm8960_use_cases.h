@@ -202,6 +202,7 @@ static card_mapping_t card_mapping_list[] = {
 #define SND_USE_CASE_VERB_INCALL_REC   "Incall REC"
 #define SND_USE_CASE_VERB_MI2S        "MI2S"
 #define SND_USE_CASE_VERB_VOLTE    "VoLTE"
+#define SND_USE_CASE_VERB_ADSP_TESTFWK "ADSP testfwk"
 
 #define SND_USE_CASE_DEV_FM_TX           "FM Tx"
 #define SND_USE_CASE_DEV_ANC_HEADSET     "ANC Headset"

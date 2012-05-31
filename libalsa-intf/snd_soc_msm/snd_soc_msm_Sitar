@@ -861,7 +861,26 @@ SectionVerb
 
 EndSection
 }
+SectionUseCase."ADSP testfwk" {
+Comment "ADSP testfwk use case"
 
+SectionVerb
+        Name "ADSP testfwk"
+
+        EnableSequence
+		'SLIMBUS_DL_HL Switch':1:1
+        EndSequence
+
+        DisableSequence
+		'SLIMBUS_DL_HL Switch':1:0
+        EndSequence
+
+        # ALSA PCMs
+        PlaybackPCM 5
+        CapturePCM 5
+
+EndSection
+}
 SectionDevice
 	Name "Earpiece"
 	Comment "Handset Rx device"

@@ -832,7 +832,11 @@ int getUseCaseType(const char *useCase)
         !strncmp(useCase, SND_USE_CASE_MOD_CAPTURE_VOICE_DL,
             MAX_LEN(useCase,SND_USE_CASE_MOD_CAPTURE_VOICE_DL)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_CAPTURE_VOICE_UL_DL,
-            MAX_LEN(useCase,SND_USE_CASE_MOD_CAPTURE_VOICE_UL_DL))) {
+            MAX_LEN(useCase,SND_USE_CASE_MOD_CAPTURE_VOICE_UL_DL)) ||
+        !strncmp(useCase, SND_USE_CASE_VERB_VOLTE,
+            MAX_LEN(useCase,SND_USE_CASE_VERB_VOLTE)) ||
+        !strncmp(useCase, SND_USE_CASE_MOD_PLAY_VOLTE,
+            MAX_LEN(useCase, SND_USE_CASE_MOD_PLAY_VOLTE))) {
         return CAP_VOICE;
     } else {
         LOGE("unknown use case %s, returning voice capablity", useCase);

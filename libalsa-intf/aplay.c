@@ -279,8 +279,11 @@ static int play_file(unsigned rate, unsigned channels, int fd,
         frames = (pcm->flags & PCM_MONO) ? (bufsize / 2) : (bufsize / 4);
         for (;;) {
              if (!pcm->running) {
-                  if (pcm_prepare(pcm))
-                      return --errno;
+                  if (pcm_prepare(pcm)) {
+                      fprintf(stderr, "Aplay:Failed in pcm_prepare\n");
+                      pcm_close(pcm);
+                      return -errno;
+                  }
                   pcm->running = 1;
                   start = 0;
              }
@@ -299,8 +302,11 @@ static int play_file(unsigned rate, unsigned channels, int fd,
               * less than avail_min we need to wait
               */
              avail = pcm_avail(pcm);
-             if (avail < 0)
+             if (avail < 0) {
+                 fprintf(stderr, "Aplay:Failed in pcm_avail\n");
+                 pcm_close(pcm);
                  return avail;
+             }
              if (avail < pcm->sw_p->avail_min) {
                  poll(pfd, nfds, TIMEOUT_INFINITE);
                  continue;
@@ -390,6 +396,7 @@ static int play_file(unsigned rate, unsigned channels, int fd,
                          continue;
                     } else {
                         fprintf(stderr, "Aplay:Error no %d \n", errno);
+                        pcm_close(pcm);
                         return -errno;
                     }
                 } else

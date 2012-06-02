@@ -102,7 +102,7 @@ static void alsaucm_test_cmd_svr(void)
             }
 
             if (ch != '\n') {
-                strncat(cmdstr, &ch , 1);
+                strlcat(cmdstr, &ch , (2+strlen(cmdstr)));
                 continue;
             } else {
                 if (!strncmp(cmdstr, exit_str, strlen(cmdstr))) {

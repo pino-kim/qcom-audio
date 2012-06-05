@@ -3509,8 +3509,9 @@ void free_list(card_mctrl_t *list, int verb_index, int count)
                     mindex++) {
                     free(list[case_index].ena_mixer_list[index].mulval[mindex]);
                 }
-                if(list[case_index].ena_mixer_list[index].mulval)
-                        free(list[case_index].ena_mixer_list[index].mulval);
+                if(list[case_index].ena_mixer_list[index].mulval) {
+                    free(list[case_index].ena_mixer_list[index].mulval);
+                }
             }
         }
         for(index = 0; index < list[case_index].dis_mixer_count; index++) {
@@ -3519,6 +3520,16 @@ void free_list(card_mctrl_t *list, int verb_index, int count)
             }
             if(list[case_index].dis_mixer_list[index].string) {
                 free(list[case_index].dis_mixer_list[index].string);
+            }
+            if(list[case_index].dis_mixer_list[index].mulval) {
+                for(mindex = 0;
+                    mindex < list[case_index].dis_mixer_list[index].value;
+                    mindex++) {
+                    free(list[case_index].dis_mixer_list[index].mulval[mindex]);
+                }
+                if(list[case_index].dis_mixer_list[index].mulval) {
+                    free(list[case_index].dis_mixer_list[index].mulval);
+                }
             }
         }
         if(list[case_index].case_name) {
@@ -3536,6 +3547,9 @@ void free_list(card_mctrl_t *list, int verb_index, int count)
         if(list[case_index].capture_dev_name) {
             free(list[case_index].capture_dev_name);
         }
+        if(list[case_index].effects_mixer_ctl) {
+            list[case_index].effects_mixer_ctl = NULL;
+        }
     }
 }
 
@@ -3546,45 +3560,11 @@ void snd_ucm_free_mixer_list(snd_use_case_mgr_t **uc_mgr)
     int index = 0, verb_index = 0;
 
     pthread_mutex_lock(&(*uc_mgr)->card_ctxt_ptr->card_lock);
+    verb_list = (*uc_mgr)->card_ctxt_ptr->use_case_verb_list;
     while(strncmp((*uc_mgr)->card_ctxt_ptr->verb_list[verb_index],
           SND_UCM_END_OF_LIST, 3)) {
-        verb_list = (*uc_mgr)->card_ctxt_ptr->use_case_verb_list;
         ctrl_list = verb_list[verb_index].verb_ctrls;
         free_list(ctrl_list, verb_index, verb_list[verb_index].verb_count);
-        ctrl_list = verb_list[verb_index].device_ctrls;
-        free_list(ctrl_list, verb_index, verb_list[verb_index].device_count);
-        ctrl_list = verb_list[verb_index].mod_ctrls;
-        free_list(ctrl_list, verb_index, verb_list[verb_index].mod_count);
-        index = 0;
-        while(1) {
-            if (verb_list[verb_index].device_list[index]) {
-                if (!strncmp(verb_list[verb_index].device_list[index],
-                    SND_UCM_END_OF_LIST, 3)) {
-                    free(verb_list[verb_index].device_list[index]);
-                    break;
-                } else {
-                    free(verb_list[verb_index].device_list[index]);
-                    index++;
-                }
-            }
-        }
-        if (verb_list[verb_index].device_list)
-                free(verb_list[verb_index].device_list);
-        index = 0;
-        while(1) {
-            if (verb_list[verb_index].modifier_list[index]) {
-                if (!strncmp(verb_list[verb_index].modifier_list[index],
-                    SND_UCM_END_OF_LIST, 3)) {
-                    free(verb_list[verb_index].modifier_list[index]);
-                    break;
-                } else {
-                    free(verb_list[verb_index].modifier_list[index]);
-                    index++;
-                }
-            }
-        }
-        if (verb_list[verb_index].modifier_list)
-                free(verb_list[verb_index].modifier_list);
         if(verb_list[verb_index].use_case_name)
             free(verb_list[verb_index].use_case_name);
         if((*uc_mgr)->card_ctxt_ptr->verb_list[verb_index]) {
@@ -3592,6 +3572,41 @@ void snd_ucm_free_mixer_list(snd_use_case_mgr_t **uc_mgr)
         }
         verb_index++;
     }
+    verb_index -= 1;
+    ctrl_list = verb_list[verb_index].device_ctrls;
+    free_list(ctrl_list, verb_index, verb_list[verb_index].device_count);
+    ctrl_list = verb_list[verb_index].mod_ctrls;
+    free_list(ctrl_list, verb_index, verb_list[verb_index].mod_count);
+    index = 0;
+    while(1) {
+        if (verb_list[verb_index].device_list[index]) {
+            if (!strncmp(verb_list[verb_index].device_list[index],
+                SND_UCM_END_OF_LIST, 3)) {
+                free(verb_list[verb_index].device_list[index]);
+                break;
+            } else {
+                free(verb_list[verb_index].device_list[index]);
+                index++;
+            }
+        }
+    }
+    if (verb_list[verb_index].device_list)
+        free(verb_list[verb_index].device_list);
+    index = 0;
+    while(1) {
+        if (verb_list[verb_index].modifier_list[index]) {
+            if (!strncmp(verb_list[verb_index].modifier_list[index],
+                SND_UCM_END_OF_LIST, 3)) {
+                free(verb_list[verb_index].modifier_list[index]);
+                break;
+            } else {
+                free(verb_list[verb_index].modifier_list[index]);
+                index++;
+            }
+        }
+    }
+    if (verb_list[verb_index].modifier_list)
+        free(verb_list[verb_index].modifier_list);
     if((*uc_mgr)->card_ctxt_ptr->use_case_verb_list)
         free((*uc_mgr)->card_ctxt_ptr->use_case_verb_list);
     if((*uc_mgr)->card_ctxt_ptr->verb_list)

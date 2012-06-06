@@ -203,9 +203,12 @@ static card_mapping_t card_mapping_list[] = {
 #define SND_USE_CASE_VERB_HIFI_TUNNEL    "HiFi Tunnel"
 #define SND_USE_CASE_VERB_HIFI2       "HiFi2"
 #define SND_USE_CASE_VERB_INCALL_REC   "Incall REC"
-#define SND_USE_CASE_VERB_MI2S        "MI2S"
 #define SND_USE_CASE_VERB_VOLTE    "VoLTE"
 #define SND_USE_CASE_VERB_ADSP_TESTFWK "ADSP testfwk"
+#define SND_USE_CASE_VERB_HIFI_REC2       "HiFi Rec2"
+#define SND_USE_CASE_VERB_HIFI_REC_COMPRESSED    "HiFi Rec Compressed"
+#define SND_USE_CASE_VERB_HIFI3       "HiFi3"
+#define SND_USE_CASE_VERB_HIFI_TUNNEL2    "HiFi Tunnel2"
 
 #define SND_USE_CASE_DEV_FM_TX           "FM Tx"
 #define SND_USE_CASE_DEV_ANC_HEADSET     "ANC Headset"
@@ -259,8 +262,11 @@ static card_mapping_t card_mapping_list[] = {
 #define SND_USE_CASE_MOD_CAPTURE_VOICE_UL_DL    "Capture Voice Uplink Downlink"
 #define SND_USE_CASE_MOD_PLAY_TUNNEL     "Play Tunnel"
 #define SND_USE_CASE_MOD_PLAY_MUSIC2       "Play Music2"
-#define SND_USE_CASE_MOD_PLAY_MI2S       "Play MI2S"
 #define SND_USE_CASE_MOD_PLAY_VOLTE   "Play VoLTE"
+#define SND_USE_CASE_MOD_CAPTURE_MUSIC2       "Capture Music2"
+#define SND_USE_CASE_MOD_CAPTURE_MUSIC_COMPRESSED    "Capture Music Compressed"
+#define SND_USE_CASE_MOD_PLAY_MUSIC3       "Play Music3"
+#define SND_USE_CASE_MOD_PLAY_TUNNEL2     "Play Tunnel2"
 
 /* List utility functions for maintaining enabled devices and modifiers */
 static int snd_ucm_add_ident_to_list(struct snd_ucm_ident_node **head, const char *value);

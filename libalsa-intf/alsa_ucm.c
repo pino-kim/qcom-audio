@@ -310,9 +310,9 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
             (!strncmp(ident1, "CapturePCM", 10))) {
             ident2 = strtok_r(NULL, "/", &temp_ptr);
             index = 0;
-            verb_index = uc_mgr->card_ctxt_ptr->current_verb_index;
-            verb_list = uc_mgr->card_ctxt_ptr->use_case_verb_list;
             if (ident2 != NULL) {
+                verb_index = uc_mgr->card_ctxt_ptr->current_verb_index;
+                verb_list = uc_mgr->card_ctxt_ptr->use_case_verb_list;
                 if((get_usecase_type(uc_mgr, ident2)) == CTRL_LIST_VERB) {
                     ctrl_list = verb_list[verb_index].verb_ctrls;
                 } else {
@@ -567,9 +567,11 @@ int use_case_index)
                     strlen(SND_USE_CASE_MOD_PLAY_VOIP)))) {
                     voice_acdb = 1;
                     free(ident_value);
+                    ident_value = NULL;
                     break;
                 }
                 free(ident_value);
+                ident_value = NULL;
             }
         }
     }
@@ -640,6 +642,7 @@ int use_case_index)
                 }
             }
             free(ident_value);
+            ident_value = NULL;
         }
     } else {
         LOGV("No voice use case found");
@@ -2152,6 +2155,14 @@ void *second_stage_parsing_thread(void *uc_mgr_ptr)
         if((current_str = next_str) == NULL)
             break;
     }
+    if (verb_name != NULL) {
+        free(verb_name);
+        verb_name = NULL;
+    }
+    if (file_name != NULL) {
+        free(file_name);
+        file_name = NULL;
+    }
     munmap(read_buf, st.st_size);
     close(fd);
 #if PARSE_DEBUG
@@ -2214,8 +2225,19 @@ static int snd_ucm_parse(snd_use_case_mgr_t **uc_mgr)
     verb_count = get_verb_count(current_str);
     (*uc_mgr)->card_ctxt_ptr->use_case_verb_list =
         (use_case_verb_t *)malloc((verb_count+1)*(sizeof(use_case_verb_t)));
-    (*uc_mgr)->card_ctxt_ptr->verb_list =
-        (char **)malloc((verb_count+2)*(sizeof(char *)));
+    if ((*uc_mgr)->card_ctxt_ptr->use_case_verb_list == NULL) {
+        LOGE("failed to allocate memory for use case verb list\n");
+        munmap(read_buf, st.st_size);
+        close(fd);
+        return -ENOMEM;
+    }
+    if (((*uc_mgr)->card_ctxt_ptr->verb_list =
+        (char **)malloc((verb_count+2)*(sizeof(char *)))) == NULL) {
+        LOGE("failed to allocate memory for verb list\n");
+        munmap(read_buf, st.st_size);
+        close(fd);
+        return -ENOMEM;
+    }
     verb_name = NULL;
     if ((ret = is_single_config_format(current_str))) {
         LOGD("Single config file format detected\n");
@@ -3226,22 +3248,6 @@ char **nxt_str, int verb_index, int ctrl_list_type)
         }
         if (*next_str == (char)EOF)
              break;
-    }
-    if ((list->case_name == NULL) && (ret == 0)) {
-        list->case_name = (char *)
-        malloc((strlen((*uc_mgr)->card_ctxt_ptr->card_name)+1)*sizeof(char));
-        if(list->case_name == NULL) {
-            if (ctrl_list_type == CTRL_LIST_VERB) {
-                free(verb_list[verb_index].verb_ctrls);
-            } else if (ctrl_list_type == CTRL_LIST_DEVICE) {
-                free(verb_list[verb_index].device_ctrls);
-            } else if (ctrl_list_type == CTRL_LIST_MODIFIER) {
-                free(verb_list[verb_index].mod_ctrls);
-            }
-            return -ENOMEM;
-        }
-        strlcpy(list->case_name, (*uc_mgr)->card_ctxt_ptr->card_name,
-            (strlen((*uc_mgr)->card_ctxt_ptr->card_name)+1)*sizeof(char));
     }
     if(ret == 0) {
         *cur_str = current_str; *nxt_str = next_str;

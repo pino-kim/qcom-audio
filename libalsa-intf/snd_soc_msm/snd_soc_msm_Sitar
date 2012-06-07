@@ -934,32 +934,6 @@ SectionDevice
 EndSection
 
 SectionDevice
-	Name "ANC Handset"
-	Comment "ANC Handset Rx device"
-
-	EnableSequence
-		'DAC1 MUX':0:RX1
-		'SLIM_0_RX Channels':0:One
-		'RX1 MIX1 INP1':0:RX1
-		'EAR PA Gain':0:POS_2_DB
-		'DAC1 Switch':1:1
-		'RX1 Digital Volume':1:66
-	EndSequence
-
-	DisableSequence
-		'DAC1 MUX':0:ZERO
-		'RX1 MIX1 INP1':0:ZERO
-		'EAR PA Gain':0:POS_6_DB
-		'DAC1 Switch':1:0
-		'RX1 Digital Volume':1:0
-	EndSequence
-
-	ACDBID	30:1
-	EffectsMixerCTL "SRS TruMedia"
-
-EndSection
-
-SectionDevice
 	Name "Speaker"
 	Comment "Speaker Rx device"
 
@@ -1042,20 +1016,47 @@ SectionDevice
 	Comment "Speaker ANC Headset Rx combo device"
 
 	EnableSequence
-		'DAC1 MUX':0:RX1
-		'SLIM_0_RX Channels':0:One
+		'SLIM_0_RX Channels':0:Two
+		'DAC3 MUX':0:INV_RX1
+		'DAC2 MUX':0:RX1
+		'LINEOUT1 Volume':1:100
+		'LINEOUT2 Volume':1:100
 		'RX1 MIX1 INP1':0:RX1
-		'EAR PA Gain':0:POS_2_DB
-		'DAC1 Switch':1:1
-		'RX1 Digital Volume':1:66
+		'RX1 Digital Volume':1:70
+		'PMIC SPK Gain':0:POS_20_DB
+		'RX2 MIX1 INP1':0:RX1
+		'RX3 MIX1 INP1':0:RX2
+		'DAC4 MUX':0:ON
+		'HPHL Volume':1:100
+		'HPHR Volume':1:100
+		'RX2 Digital Volume':1:67
+		'RX3 Digital Volume':1:67
+		'ANC Slot':1:0
+		'ANC1 MUX':0:ADC1
+		'ANC2 MUX':0:ADC3
+		'ANC1 FB MUX':0:EAR_HPH_L
+		'ADC1 Volume':1:85
+		'ADC3 Volume':1:85
 	EndSequence
 
 	DisableSequence
-		'DAC1 MUX':0:ZERO
+		'DAC3 MUX':0:ZERO
+		'DAC2 MUX':0:ZERO
+		'LINEOUT1 Volume':1:0
+		'LINEOUT2 Volume':1:0
 		'RX1 MIX1 INP1':0:ZERO
-		'EAR PA Gain':0:POS_6_DB
-		'DAC1 Switch':1:0
 		'RX1 Digital Volume':1:0
+		'RX2 MIX1 INP1':0:ZERO
+		'RX3 MIX1 INP1':0:ZERO
+		'DAC4 MUX':0:ZERO
+		'HPHL Volume':1:0
+		'HPHR Volume':1:0
+		'RX2 Digital Volume':1:0
+		'RX3 Digital Volume':1:0
+		'ANC1 MUX':0:ZERO
+		'ANC2 MUX':0:ZERO
+		'ADC1 Volume':1:0
+		'ADC3 Volume':1:0
 	EndSequence
 
 	ACDBID	26:1
@@ -1068,20 +1069,34 @@ SectionDevice
 	Comment "ANC Headset Rx device"
 
 	EnableSequence
-		'DAC1 MUX':0:RX1
-		'SLIM_0_RX Channels':0:One
-		'RX1 MIX1 INP1':0:RX1
-		'EAR PA Gain':0:POS_2_DB
-		'DAC1 Switch':1:1
-		'RX1 Digital Volume':1:66
+		'SLIM_0_RX Channels':0:Two
+		'RX2 MIX1 INP1':0:RX1
+		'RX3 MIX1 INP1':0:RX2
+		'DAC4 MUX':0:ON
+		'HPHL Volume':1:100
+		'HPHR Volume':1:100
+		'RX2 Digital Volume':1:67
+		'RX3 Digital Volume':1:67
+		'ANC Slot':1:0
+		'ANC1 MUX':0:ADC1
+		'ANC2 MUX':0:ADC3
+		'ANC1 FB MUX':0:EAR_HPH_L
+		'ADC1 Volume':1:85
+		'ADC3 Volume':1:85
 	EndSequence
 
 	DisableSequence
-		'DAC1 MUX':0:ZERO
-		'RX1 MIX1 INP1':0:ZERO
-		'EAR PA Gain':0:POS_6_DB
-		'DAC1 Switch':1:0
-		'RX1 Digital Volume':1:0
+		'RX2 MIX1 INP1':0:ZERO
+		'RX3 MIX1 INP1':0:ZERO
+		'DAC4 MUX':0:ZERO
+		'HPHL Volume':1:0
+		'HPHR Volume':1:0
+		'RX2 Digital Volume':1:0
+		'RX3 Digital Volume':1:0
+		'ANC1 MUX':0:ZERO
+		'ANC2 MUX':0:ZERO
+		'ADC1 Volume':1:0
+		'ADC3 Volume':1:0
 	EndSequence
 
 	ACDBID	26:1

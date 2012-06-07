@@ -904,6 +904,7 @@ SectionDevice
 
 	ACDBID	7:1
 	EffectsMixerCTL "SRS TruMedia"
+	EC_REF_RXMixerCTL "SLIM_RX"
 
 EndSection
 
@@ -930,6 +931,7 @@ SectionDevice
 
 	ACDBID  37:1
 	EffectsMixerCTL "SRS TruMedia"
+	EC_REF_RXMixerCTL "SLIM_RX"
 
 EndSection
 
@@ -956,6 +958,7 @@ SectionDevice
 	EndSequence
 	ACDBID	14:1
 	EffectsMixerCTL "SRS TruMedia"
+	EC_REF_RXMixerCTL "SLIM_RX"
 
 EndSection
 
@@ -982,6 +985,7 @@ SectionDevice
 
 	ACDBID	10:1
 	EffectsMixerCTL "SRS TruMedia"
+	EC_REF_RXMixerCTL "SLIM_RX"
 
 EndSection
 
@@ -1019,6 +1023,7 @@ SectionDevice
 
 	ACDBID	10:1
 	EffectsMixerCTL "SRS TruMedia"
+	EC_REF_RXMixerCTL "SLIM_RX"
 
 EndSection
 
@@ -1072,6 +1077,7 @@ SectionDevice
 
 	ACDBID	26:1
 	EffectsMixerCTL "SRS TruMedia"
+	EC_REF_RXMixerCTL "SLIM_RX"
 
 EndSection
 
@@ -1112,6 +1118,7 @@ SectionDevice
 
 	ACDBID	26:1
 	EffectsMixerCTL "SRS TruMedia"
+	EC_REF_RXMixerCTL "SLIM_RX"
 
 EndSection
 

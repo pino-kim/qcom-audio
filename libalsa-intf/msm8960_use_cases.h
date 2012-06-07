@@ -52,6 +52,8 @@ extern "C" {
 #define DEVICE_DUALMIC_HANDSET_TX_ENDFIRE_ACDB_ID       6 // HANDSET_MIC_ENDFIRE
 #define DEVICE_DUALMIC_SPEAKER_TX_BROADSIDE_ACDB_ID     12// SPKR_PHONE_MIC_BROADSIDE
 #define DEVICE_DUALMIC_SPEAKER_TX_ENDFIRE_ACDB_ID       13// SPKR_PHONE_MIC_ENDFIRE
+#define DEVICE_DUALMIC_HANDSET_STEREO_ACDB_ID           34
+#define DEVICE_DUALMIC_SPEAKER_PHONE_STEREO_ACDB_ID     35
 #define DEVICE_TTY_HEADSET_MONO_RX_ACDB_ID              17// TTY_HEADSET_SPKR
 #define DEVICE_TTY_HEADSET_MONO_TX_ACDB_ID              16// TTY_HEADSET_MIC
 #define DEVICE_BT_SCO_RX_ACDB_ID                        22// BT_SCO_SPKR
@@ -114,6 +116,7 @@ typedef struct card_mctrl {
     int acdb_id;
     int capability;
     char *effects_mixer_ctl;
+    char *ec_ref_rx_mixer_ctl;
 }card_mctrl_t;
 
 /* identifier node structure for identifier list*/
@@ -222,8 +225,10 @@ static card_mapping_t card_mapping_list[] = {
 #define SND_USE_CASE_DEV_TTY_HANDSET_ANALOG_TX  "TTY Handset Analog Tx"
 #define SND_USE_CASE_DEV_DUAL_MIC_BROADSIDE "DMIC Broadside"
 #define SND_USE_CASE_DEV_DUAL_MIC_ENDFIRE "DMIC Endfire"
+#define SND_USE_CASE_DEV_DUAL_MIC_HANDSET_STEREO "Handset DMIC Stereo"
 #define SND_USE_CASE_DEV_SPEAKER_DUAL_MIC_BROADSIDE "Speaker DMIC Broadside"
 #define SND_USE_CASE_DEV_SPEAKER_DUAL_MIC_ENDFIRE "Speaker DMIC Endfire"
+#define SND_USE_CASE_DEV_SPEAKER_DUAL_MIC_STEREO "Speaker DMIC Stereo"
 #define SND_USE_CASE_DEV_HDMI_TX             "HDMI Tx"
 #define SND_USE_CASE_DEV_HDMI_SPDIF          "HDMI SPDIF"
 #define SND_USE_CASE_DEV_QUAD_MIC "QMIC"
@@ -283,6 +288,7 @@ static int snd_ucm_parse_section(snd_use_case_mgr_t **uc_mgr, char **cur_str, ch
 static int snd_ucm_extract_name(char *buf, char **case_name);
 static int snd_ucm_extract_acdb(char *buf, int *id, int *cap);
 static int snd_ucm_extract_effects_mixer_ctl(char *buf, char **mixer_name);
+static int snd_ucm_extract_ec_ref_rx_mixer_ctl(char *buf, char **mixer_name);
 static int snd_ucm_extract_dev_name(char *buf, char **dev_name);
 static int snd_ucm_extract_controls(char *buf, mixer_control_t **mixer_list, int count);
 static int snd_ucm_print(snd_use_case_mgr_t *uc_mgr);

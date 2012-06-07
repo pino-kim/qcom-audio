@@ -64,8 +64,6 @@
 #if defined(QC_PROP)
     #include "acdb-loader.h"
 #else
-    #define acdb_loader_init_ACDB() (-EPERM)
-    #define acdb_loader_deallocate_ACDB() (-EPERM)
     #define acdb_loader_send_voice_cal(rxacdb_id, txacdb_id) (-EPERM)
     #define acdb_loader_send_audio_cal(acdb_id, capability) (-EPERM)
     #define acdb_loader_send_anc_cal(acdb_id) (-EPERM)
@@ -1884,9 +1882,6 @@ int snd_use_case_mgr_open(snd_use_case_mgr_t **uc_mgr, const char *card_name)
         uc_mgr_ptr->card_ctxt_ptr->mixer_handle =
             mixer_open(uc_mgr_ptr->card_ctxt_ptr->control_device);
         LOGV("Mixer handle %p", uc_mgr_ptr->card_ctxt_ptr->mixer_handle);
-        if ((acdb_loader_init_ACDB()) < 0) {
-            LOGE("Failed to initialize ACDB");
-        }
         *uc_mgr = uc_mgr_ptr;
     }
     LOGV("snd_use_case_open(): returning instance %p", uc_mgr_ptr);
@@ -1924,7 +1919,6 @@ int snd_use_case_mgr_close(snd_use_case_mgr_t *uc_mgr)
     if (ret < 0)
         LOGE("Failed to reset ucm session");
     snd_ucm_free_mixer_list(&uc_mgr);
-    acdb_loader_deallocate_ACDB();
     pthread_mutexattr_destroy(&uc_mgr->card_ctxt_ptr->card_lock_attr);
     pthread_mutex_destroy(&uc_mgr->card_ctxt_ptr->card_lock);
     if (uc_mgr->card_ctxt_ptr->mixer_handle) {

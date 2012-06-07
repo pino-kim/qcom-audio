@@ -1305,7 +1305,7 @@ SectionDevice
 		'SLIM TX7 MUX':0:DEC8
 		'DEC8 MUX':0:ADC2
 		'ADC2 Volume':1:100
-		'IIR1 INP1 Volume':1:50
+		'IIR1 INP1 Volume':1:62
 		'IIR1 INP1 MUX':0:DEC8
 	EndSequence
 

@@ -2257,13 +2257,14 @@ static int snd_ucm_parse(snd_use_case_mgr_t **uc_mgr)
         close(fd);
         return -EINVAL;
     }
-    read_buf = (char *) mmap(0, st.st_size, PROT_READ | PROT_WRITE,
+    read_buf = (char *) mmap(0, st.st_size+1, PROT_READ | PROT_WRITE,
                MAP_PRIVATE, fd, 0);
     if (read_buf == MAP_FAILED) {
         LOGE("failed to mmap file error %d\n", errno);
         close(fd);
         return -EINVAL;
     }
+    read_buf[st.st_size] = '\0';
     current_str = read_buf;
     verb_count = get_verb_count(current_str);
     (*uc_mgr)->card_ctxt_ptr->use_case_verb_list =

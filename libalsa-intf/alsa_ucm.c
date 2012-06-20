@@ -897,7 +897,7 @@ const char *ident, int enable, int ctrl_list_type)
     card_mctrl_t *dev_list, *uc_list;
     char *current_device, use_case[MAX_UC_LEN];
     int list_size, index, uc_index, ret = 0, intdev_flag = 0;
-    int verb_index, capability = 0, ident_cap = 0;
+    int verb_index, capability = 0, ident_cap = 0, dev_cap = 0;
 
     LOGV("set_use_case_ident_for_all_devices(): %s", ident);
     if ((verb_index = uc_mgr->card_ctxt_ptr->current_verb_index) < 0)
@@ -921,44 +921,45 @@ const char *ident, int enable, int ctrl_list_type)
         if (current_device != NULL) {
             uc_index = get_use_case_index(uc_mgr, current_device,
                        CTRL_LIST_DEVICE);
+            dev_cap = dev_list[uc_index].capability;
             if (!capability) {
                 capability = dev_list[uc_index].capability;
             } else if (capability != dev_list[uc_index].capability) {
                 capability = CAP_VOICE;
             }
-            if (enable) {
-                if (!snd_ucm_get_status_at_index(
+            if (ident_cap == CAP_VOICE || dev_cap == ident_cap) {
+                if (enable) {
+                    if (!snd_ucm_get_status_at_index(
                         uc_mgr->card_ctxt_ptr->dev_list_head, current_device)) {
-                    if (uc_index >= 0) {
-                        LOGV("Applying mixer controls for device: %s",
-                            current_device);
-                        ret = snd_use_case_apply_mixer_controls(uc_mgr,
-                            current_device, enable, CTRL_LIST_DEVICE, uc_index);
-                        if (!ret)
-                           snd_ucm_set_status_at_index(
-                              uc_mgr->card_ctxt_ptr->dev_list_head,
-                              current_device, enable);
+                        if (uc_index >= 0) {
+                            LOGV("Applying mixer controls for device: %s",
+                                current_device);
+                            ret = snd_use_case_apply_mixer_controls(uc_mgr,
+                                  current_device, enable, CTRL_LIST_DEVICE,
+                                  uc_index);
+                            if (!ret)
+                                snd_ucm_set_status_at_index(
+                                  uc_mgr->card_ctxt_ptr->dev_list_head,
+                                  current_device, enable);
+                        }
+                    } else if (ident_cap == CAP_VOICE) {
+                        snd_use_case_apply_voice_acdb(uc_mgr, uc_index);
                     }
-                } else if (ident_cap == CAP_VOICE) {
-                    snd_use_case_apply_voice_acdb(uc_mgr, uc_index);
                 }
-            }
-            strlcpy(use_case, ident, sizeof(use_case));
-            strlcat(use_case, current_device, sizeof(use_case));
-            LOGV("Applying mixer controls for use case: %s", use_case);
-            if ((uc_index =
-                get_use_case_index(uc_mgr, use_case, ctrl_list_type)) < 0) {
-                LOGV("No valid use case found: %s", use_case);
-                intdev_flag++;
-            } else {
-                if (capability == CAP_VOICE || ident_cap == CAP_VOICE ||
-                    capability == ident_cap) {
+                strlcpy(use_case, ident, sizeof(use_case));
+                strlcat(use_case, current_device, sizeof(use_case));
+                LOGV("Applying mixer controls for use case: %s", use_case);
+                if ((uc_index =
+                    get_use_case_index(uc_mgr, use_case, ctrl_list_type)) < 0) {
+                    LOGV("No valid use case found: %s", use_case);
+                    intdev_flag++;
+                } else {
                     ret = snd_use_case_apply_mixer_controls(uc_mgr, use_case,
                           enable, ctrl_list_type, uc_index);
                 }
+                use_case[0] = 0;
+                free(current_device);
             }
-            use_case[0] = 0;
-            free(current_device);
         }
     }
     if (intdev_flag) {
@@ -1053,30 +1054,29 @@ const char *device, int enable)
         strlen(SND_USE_CASE_VERB_INACTIVE))) {
         uc_list =
             uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].verb_ctrls;
-        strlcpy(use_case, uc_mgr->card_ctxt_ptr->current_verb,
-            sizeof(use_case));
-        strlcat(use_case, device, sizeof(use_case));
-        if ((uc_index =
-            get_use_case_index(uc_mgr, use_case, CTRL_LIST_VERB)) < 0) {
-            LOGV("No valid use case found: %s", use_case);
-            intdev_flag = 1;
-        } else {
-            if (enable) {
-                if (!snd_ucm_get_status_at_index(
-                    uc_mgr->card_ctxt_ptr->dev_list_head, device)) {
-                    ret = snd_use_case_apply_mixer_controls(uc_mgr, device,
-                              enable, CTRL_LIST_DEVICE, dev_index);
-                    if (!ret)
-                        snd_ucm_set_status_at_index(
-                        uc_mgr->card_ctxt_ptr->dev_list_head, device, enable);
-                    flag = 1;
+        if (capability == CAP_VOICE ||
+            capability == getUseCaseType(uc_mgr->card_ctxt_ptr->current_verb) ||
+            getUseCaseType(uc_mgr->card_ctxt_ptr->current_verb) == CAP_VOICE) {
+            strlcpy(use_case, uc_mgr->card_ctxt_ptr->current_verb,
+                sizeof(use_case));
+            strlcat(use_case, device, sizeof(use_case));
+            if ((uc_index =
+                get_use_case_index(uc_mgr, use_case, CTRL_LIST_VERB)) < 0) {
+                LOGV("No valid use case found: %s", use_case);
+                intdev_flag = 1;
+            } else {
+                if (enable) {
+                    if (!snd_ucm_get_status_at_index(
+                        uc_mgr->card_ctxt_ptr->dev_list_head, device)) {
+                        ret = snd_use_case_apply_mixer_controls(uc_mgr, device,
+                                  enable, CTRL_LIST_DEVICE, dev_index);
+                        if (!ret)
+                            snd_ucm_set_status_at_index(
+                            uc_mgr->card_ctxt_ptr->dev_list_head, device,
+                            enable);
+                            flag = 1;
+                    }
                 }
-            }
-            if (capability == CAP_VOICE ||
-                capability ==
-                getUseCaseType(uc_mgr->card_ctxt_ptr->current_verb) ||
-                getUseCaseType(uc_mgr->card_ctxt_ptr->current_verb) ==
-                CAP_VOICE) {
                 LOGV("set %d for use case value: %s", enable, use_case);
                 ret = snd_use_case_apply_mixer_controls(uc_mgr, use_case,
                           enable, CTRL_LIST_VERB, uc_index);
@@ -1125,34 +1125,35 @@ const char *device, int enable)
         if ((ident_value =
             snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->mod_list_head,
             index))) {
-            strlcpy(use_case, ident_value, sizeof(use_case));
-            strlcat(use_case, device, sizeof(use_case));
-            if ((uc_index = get_use_case_index(uc_mgr, use_case,
-                CTRL_LIST_MODIFIER)) < 0) {
-                LOGV("No valid use case found: %s", use_case);
-                intdev_flag = 1;
-            } else {
-                if (enable && !flag) {
-                    if (!snd_ucm_get_status_at_index(
-                        uc_mgr->card_ctxt_ptr->dev_list_head, device)) {
-                        ret = snd_use_case_apply_mixer_controls(uc_mgr,
-                                  device, enable, CTRL_LIST_DEVICE, dev_index);
-                        if (!ret)
-                            snd_ucm_set_status_at_index(
-                                uc_mgr->card_ctxt_ptr->dev_list_head,
-                                device, enable);
-                        flag = 1;
+            if (capability == CAP_VOICE ||
+                getUseCaseType(ident_value) == CAP_VOICE ||
+                capability == getUseCaseType(ident_value)) {
+                strlcpy(use_case, ident_value, sizeof(use_case));
+                strlcat(use_case, device, sizeof(use_case));
+                if ((uc_index = get_use_case_index(uc_mgr, use_case,
+                    CTRL_LIST_MODIFIER)) < 0) {
+                    LOGV("No valid use case found: %s", use_case);
+                    intdev_flag = 1;
+                } else {
+                    if (enable && !flag) {
+                        if (!snd_ucm_get_status_at_index(
+                            uc_mgr->card_ctxt_ptr->dev_list_head, device)) {
+                            ret = snd_use_case_apply_mixer_controls(uc_mgr,
+                                      device, enable, CTRL_LIST_DEVICE,
+                                      dev_index);
+                            if (!ret)
+                                snd_ucm_set_status_at_index(
+                                    uc_mgr->card_ctxt_ptr->dev_list_head,
+                                    device, enable);
+                            flag = 1;
+                        }
                     }
-                }
-                if (capability == CAP_VOICE ||
-                    getUseCaseType(ident_value) == CAP_VOICE ||
-                    capability == getUseCaseType(ident_value)) {
                     LOGV("set %d for use case value: %s", enable, use_case);
-                     ret = snd_use_case_apply_mixer_controls(uc_mgr,
-                           use_case, enable, CTRL_LIST_MODIFIER, uc_index);
-                     if (ret != 0)
-                         LOGE("No valid controls exists for usecase %s and \
-                              device %s, enable: %d", use_case, device, enable);
+                    ret = snd_use_case_apply_mixer_controls(uc_mgr,
+                          use_case, enable, CTRL_LIST_MODIFIER, uc_index);
+                    if (ret != 0)
+                        LOGE("No valid controls exists for usecase %s and \
+                            device %s, enable: %d", use_case, device, enable);
                 }
             }
             if (intdev_flag) {

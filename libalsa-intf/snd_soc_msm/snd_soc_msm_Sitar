@@ -990,19 +990,30 @@ SectionDevice
 	Comment "Speaker Headset Rx combo device"
 
 	EnableSequence
-		'DAC1 MUX':0:RX1
-		'SLIM_0_RX Channels':0:One
+		'SLIM_0_RX Channels':0:Two
+		'RX2 MIX1 INP1':0:RX1
+		'RX3 MIX1 INP1':0:RX2
+		'DAC4 MUX':0:ON
+		'HPHL Volume':1:80
+		'HPHR Volume':1:80
+		'DAC3 MUX':0:INV_RX1
+		'DAC2 MUX':0:RX1
+		'LINEOUT1 Volume':1:100
+		'LINEOUT2 Volume':1:100
 		'RX1 MIX1 INP1':0:RX1
-		'EAR PA Gain':0:POS_2_DB
-		'DAC1 Switch':1:1
-		'RX1 Digital Volume':1:66
+		'RX1 Digital Volume':1:70
+		'PMIC SPK Gain':0:POS_20_DB
 	EndSequence
 
 	DisableSequence
-		'DAC1 MUX':0:ZERO
+		'RX2 MIX1 INP1':0:ZERO
+		'RX3 MIX1 INP1':0:ZERO
+		'DAC4 MUX':0:ZERO
+		'HPHL Volume':1:0
+		'HPHR Volume':1:0
 		'RX1 MIX1 INP1':0:ZERO
-		'EAR PA Gain':0:POS_6_DB
-		'DAC1 Switch':1:0
+		'DAC3 MUX':0:ZERO
+		'DAC2 MUX':0:ZERO
 		'RX1 Digital Volume':1:0
 	EndSequence
 
@@ -1109,19 +1120,20 @@ SectionDevice
 	Comment "Speaker FM Tx combo device"
 
 	EnableSequence
-		'DAC1 MUX':0:RX1
+		'DAC3 MUX':0:INV_RX1
+		'DAC2 MUX':0:RX1
+		'LINEOUT1 Volume':1:100
+		'LINEOUT2 Volume':1:100
 		'SLIM_0_RX Channels':0:One
 		'RX1 MIX1 INP1':0:RX1
-		'EAR PA Gain':0:POS_2_DB
-		'DAC1 Switch':1:1
-		'RX1 Digital Volume':1:66
+		'RX1 Digital Volume':1:70
+		'PMIC SPK Gain':0:POS_20_DB
 	EndSequence
 
 	DisableSequence
-		'DAC1 MUX':0:ZERO
 		'RX1 MIX1 INP1':0:ZERO
-		'EAR PA Gain':0:POS_6_DB
-		'DAC1 Switch':1:0
+		'DAC3 MUX':0:ZERO
+		'DAC2 MUX':0:ZERO
 		'RX1 Digital Volume':1:0
 	EndSequence
 

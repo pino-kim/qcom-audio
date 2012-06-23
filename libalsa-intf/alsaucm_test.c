@@ -36,6 +36,11 @@
 #include <errno.h>
 #include <stdlib.h>
 
+#ifndef ANDROID
+#include <stdint.h>
+#define strlcat g_strlcat
+#endif
+
 #include "alsa_ucm.h"
 #include "msm8960_use_cases.h"
 

@@ -548,6 +548,8 @@ int use_case_index)
     if ((!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
         SND_USE_CASE_VERB_VOICECALL, strlen(SND_USE_CASE_VERB_VOICECALL))) ||
         (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
+        SND_USE_CASE_VERB_SGLTECALL, strlen(SND_USE_CASE_VERB_SGLTECALL))) ||
+        (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
         SND_USE_CASE_VERB_IP_VOICECALL,
         strlen(SND_USE_CASE_VERB_IP_VOICECALL)))) {
         voice_acdb = 1;
@@ -561,6 +563,8 @@ int use_case_index)
                 index))) {
                 if ((!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_VOICE,
                     strlen(SND_USE_CASE_MOD_PLAY_VOICE))) ||
+                    (!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_SGLTE,
+                    strlen(SND_USE_CASE_MOD_PLAY_SGLTE))) ||
                     (!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_VOIP,
                     strlen(SND_USE_CASE_MOD_PLAY_VOIP)))) {
                     voice_acdb = 1;
@@ -858,6 +862,8 @@ int getUseCaseType(const char *useCase)
         return CAP_TX;
     } else if (!strncmp(useCase, SND_USE_CASE_VERB_VOICECALL,
             MAX_LEN(useCase,SND_USE_CASE_VERB_VOICECALL)) ||
+        !strncmp(useCase, SND_USE_CASE_VERB_SGLTECALL,
+            MAX_LEN(useCase,SND_USE_CASE_VERB_SGLTECALL)) ||
         !strncmp(useCase, SND_USE_CASE_VERB_IP_VOICECALL,
             MAX_LEN(useCase,SND_USE_CASE_VERB_IP_VOICECALL)) ||
         !strncmp(useCase, SND_USE_CASE_VERB_DL_REC,
@@ -868,6 +874,8 @@ int getUseCaseType(const char *useCase)
             MAX_LEN(useCase,SND_USE_CASE_VERB_INCALL_REC)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_PLAY_VOICE,
             MAX_LEN(useCase,SND_USE_CASE_MOD_PLAY_VOICE)) ||
+        !strncmp(useCase, SND_USE_CASE_MOD_PLAY_SGLTE,
+            MAX_LEN(useCase,SND_USE_CASE_MOD_PLAY_SGLTE)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_PLAY_VOIP,
             MAX_LEN(useCase,SND_USE_CASE_MOD_PLAY_VOIP)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_CAPTURE_VOICE_DL,

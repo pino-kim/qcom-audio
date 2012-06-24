@@ -1199,6 +1199,167 @@ SectionVerb
 
 EndSection
 }
+SectionUseCase."SGLTE" {
+Comment "SGLTE use case"
+SectionVerb
+        Name "SGLTE"
+
+        EnableSequence
+                'SLIM_0_RX_Voice Mixer SGLTE':1:1
+                'SGLTE_Tx Mixer SLIM_0_TX_SGLTE':1:1
+        EndSequence
+
+        DisableSequence
+                'SLIM_0_RX_Voice Mixer SGLTE':1:0
+                'SGLTE_Tx Mixer SLIM_0_TX_SGLTE':1:0
+        EndSequence
+
+        # ALSA PCMs
+        PlaybackPCM 13
+        CapturePCM 13
+
+EndSection
+
+SectionVerb
+        Name "SGLTE CallHDMI"
+
+        EnableSequence
+        EndSequence
+
+        DisableSequence
+                'HDMI_RX_Voice Mixer SGLTE':1:0
+                'SGLTE_Tx Mixer SLIM_0_TX_SGLTE':1:0
+        EndSequence
+
+        # ALSA PCMs
+        PlaybackPCM 13
+        CapturePCM 13
+
+EndSection
+
+SectionVerb
+        Name "SGLTE CallHDMI Tx"
+
+        EnableSequence
+                'HDMI_RX_Voice Mixer SGLTE':1:1
+                'SGLTE_Tx Mixer SLIM_0_TX_SGLTE':1:1
+        EndSequence
+
+        DisableSequence
+        EndSequence
+
+        # ALSA PCMs
+        PlaybackPCM 13
+        CapturePCM 13
+
+EndSection
+
+SectionVerb
+        Name "SGLTE CallBT SCO Rx"
+
+        EnableSequence
+        EndSequence
+
+        DisableSequence
+                'Internal BTSCO SampleRate':0:8000
+                'INTERNAL_BT_SCO_RX_Voice Mixer SGLTE':1:0
+                'SGLTE_Tx Mixer INTERNAL_BT_SCO_TX_SGLTE':1:0
+        EndSequence
+
+        # ALSA PCMs
+        PlaybackPCM 13
+        CapturePCM 13
+
+EndSection
+
+SectionVerb
+        Name "SGLTE CallBT SCO Tx"
+
+        EnableSequence
+                'Internal BTSCO SampleRate':0:8000
+                'INTERNAL_BT_SCO_RX_Voice Mixer SGLTE':1:1
+                'SGLTE_Tx Mixer INTERNAL_BT_SCO_TX_SGLTE':1:1
+        EndSequence
+
+        DisableSequence
+        EndSequence
+
+        # ALSA PCMs
+        PlaybackPCM 13
+        CapturePCM 13
+
+EndSection
+
+SectionVerb
+        Name "SGLTE CallBT SCO WB Rx"
+
+        EnableSequence
+        EndSequence
+
+        DisableSequence
+                'Internal BTSCO SampleRate':0:8000
+                'INTERNAL_BT_SCO_RX_Voice Mixer SGLTE':1:0
+                'SGLTE_Tx Mixer INTERNAL_BT_SCO_TX_SGLTE':1:0
+        EndSequence
+
+        # ALSA PCMs
+        PlaybackPCM 13
+        CapturePCM 13
+
+EndSection
+
+SectionVerb
+        Name "SGLTE CallBT SCO WB Tx"
+
+        EnableSequence
+                'Internal BTSCO SampleRate':0:16000
+                'INTERNAL_BT_SCO_RX_Voice Mixer SGLTE':1:1
+                'SGLTE_Tx Mixer INTERNAL_BT_SCO_TX_SGLTE':1:1
+        EndSequence
+
+        DisableSequence
+        EndSequence
+
+        # ALSA PCMs
+        PlaybackPCM 13
+        CapturePCM 13
+
+EndSection
+
+SectionVerb
+        Name "SGLTE CallPROXY Rx"
+
+        EnableSequence
+        EndSequence
+
+        DisableSequence
+                'AFE_PCM_RX_Voice Mixer SGLTE':1:0
+                'SGLTE_Tx Mixer AFE_PCM_TX_SGLTE':1:0
+        EndSequence
+
+        # ALSA PCMs
+        PlaybackPCM 13
+        CapturePCM 13
+
+EndSection
+
+SectionVerb
+        Name "SGLTE CallPROXY Tx"
+
+        EnableSequence
+                'AFE_PCM_RX_Voice Mixer SGLTE':1:1
+                'SGLTE_Tx Mixer AFE_PCM_TX_SGLTE':1:1
+        EndSequence
+
+        DisableSequence
+        EndSequence
+
+        # ALSA PCMs
+        PlaybackPCM 13
+        CapturePCM 13
+
+EndSection
+}
 SectionUseCase."Voice Call IP" {
 Comment "VOIP Call use case"
 SectionVerb
@@ -4002,6 +4163,25 @@ SectionModifier
 	# ALSA PCMs
 	CapturePCM 2
 	PlaybackPCM 2
+
+EndSection
+
+SectionModifier
+        Name "Play SGLTE"
+
+        EnableSequence
+                'SLIM_0_RX_Voice Mixer SGLTE':1:1
+                'SGLTE_Tx Mixer SLIM_0_TX_SGLTE':1:1
+        EndSequence
+
+        DisableSequence
+                'SLIM_0_RX_Voice Mixer SGLTE':1:0
+                'SGLTE_Tx Mixer SLIM_0_TX_SGLTE':1:0
+        EndSequence
+
+        # ALSA PCMs
+        CapturePCM 13
+        PlaybackPCM 13
 
 EndSection
 

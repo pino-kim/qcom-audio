@@ -213,7 +213,6 @@ static int process_cmd(char *cmdStr)
             fprintf(stderr, "%s: error failed to open sound card %s: %d\n", cmd->cmd_str, identifier, err);
             return err;
         }
-        snd_use_case_mgr_wait_for_parsing(uc_mgr);
         break;
 
     case UCM_LISTCARDS:

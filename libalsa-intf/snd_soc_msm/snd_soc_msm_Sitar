@@ -1250,14 +1250,12 @@ SectionDevice
 		'SLIM TX1 MUX':0:DEC1
 		'DEC1 MUX':0:ADC2
 		'ADC2 Volume':1:100
-		'MICBIAS2 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
 		'SLIM TX1 MUX':0:ZERO
 		'DEC1 MUX':0:ZERO
 		'ADC2 Volume':1:0
-		'MICBIAS2 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID	8:2
@@ -1273,13 +1271,11 @@ SectionDevice
 		'SLIM_0_TX Channels':0:One
 		'SLIM TX1 MUX':0:DEC1
 		'DEC1 MUX':0:DMIC1
-		'MICBIAS1 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
 		'SLIM TX1 MUX':0:ZERO
 		'DEC1 MUX':0:ZERO
-		'MICBIAS1 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID	4:2
@@ -1295,13 +1291,11 @@ SectionDevice
 		'SLIM_0_TX Channels':0:One
 		'SLIM TX1 MUX':0:DEC1
 		'DEC1 MUX':0:DMIC1
-		'MICBIAS1 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
 		'SLIM TX1 MUX':0:ZERO
 		'DEC1 MUX':0:ZERO
-		'MICBIAS1 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID  36:2
@@ -1317,13 +1311,11 @@ SectionDevice
 		'SLIM_0_TX Channels':0:One
 		'SLIM TX1 MUX':0:DEC1
 		'DEC1 MUX':0:DMIC1
-		'MICBIAS1 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
 		'SLIM TX1 MUX':0:ZERO
 		'DEC1 MUX':0:ZERO
-		'MICBIAS1 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID	4:2
@@ -1339,13 +1331,11 @@ SectionDevice
 		'SLIM_0_TX Channels':0:One
 		'SLIM TX1 MUX':0:DEC1
 		'DEC1 MUX':0:DMIC1
-		'MICBIAS1 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
 		'SLIM TX1 MUX':0:ZERO
 		'DEC1 MUX':0:ZERO
-		'MICBIAS1 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID  36:2
@@ -1362,13 +1352,11 @@ SectionDevice
 		'SLIM_0_TX Channels':0:One
 		'SLIM TX1 MUX':0:DEC1
 		'DEC1 MUX':0:DMIC1
-		'MICBIAS1 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
 		'SLIM TX1 MUX':0:ZERO
 		'DEC1 MUX':0:ZERO
-		'MICBIAS1 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID	4:2
@@ -1391,7 +1379,6 @@ SectionDevice
 		'DEC3 MUX':0:DMIC3
 		'SLIM TX4 MUX':0:DEC4
 		'DEC4 MUX':0:DMIC4
-		'MICBIAS1 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
@@ -1403,7 +1390,6 @@ SectionDevice
 		'DEC3 MUX':0:ZERO
 		'SLIM TX4 MUX':0:ZERO
 		'DEC4 MUX':0:ZERO
-		'MICBIAS1 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID  19:2
@@ -1420,7 +1406,6 @@ SectionDevice
 		'DEC1 MUX':0:DMIC1
 		'SLIM TX5 MUX':0:DEC2
 		'DEC2 MUX':0:DMIC2
-		'MICBIAS1 CAPLESS Switch':1:1
 		'SLIM_0_TX Channels':0:Two
 	EndSequence
 
@@ -1429,14 +1414,12 @@ SectionDevice
 		'DEC2 MUX':0:ZERO
 		'SLIM TX5 MUX':0:ZERO
 		'DEC2 MUX':0:ZERO
-		'MICBIAS1 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID	6:2
 	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
-
 
 SectionDevice
 	Name "Speaker DMIC Endfire"
@@ -1447,7 +1430,6 @@ SectionDevice
 		'DEC1 MUX':0:DMIC1
 		'SLIM TX5 MUX':0:DEC2
 		'DEC2 MUX':0:DMIC2
-		'MICBIAS1 CAPLESS Switch':1:1
 		'SLIM_0_TX Channels':0:Two
 	EndSequence
 
@@ -1456,7 +1438,6 @@ SectionDevice
 		'DEC1 MUX':0:ZERO
 		'SLIM TX5 MUX':0:ZERO
 		'DEC2 MUX':0:ZERO
-		'MICBIAS1 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID	13:2
@@ -1498,7 +1479,6 @@ SectionDevice
                 'SLIM TX1 MUX':0:DEC1
                 'DEC1 MUX':0:ADC2
                 'ADC2 Volume':1:100
-                'MICBIAS2 CAPLESS Switch':1:1
         EndSequence
 
         DisableSequence
@@ -1506,7 +1486,6 @@ SectionDevice
                 'SLIM TX1 MUX':0:ZERO
                 'DEC1 MUX':0:ZERO
                 'ADC2 Volume':1:0
-                'MICBIAS2 CAPLESS Switch':1:0
         EndSequence
 
 	ACDBID	16:2
@@ -1547,14 +1526,12 @@ SectionDevice
                 'SLIM TX1 MUX':0:DEC1
                 'DEC1 MUX':0:ADC2
                 'ADC2 Volume':1:100
-                'MICBIAS2 CAPLESS Switch':1:1
         EndSequence
 
         DisableSequence
                 'SLIM TX1 MUX':0:ZERO
                 'DEC1 MUX':0:ZERO
                 'ADC2 Volume':1:0
-                'MICBIAS2 CAPLESS Switch':1:0
         EndSequence
 
 	ACDBID	16:2
@@ -1697,7 +1674,6 @@ SectionDevice
 		'DEC3 MUX':0:DMIC3
 		'SLIM TX4 MUX':0:DEC4
 		'DEC4 MUX':0:DMIC4
-		'MICBIAS1 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
@@ -1709,7 +1685,6 @@ SectionDevice
 		'DEC3 MUX':0:ZERO
 		'SLIM TX4 MUX':0:ZERO
 		'DEC4 MUX':0:ZERO
-		'MICBIAS1 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID  46:2

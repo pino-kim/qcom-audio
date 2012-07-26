@@ -997,8 +997,8 @@ SectionDevice
 		'RX2 MIX1 INP1':0:RX1
 		'RX3 MIX1 INP1':0:RX2
 		'DAC4 MUX':0:ON
-		'HPHL Volume':1:80
-		'HPHR Volume':1:80
+		'HPHL Volume':1:68
+		'HPHR Volume':1:68
 	EndSequence
 
 	DisableSequence
@@ -1024,8 +1024,8 @@ SectionDevice
 		'RX2 MIX1 INP1':0:RX1
 		'RX3 MIX1 INP1':0:RX2
 		'DAC4 MUX':0:ON
-		'HPHL Volume':1:80
-		'HPHR Volume':1:80
+		'HPHL Volume':1:68
+		'HPHR Volume':1:68
 	EndSequence
 
 	DisableSequence
@@ -1050,8 +1050,8 @@ SectionDevice
 		'RX2 MIX1 INP1':0:RX1
 		'RX3 MIX1 INP1':0:RX2
 		'DAC4 MUX':0:ON
-		'HPHL Volume':1:80
-		'HPHR Volume':1:80
+		'HPHL Volume':1:68
+		'HPHR Volume':1:68
 		'DAC3 MUX':0:INV_RX1
 		'DAC2 MUX':0:RX1
 		'LINEOUT1 Volume':1:100
@@ -1095,8 +1095,8 @@ SectionDevice
 		'RX2 MIX1 INP1':0:RX1
 		'RX3 MIX1 INP1':0:RX2
 		'DAC4 MUX':0:ON
-		'HPHL Volume':1:100
-		'HPHR Volume':1:100
+		'HPHL Volume':1:68
+		'HPHR Volume':1:68
 		'RX2 Digital Volume':1:67
 		'RX3 Digital Volume':1:67
 		'ANC Slot':1:0
@@ -1142,8 +1142,8 @@ SectionDevice
 		'RX2 MIX1 INP1':0:RX1
 		'RX3 MIX1 INP1':0:RX2
 		'DAC4 MUX':0:ON
-		'HPHL Volume':1:100
-		'HPHR Volume':1:100
+		'HPHL Volume':1:68
+		'HPHR Volume':1:68
 		'RX2 Digital Volume':1:67
 		'RX3 Digital Volume':1:67
 		'ANC Slot':1:0
@@ -1183,8 +1183,8 @@ SectionDevice
 		'RX2 MIX1 INP1':0:RX1
 		'RX3 MIX1 INP1':0:RX2
 		'DAC4 MUX':0:ON
-		'HPHL Volume':1:100
-		'HPHR Volume':1:100
+		'HPHL Volume':1:68
+		'HPHR Volume':1:68
 		'RX2 Digital Volume':1:67
 		'RX3 Digital Volume':1:67
 		'ANC Slot':1:0
@@ -1454,7 +1454,7 @@ SectionDevice
 		'SLIM_0_RX Channels':0:One
 		'RX2 MIX1 INP1':0:RX1
 		'DAC4 MUX':0:ON
-		'HPHL Volume':1:80
+		'HPHL Volume':1:68
 	EndSequence
 
 	DisableSequence
@@ -1502,7 +1502,7 @@ SectionDevice
 		'SLIM_0_RX Channels':0:One
 		'RX2 MIX1 INP1':0:RX1
 		'DAC4 MUX':0:ON
-		'HPHL Volume':1:80
+		'HPHL Volume':1:68
 	EndSequence
 
 	DisableSequence

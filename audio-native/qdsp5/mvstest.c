@@ -1,6 +1,6 @@
 /* mvstest.c - native mvs test application
  *
- * Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+ * Copyright (c) 2011-2012 Code Aurora Forum. All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
@@ -40,7 +40,7 @@
 #include <linux/msm_audio_mvs.h>
 #include "audiotest_def.h"
 
-#if defined(QC_PROP)
+#if defined(TARGET_USES_QCOM_MM_AUDIO)
 #include "control.h"
 #include "acdb-loader.h"
 #include "acdb-id-mapper.h"

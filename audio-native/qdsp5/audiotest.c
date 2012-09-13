@@ -3,7 +3,7 @@
  * Based on native pcm test application platform/system/extras/sound/playwav.c
  *
  * Copyright (C) 2008 The Android Open Source Project
- * Copyright (c) 2009-2011, Code Aurora Forum. All rights reserved.
+ * Copyright (c) 2009-2012 Code Aurora Forum. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ Format of command string is test case specific. Run audio_test -format test_case
 to see the format of command string for the desired test case. \n";
 	 
 char cmdstr[256];
+int ionfd;
 
 #define AUDIOTEST_MAX_TH_CXT 10 /* Maximum number of thread context */
 struct audiotest_thread_context thread_context[AUDIOTEST_MAX_TH_CXT];
@@ -126,7 +127,7 @@ pb_control_func audiotest_pb_controllers[AUDIOTEST_MAX_TEST_MOD] = {
 	adpcm_play_control_handler, voiceenc_control_handler,
 	NULL, fm_play_control_handler, lpa_play_control_handler,
 	sbc_rec_control_handler,
-#if defined(QC_PROP) && defined(QDSP6V2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(QDSP6V2)
 	mvs_lp_test_control_handler,
 #else
 	NULL,
@@ -200,7 +201,7 @@ struct audiotest_case_type audiotest_case_list[] = {
 #endif
 #ifdef AUDIOV2
 	{ "voiceenc", voiceenc_read_params, voiceenc_help_menu, NULL } ,
-#if defined(QC_PROP)
+#if defined(TARGET_USES_QCOM_MM_AUDIO)
 	{ "devctl", devctl_read_params, devctl_help_menu, NULL },
 #ifdef QDSP6V2
         { "mvstest", mvstest_read_params, mvstest_help_menu, NULL } ,
@@ -239,9 +240,17 @@ void audiotest_cmd_svr(void) {
 		fd = open("/tmp/audio_test", O_RDONLY);
 #endif
 
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
 	audiotest_init_devmgr();
 #endif
+
+	ionfd = -1;
+	ionfd = open("/dev/ion", O_RDONLY | O_DSYNC);
+	if (ionfd < 0)
+	{
+		fprintf(stderr, "/dev/ion open failed \n");
+		return;
+	}
 
 		while (1) {
 			cmdstr[0] = '\0';
@@ -284,11 +293,12 @@ void audiotest_cmd_svr(void) {
 		remove("/tmp/audio_test");
 #endif
 
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
 		audiotest_deinit_devmgr();
 #endif
 		wait_child_threads();
 		audiotest_case_deinit();
+		close(ionfd);
 	} else {
 		fprintf(stderr, "audio_test: Failed to create server\n");
 	}

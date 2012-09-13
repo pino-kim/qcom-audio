@@ -3,7 +3,7 @@
  * Based on native sbc test application platform/system/extras/sound/playsbc.c
  *
  * Copyright (C) 2008 The Android Open Source Project
- * Copyright (c) 2009-2010, Code Aurora Forum. All rights reserved.
+ * Copyright (c) 2009-2010, 2012 Code Aurora Forum. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ int sbc_rec(struct audtest_config *config)
 		goto error;
 	}
 	printf("enc_id = %d\n", enc_id);
-#if defined(QC_PROP)
+#if defined(TARGET_USES_QCOM_MM_AUDIO)
 /*	if (devmgr_register_session(enc_id, DIR_TX) < 0) {
 		goto error;
     	} */
@@ -173,7 +173,7 @@ int sbc_rec(struct audtest_config *config)
 
 	rc = 0;
 fail:
-#if defined(QC_PROP)
+#if defined(TARGET_USES_QCOM_MM_AUDIO)
 /*	if (devmgr_unregister_session(enc_id, DIR_TX) < 0)
 			return -1; */
 

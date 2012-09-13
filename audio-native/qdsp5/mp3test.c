@@ -3,7 +3,7 @@
  * Based on native pcm test application platform/system/extras/sound/playwav.c
  *
  * Copyright (C) 2008 The Android Open Source Project
- * Copyright (c) 2009-2010, Code Aurora Forum. All rights reserved.
+ * Copyright (c) 2009-2010, 2012 Code Aurora Forum. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@
 #include <pthread.h>
 #include <sys/ioctl.h>
 #include <linux/msm_audio.h>
+#include "ion_alloc.h"
 
 #define EOS 1
 
@@ -48,6 +49,7 @@ static int in_free_indx;
 static int in_data_indx;
 static int out_free_indx;
 static int out_data_indx;
+extern int ionfd;
 
 /* http://ccrma.stanford.edu/courses/422/projects/WaveFormat/ */
 struct wav_header {		/* Simple wave header */
@@ -378,7 +380,7 @@ static int initiate_play(struct audtest_config *clnt_config,
 			close(afd);
 			return -1;
 		}
-#if defined(QC_PROP)
+#if defined(TARGET_USES_QCOM_MM_AUDIO)
 		if (devmgr_register_session(dec_id, DIR_RX) < 0) {
 			ret = -1;
 			goto exit;
@@ -574,7 +576,7 @@ static int initiate_play(struct audtest_config *clnt_config,
 	}
 	free(buf);
 err_state:
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
 	if (!audio_data->mode) {
 		if (devmgr_unregister_session(dec_id, DIR_RX) < 0)
 			ret = -1;
@@ -837,7 +839,7 @@ static void *mp3_read_thread_8660(void *arg)
                         goto err_state;
                 }
                 printf("pcm decoder session id %d\n", dec_id);
-#if defined(QC_PROP)
+#if defined(TARGET_USES_QCOM_MM_AUDIO)
                 if (devmgr_register_session(dec_id, DIR_RX) < 0) {
                         perror("could not route pcm decoder stream\n");
                         goto err_state;
@@ -918,7 +920,7 @@ static void *mp3_read_thread_8660(void *arg)
                 write(fd, (char *)&append_header, 44);
         } else {
                 sleep(1); // All buffers drained
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
                 if (devmgr_unregister_session(dec_id, DIR_RX) < 0) {
                         perror("could not deroute pcm decoder stream\n");
                 }
@@ -1066,23 +1068,18 @@ static int mp3_play_8660(struct audtest_config *clnt_config)
 #ifdef AUDIOV2
         int dec_id;
 #endif
-        int afd, ipmem_fd[MP3TEST_NUM_IBUF], opmem_fd[MP3TEST_NUM_OBUF];
-        void *ipmem_ptr[MP3TEST_NUM_IBUF], *opmem_ptr[MP3TEST_NUM_OBUF];
-        struct msm_audio_pmem_info pmem_info;
+        int afd;
         struct msm_audio_aio_buf aio_buf;
         struct msm_audio_buf_cfg buf_cfg;
         struct msm_audio_config config;
         unsigned int open_flags;
-
-        memset(ipmem_fd, 0, (sizeof(int) * MP3TEST_NUM_IBUF));
-        memset(opmem_fd, 0, (sizeof(int) * MP3TEST_NUM_OBUF));
-        memset(ipmem_ptr, 0, (sizeof(void *) * MP3TEST_NUM_IBUF));
-        memset(opmem_ptr, 0, (sizeof(void *) * MP3TEST_NUM_OBUF));
+	struct mmap_info *in_ion_buf[MP3TEST_NUM_IBUF];
+	struct mmap_info *out_ion_buf[MP3TEST_NUM_OBUF];
 
         if(((in_size + sizeof(struct meta_in)) > MP3TEST_IBUFSZ) ||
                 (out_size > MP3TEST_OBUFSZ)) {
                         perror("configured input / output size more"\
-                        "than pmem allocation");
+                        "than ion allocation");
                         return -1;
         }
 
@@ -1121,7 +1118,7 @@ static int mp3_play_8660(struct audtest_config *clnt_config)
                         perror("could not get decoder session id\n");
                         goto err_state1;
                 }
-#if defined(QC_PROP)
+#if defined(TARGET_USES_QCOM_MM_AUDIO)
                 if (devmgr_register_session(dec_id, DIR_RX) < 0) {
                         goto err_state1;
                 }
@@ -1161,21 +1158,21 @@ static int mp3_play_8660(struct audtest_config *clnt_config)
                 printf(" selected non-tunnel part\n");
                 // Register read buffers
                 for (n = 0; n < MP3TEST_NUM_OBUF; n++) {
-                        opmem_fd[n] = open("/dev/pmem_audio", O_RDWR);
-                        printf("%s: opmem_fd %x\n",  __func__, opmem_fd[n]);
-                        opmem_ptr[n] = mmap(0, MP3TEST_OBUFSZ,
-                                PROT_READ | PROT_WRITE, MAP_SHARED, opmem_fd[n], 0);
-                        printf("%s:opmem_ptr[%d] %x\n", __func__, n, (unsigned int) opmem_ptr[n]);
-                        pmem_info.fd = opmem_fd[n];
-                        pmem_info.vaddr = opmem_ptr[n];
-                        rc = ioctl(afd, AUDIO_REGISTER_PMEM, &pmem_info);
-                        if(rc < 0) {
-                                printf( "error on register opmem=%d\n",rc);
+			out_ion_buf[n] = alloc_ion_buffer(ionfd, MP3TEST_OBUFSZ);
+			if (!out_ion_buf[n]) {
+                                printf("\n alloc_ion_buffer: out_ion_buf[n] allocation failed\n");
+                                goto err_state2;
+                        }
+
+			rc = audio_register_ion(afd, out_ion_buf[n]);
+                        if (-1 == rc) {
+                                printf("\n audio_register_ion: out_ion_buf[n] failed\n");
+				free_ion_buffer(ionfd, &out_ion_buf[n]);
                                 goto err_state2;
                         }
                         // Read buffers local structure
-                        aio_op_buf[n].buf_addr = opmem_ptr[n];
-                        aio_op_buf[n].buf_len = out_size + sizeof(struct dec_meta_out);
+			aio_op_buf[n].buf_addr = out_ion_buf[n]->pBuffer;
+			aio_op_buf[n].buf_len = (MP3TEST_OBUFSZ + 4095) & (~4095);
                         aio_op_buf[n].data_len = 0; // Driver will notify actual size
                         aio_op_buf[n].private_data = (void *)n; //Index
                 }
@@ -1198,21 +1195,21 @@ static int mp3_play_8660(struct audtest_config *clnt_config)
 
 	        //Register Write  buffer
         for (n = 0; n < MP3TEST_NUM_IBUF; n++) {
-                ipmem_fd[n] = open("/dev/pmem_audio", O_RDWR);
-                printf("%s: ipmem_fd %x\n",  __func__, ipmem_fd[n]);
-                ipmem_ptr[n] = mmap(0, MP3TEST_IBUFSZ,
-                        PROT_READ | PROT_WRITE, MAP_SHARED, ipmem_fd[n], 0);
-                printf("%s:ipmem_ptr[%d] %x\n", __func__, n, (unsigned int )ipmem_ptr[n]);
-                pmem_info.fd = ipmem_fd[n];
-                pmem_info.vaddr = ipmem_ptr[n];
-                rc = ioctl(afd, AUDIO_REGISTER_PMEM, &pmem_info);
-                if(rc < 0) {
-                        printf( "error on register ipmem=%d\n",rc);
+		in_ion_buf[n] = alloc_ion_buffer(ionfd, MP3TEST_IBUFSZ);
+		if (!in_ion_buf[n]) {
+			printf("\n alloc_ion_buffer: in_ion_buf[%d] allocation failed\n", n);
+			goto err_state2;
+		}
+
+		rc = audio_register_ion(afd, in_ion_buf[n]);
+		if (-1 == rc) {
+			printf("\n audio_register_ion: in_ion_buf[%d] failed\n", n);
+			free_ion_buffer(ionfd, &in_ion_buf[n]);
                         goto err_state2;
                 }
                 // Write buffers local structure
-                aio_ip_buf[n].buf_addr = ipmem_ptr[n];
-                aio_ip_buf[n].buf_len = MP3TEST_IBUFSZ;
+                aio_ip_buf[n].buf_addr = in_ion_buf[n]->pBuffer;
+                aio_ip_buf[n].buf_len = (MP3TEST_IBUFSZ + 4095) & (~4095);
                 aio_ip_buf[n].data_len = 0; // Driver will notify actual size
                 aio_ip_buf[n].private_data = (void *)n; //Index
         }
@@ -1244,16 +1241,14 @@ done:
 err_state2:
         if (audio_data->mode) {
                 for (n = 0; n < MP3TEST_NUM_OBUF; n++) {
-                        munmap(opmem_ptr[n], MP3TEST_OBUFSZ);
-                        close(opmem_fd[n]);
+			free_ion_buffer(ionfd, &out_ion_buf[n]);
                 }
         }
         for (n = 0; n < MP3TEST_NUM_IBUF; n++) {
-                munmap(ipmem_ptr[n], MP3TEST_IBUFSZ);
-                close(ipmem_fd[n]);
+		free_ion_buffer(ionfd, &in_ion_buf[n]);
         }
         if (!audio_data->mode) {
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
                 if (devmgr_unregister_session(dec_id, DIR_RX) < 0)
                         printf("error closing stream\n");
 #endif
@@ -1397,7 +1392,7 @@ int mp3_play_control_handler(void* private_data) {
 				ioctl(drvfd, AUDIO_PAUSE, 1);
 			} else if (!strcmp(token, "resume")) {
 				ioctl(drvfd, AUDIO_PAUSE, 0);
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
 			} else if (!strcmp(token, "volume")) {
 				int rc;
 				unsigned short dec_id;

@@ -63,7 +63,7 @@ int fm_play(struct audtest_config *cfg)
 		close(afd);
 		return -1;
 	}
-#if defined(QC_PROP)
+#if defined(TARGET_USES_QCOM_MM_AUDIO)
 	if (devmgr_register_session(dec_id, DIR_RX) < 0) {
 		ret = -1;
 		goto exit;
@@ -105,7 +105,7 @@ int fm_play(struct audtest_config *cfg)
 		printf("fm_play: Unable to start driver\n");
 	}
 #endif
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
 	if (msm_en_device(fm_devid_rx, 0) < 0) {
 		perror("could not disable device\n");
 		close(afd);
@@ -181,7 +181,7 @@ int fm_play_control_handler(void *private_data)
 {
 	int  drvfd , ret_val = 0;
 	char *token;
-#if (defined(QC_PROP) && defined(AUDIOV2)) || defined(AUDIO7X27A)
+#if (defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)) || defined(AUDIO7X27A)
 	int volume;
 #endif
 
@@ -189,7 +189,7 @@ int fm_play_control_handler(void *private_data)
 	if (token != NULL) {
 		drvfd = (int) private_data;
 		if (!memcmp(token, "-cmd=", (sizeof("-cmd=") - 1))) {
-#if (defined(QC_PROP) && defined(AUDIOV2)) || defined(AUDIO7X27A)
+#if (defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)) || defined(AUDIO7X27A)
 			token = &token[sizeof("-cmd=") - 1];
 			printf("%s: cmd %s\n", __FUNCTION__, token);
 			if (!strcmp(token, "stop")) {

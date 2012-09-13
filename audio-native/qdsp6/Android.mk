@@ -9,8 +9,8 @@ mm-audio-native-def := -g -O3
 mm-audio-native-def += -DQC_MODIFIED
 mm-audio-native-def += -D_ANDROID_
 
-ifeq ($(strip $(QC_PROP)),true)
-mm-audio-native-def += -DQC_PROP
+ifeq ($(strip $(TARGET_USES_QCOM_MM_AUDIO)),true)
+mm-audio-native-def += -DTARGET_USES_QCOM_MM_AUDIO
 endif
 # ---------------------------------------------------------------------------------
 #                       Make the apps-test (mm-audio-native-test)
@@ -18,7 +18,7 @@ endif
 
 include $(CLEAR_VARS)
 
-ifeq ($(strip $(QC_PROP)),true)
+ifeq ($(strip $(TARGET_USES_QCOM_MM_AUDIO)),true)
 mm-audio-native-inc     += $(TARGET_OUT_HEADERS)/mm-audio/atu
 endif
 
@@ -26,7 +26,7 @@ LOCAL_MODULE            := mm-audio-native-test
 LOCAL_MODULE_TAGS       := optional
 LOCAL_CFLAGS            := $(mm-audio-native-def)
 LOCAL_PRELINK_MODULE    := false
-ifeq ($(strip $(QC_PROP)),true)
+ifeq ($(strip $(TARGET_USES_QCOM_MM_AUDIO)),true)
 LOCAL_C_INCLUDES        := $(mm-audio-native-inc)
 LOCAL_SHARED_LIBRARIES  := libatu
 endif

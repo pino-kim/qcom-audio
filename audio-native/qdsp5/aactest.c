@@ -2696,6 +2696,7 @@ static int aac_start_8660(struct audtest_config *clnt_config)
 	aac_config.sbr_on_flag = clnt_config->fmt_config.aac.sbr_flag;
 	aac_config.sbr_ps_on_flag = clnt_config->fmt_config.aac.sbr_ps_flag;
 	aac_config.channel_configuration = aac_channels;
+	aac_config.sample_rate = clnt_config->sample_rate;
 
 	if (ioctl(afd, AUDIO_SET_AAC_CONFIG, &aac_config)) {
 		perror("could not set AUDIO_SET_AAC_CONFIG_V2");

@@ -22,8 +22,8 @@ ifeq ($(BOARD_USES_QCOM_AUDIO_V2), true)
 mm-audio-native-def += -DAUDIOV2
 endif
 
-ifeq ($(strip $(QC_PROP)),true)
-mm-audio-native-def += -DQC_PROP
+ifeq ($(strip $(TARGET_USES_QCOM_MM_AUDIO)),true)
+mm-audio-native-def += -DTARGET_USES_QCOM_MM_AUDIO
 endif
 
 ifeq ($(call is-board-platform,msm8660),true)
@@ -41,7 +41,7 @@ endif
 include $(CLEAR_VARS)
 
 mm-audio-native-inc     := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
-ifeq ($(strip $(QC_PROP)),true)
+ifeq ($(strip $(TARGET_USES_QCOM_MM_AUDIO)),true)
 mm-audio-native-inc     += $(TARGET_OUT_HEADERS)/mm-audio/audio-alsa
 ifeq ($(call is-board-platform,msm8660),true)
 mm-audio-native-inc     += $(TARGET_OUT_HEADERS)/mm-audio/audio-acdb-util
@@ -57,7 +57,7 @@ LOCAL_PRELINK_MODULE    := false
 
 LOCAL_C_INCLUDES        := $(mm-audio-native-inc)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
-ifeq ($(strip $(QC_PROP)),true)
+ifeq ($(strip $(TARGET_USES_QCOM_MM_AUDIO)),true)
 LOCAL_SHARED_LIBRARIES  := libaudioalsa
 ifeq ($(call is-board-platform,msm8660),true)
 LOCAL_SHARED_LIBRARIES	+= libacdbloader
@@ -80,6 +80,7 @@ LOCAL_SRC_FILES += voicememotest.c
 LOCAL_SRC_FILES += audioprofile.c
 LOCAL_SRC_FILES += snddevtest.c
 LOCAL_SRC_FILES     += equalizer.c
+LOCAL_SRC_FILES     += ion_alloc.c
 
 ifeq ($(BOARD_USES_QCOM_AUDIO_V2), true)
 LOCAL_SRC_FILES += sbctest.c
@@ -87,7 +88,7 @@ LOCAL_SRC_FILES += adpcmtest.c
 LOCAL_SRC_FILES += voiceenctest.c
 LOCAL_SRC_FILES += fm_test.c
 LOCAL_SRC_FILES += lpatest.c
-ifeq ($(strip $(QC_PROP)),true)
+ifeq ($(strip $(TARGET_USES_QCOM_MM_AUDIO)),true)
 LOCAL_SRC_FILES += devctltest.c
 ifeq ($(call is-board-platform,msm8660),true)
 LOCAL_SRC_FILES += mvstest.c

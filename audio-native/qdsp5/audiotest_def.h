@@ -3,7 +3,7 @@
  * Based on native pcm test application platform/system/extras/sound/playwav.c
  *
  * Copyright (C) 2008 The Android Open Source Project
- * Copyright (c) 2009-2010, Code Aurora Forum. All rights reserved.
+ * Copyright (c) 2009-2010, 2012 Code Aurora Forum. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 #define AUDIOTEST_DEFS_H
 
 #include <pthread.h>
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
 #include "control.h"
 #else
 	#define msm_mixer_count() (-EPERM)
@@ -166,7 +166,7 @@ typedef void (*case_deinit)(void);
 struct audiotest_thread_context* get_free_context(void);
 void free_context(struct audiotest_thread_context *context);
 
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
 /* Device manager functions */
 void audiotest_init_devmgr(void);
 void audiotest_deinit_devmgr(void);

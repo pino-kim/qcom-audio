@@ -3,7 +3,7 @@
  * Based on native pcm test application platform/system/extras/sound/playwav.c
  *
  * Copyright (C) 2008 The Android Open Source Project
- * Copyright (c) 2009-2011, Code Aurora Forum. All rights reserved.
+ * Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,7 +110,7 @@ static int pcm_play(struct audtest_config *cfg, unsigned rate,
 		close(afd);
 		return -1;
 	}
-#if defined(QC_PROP)
+#if defined(TARGET_USES_QCOM_MM_AUDIO)
     if (devmgr_register_session(dec_id, DIR_RX) < 0) {
 		ret = -1;
 		goto exit;
@@ -188,7 +188,7 @@ static int pcm_play(struct audtest_config *cfg, unsigned rate,
 	}
 	free(buf);
 err_state:
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
 	if (devmgr_unregister_session(dec_id, DIR_RX) < 0)
 			ret = -1;
 exit:
@@ -738,7 +738,7 @@ int pcm_play_control_handler(void* private_data) {
 	int  drvfd , ret_val = 0;
 	int volume;
 	char *token;
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
 	int eq_preset;
 #endif
 
@@ -749,7 +749,7 @@ int pcm_play_control_handler(void* private_data) {
 		if(!memcmp(token,"-cmd=", (sizeof("-cmd=") -1))) {
                        token = &token[sizeof("-cmd=") - 1];
                        printf("%s: cmd %s\n", __FUNCTION__, token);
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
                        if (!strcmp(token, "volume")) {
                                int rc;
                                unsigned short dec_id;

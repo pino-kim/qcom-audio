@@ -3,7 +3,7 @@
  * Based on native pcm test application platform/system/extras/sound/playwav.c
  *
  * Copyright (C) 2008 The Android Open Source Project
- * Copyright (c) 2009-2010, Code Aurora Forum. All rights reserved.
+ * Copyright (c) 2009-2010, 2012 Code Aurora Forum. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -330,7 +330,7 @@ static int initiate_play(struct audtest_config *clnt_config,
 			close(afd);
 			return -1;
 		}
-#if defined(QC_PROP)
+#if defined(TARGET_USES_QCOM_MM_AUDIO)
 		if (devmgr_register_session(dec_id, DIR_RX) < 0) {
 			ret = -1;
 			goto exit;
@@ -497,7 +497,7 @@ static int initiate_play(struct audtest_config *clnt_config,
 	}
 	free(buf);
 err_state:
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
 	if (!audio_data->mode) {
 		if (devmgr_unregister_session(dec_id, DIR_RX) < 0)
 			ret = -1;
@@ -637,7 +637,7 @@ static void *amrnb_read_thread_8660(void *arg)
 			goto err_state;
 		}
 		printf("pcm decoder session id %d\n", dec_id);
-#if defined(QC_PROP)
+#if defined(TARGET_USES_QCOM_MM_AUDIO)
 		if (devmgr_register_session(dec_id, DIR_RX) < 0) {
 			perror("could not route pcm decoder stream\n");
 			goto err_state;
@@ -718,7 +718,7 @@ static void *amrnb_read_thread_8660(void *arg)
 		write(fd, (char *)&append_header, 44);
 	} else {
 		sleep(1); // All buffers drained
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
 		if (devmgr_unregister_session(dec_id, DIR_RX) < 0) {
 			perror("could not deroute pcm decoder stream\n");
 		}
@@ -935,7 +935,7 @@ static int initiate_play_8660(struct audtest_config *clnt_config)
 			perror("could not get decoder session id\n");
 			goto err_state1;
 		}
-#if defined(QC_PROP)
+#if defined(TARGET_USES_QCOM_MM_AUDIO)
 		if (devmgr_register_session(dec_id, DIR_RX) < 0) {
 			goto err_state1;
 		}
@@ -1065,7 +1065,7 @@ err_state2:
 		close(ipmem_fd[n]);
 	}
 	if (!audio_data->mode) {
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
 		if (devmgr_unregister_session(dec_id, DIR_RX) < 0)
 			printf("error closing stream\n");
 #endif
@@ -1381,7 +1381,7 @@ int amrnb_play_control_handler(void* private_data) {
 				ioctl(drvfd, AUDIO_PAUSE, 1);
 			} else if (!strcmp(token, "resume")) {
 				ioctl(drvfd, AUDIO_PAUSE, 0);
-#if defined(QC_PROP) && defined(AUDIOV2)
+#if defined(TARGET_USES_QCOM_MM_AUDIO) && defined(AUDIOV2)
 			} else if (!strcmp(token, "volume")) {
 				int rc;
 				unsigned short dec_id;

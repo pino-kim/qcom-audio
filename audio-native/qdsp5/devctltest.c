@@ -30,10 +30,12 @@
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/mman.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <string.h>
 #include <sys/ioctl.h>
 #include "audiotest_def.h"
+#include <linux/msm_audio.h>
 
 #if defined(TARGET_USES_QCOM_MM_AUDIO)
 #include "control.h"
@@ -73,51 +75,59 @@ static int mvs_lp_flag = 0;
 const char *devctl_help_text =
 "\nDevice Control Help: MAINLY USED FOR SWITCHING THE AUDIO DEVICE.	\n\
 All Active playbacks will be routed to Device mentioned in this        \n\
-command. Device IDs are generated dynamically from the driver.		\n\
-Usage: echo \"devctl -cmd=dev_switch_rx -dev_id=x\" > /data/audio_test	\n\
-       echo \"devctl -cmd=dev_switch_tx -dev_id=x\" > /data/audio_test	\n\
-       For making voice loopback from application side:-	    	\n\
-	To start a voice call, input these commands:		    	\n"
+command. Device IDs are generated dynamically from the driver.		\n"
 #ifdef QDSP6V2
-"	To load voice acdb                                             \n\
-	echo \"devctl -cmd=load_voice_acdb -txdev_id=x -rxdev_id=y\" >  \n\
-	/data/audio_test                                                \n"
+"\nTo Switch Rx Devices\n"
+"Usage: echo \"devctl -cmd=dev_switch_rx -dev_id=x\" > /data/audio_test \n\n"
+" \nTo test Proxy port:\n"
+"Usage: echo \"devctl -cmd=dev_switch_rx -proxyporttest=<proxy port dev-id>\n \
+-time=<out file log time, this is actually a loopcounter> -outfile=<out put \
+file URL> -samplerate=<rate>\n \
+-channels=<chan>\" > /data/audio_test	\n"
+"Note:First play a decode session and then use this cmd to log pcm from proxy\n\n"
+#else
+"Usage: echo \"devctl -cmd=dev_switch_rx -dev_id=x\" > /data/audio_test \n"
 #endif
-"   echo \"devctl -cmd=voice_route -txdev_id=x -rxdev_id=y\" >  	\n\
-	/data/audio_test					    	\n\
-	echo \"devctl -cmd=enable_dev -dev_id=x\" > /data/audio_test	\n\
-	echo \"devctl -cmd=enable_dev -dev_id=y\" > /data/audio_test	\n\
-	echo \"devctl -cmd=start_voice\" > /data/audio_test	    	\n\
-	To mute/unmute:						    	\n\
-	echo \"devctl -cmd=voice_tx_mute -mute=z\" > /data/audio_test	\n\
-	To end started voice call, input these commands: 	    	\n\
-	echo \"devctl -cmd=end_voice\" > /data/audio_test	    	\n\
-	echo \"devctl -cmd=disable_dev -dev_id=x\" > /data/audio_test	\n\
-	echo \"devctl -cmd=disable_dev -dev_id=y\" > /data/audio_test	\n\
+"\nTo Switch Tx Devices\n"
+"echo \"devctl -cmd=dev_switch_tx -dev_id=x\" > /data/audio_test	\n\n\
+For making voice loopback from application side:-	    	\n\n\
+To start a voice call, input these commands:		    	\n"
+#ifdef QDSP6V2
+"\nTo load voice acdb                                             \n\
+echo \"devctl -cmd=load_voice_acdb -txdev_id=x -rxdev_id=y\" >  \n\
+/data/audio_test                                                \n"
+#endif
+"echo \"devctl -cmd=voice_route -txdev_id=x -rxdev_id=y\" >  	\n\
+/data/audio_test					    	\n\
+echo \"devctl -cmd=enable_dev -dev_id=x\" > /data/audio_test	\n\
+echo \"devctl -cmd=enable_dev -dev_id=y\" > /data/audio_test	\n\
+echo \"devctl -cmd=start_voice\" > /data/audio_test	    	\n\n\
+\nTo mute/unmute:						    	\n\
+echo \"devctl -cmd=voice_tx_mute -mute=z\" > /data/audio_test	\n\
+To end started voice call, input these commands: 	    	\n\
+echo \"devctl -cmd=end_voice\" > /data/audio_test	    	\n\
+echo \"devctl -cmd=disable_dev -dev_id=x\" > /data/audio_test	\n\
+echo \"devctl -cmd=disable_dev -dev_id=y\" > /data/audio_test	\n\
 where x,y = any of the supported device IDs listed below,           	\n\
 z = 0/1 where 0 is unmute, 1 is mute 				    	\n\
-        echo \"devctl -cmd=loopback_set -txdev_id=x -rxdev_id=y\" >  	\n\
-	/data/audio_test					    	\n\
-        echo \"devctl -cmd=loopback_reset -txdev_id=x -rxdev_id=y\" >  	\n\
-	/data/audio_test					    	\n"
+echo \"devctl -cmd=loopback_set -txdev_id=x -rxdev_id=y\" >/data/audio_test\n\
+echo \"devctl -cmd=loopback_reset -txdev_id=x -rxdev_id=y\" >  	\n\
+/data/audio_test					    	\n"
 #ifdef QDSP5V2
-"	echo \"devctl -cmd=mute_dev -dev_id=x -mute=0/1\" > /data/audio_test\n"
+"echo \"devctl -cmd=mute_dev -dev_id=x -mute=0/1\" > /data/audio_test\n"
 #endif
 #ifdef QDSP6V2
-"	To enable active noise cancellation:				\n\
-	echo \"devctl -cmd=enable_dev -dev_id=v\" > /data/audio_test	\n\
-	echo \"devctl -cmd=enable_anc\" > /data/audio_test		\n\
+"\nTo enable active noise cancellation:				\n\
+echo \"devctl -cmd=enable_dev -dev_id=v\" > /data/audio_test	\n\
+echo \"devctl -cmd=enable_anc\" > /data/audio_test		\n\
 where v = ANC Device ID							\n\
 If ANC Device is already enabled, then just run the enable_anc command  \n\
-	To disable active noise cancellation:				\n\
-	echo \"devctl -cmd=disable_anc\" > /data/audio_test		\n\
-        echo \"devctl -cmd=loopback_set -txdev_id=x -rxdev_id=y\" >  	\n\
-	/data/audio_test					    	\n\
-        echo \"devctl -cmd=loopback_reset -txdev_id=x -rxdev_id=y\" >  	\n\
-	/data/audio_test					    	\n\
-	To do device switch during VoIP call				\n\
-	echo \"devctl -cmd=mvs_dev_switch -rxdev_id=x -rxdev_id=x\"      \n\
-						 > /data/audio_test	\n"
+To disable active noise cancellation:				\n\
+echo \"devctl -cmd=disable_anc\" > /data/audio_test		\n\
+echo \"devctl -cmd=loopback_set -txdev_id=x -rxdev_id=y\" >/data/audio_test\n\
+echo \"devctl -cmd=loopback_reset -txdev_id=x -rxdev_id=y\" > /data/audio_test\n\
+\nTo do device switch during VoIP call				\n\
+echo \"devctl -cmd=mvs_dev_switch -rxdev_id=x -rxdev_id=x\"      \n > /data/audio_test	\n"
 #endif
 "Note:                                                               	\n\
 (i)   Handset RX/TX is set as default device for all playbacks/recordings \n\
@@ -442,13 +452,142 @@ void audiotest_init_devmgr(void)
     return;
 }
 
+struct audio_pvt_data audio_test;
+
+#ifdef QDSP6V2
+
+struct wav_header {		/* Simple wave header */
+	char Chunk_ID[4];	/* Store "RIFF" */
+	unsigned int Chunk_size;
+	char Riff_type[4];	/* Store "WAVE" */
+	char Chunk_ID1[4];	/* Store "fmt " */
+	unsigned int Chunk_fmt_size;
+	unsigned short Compression_code;	/*1 - 65,535,  1 - pcm */
+	unsigned short Number_Channels;	/* 1 - 65,535 */
+	unsigned int Sample_rate;	/*  1 - 0xFFFFFFFF */
+	unsigned int Bytes_Sec;	/*1 - 0xFFFFFFFF */
+	unsigned short Block_align;	/* 1 - 65,535 */
+	unsigned short Significant_Bits_sample;	/* 1 - 65,535 */
+	char Chunk_ID2[4];	/* Store "data" */
+	unsigned int Chunk_data_size;
+} __attribute__ ((packed));
+
+static struct wav_header append_header = {
+	{'R', 'I', 'F', 'F'}, 0, {'W', 'A', 'V', 'E'},
+	{'f', 'm', 't', ' '}, 16, 1, 2, 48000, 96000, 4,
+	16, {'d', 'a', 't', 'a'}, 0
+};
+
+static void create_wav_header(int Datasize)
+{
+	append_header.Chunk_size = Datasize + 8 + 16 + 12;
+	append_header.Chunk_data_size = Datasize;
+	append_header.Sample_rate= audio_test.freq;
+	append_header.Number_Channels= audio_test.channels;
+
+	return;
+}
+
+void proxyport_test( int value)
+{
+	int proxydrvrfd = 0;
+	FILE *outfilefp = 0;
+	struct msm_audio_config config;
+	int retval = 0;
+	int i = 0;
+	int len = 0;
+	int totallen = 0;
+	char *buff = 0;
+	int buffsize = 0;
+
+	proxydrvrfd = open("/dev/msm_pcm_in_proxy",O_RDONLY);
+
+	if (proxydrvrfd <= 0) {
+		perror("proxyporttest:open drvr failed\n");
+		goto err;
+	}
+
+	memset(&config, 0, sizeof(config));
+	retval = ioctl(proxydrvrfd, AUDIO_GET_CONFIG, &config);
+	if (retval < 0) {
+		perror("Proxyporttest:set config failed\n");
+		goto err;
+	}
+	config.sample_rate = audio_test.freq;
+	config.channel_count= audio_test.channels;
+
+	retval = ioctl(proxydrvrfd, AUDIO_SET_CONFIG, &config);
+	if (retval < 0) {
+		perror("Proxyporttest:set config failed\n");
+		goto err;
+	}
+
+	/* to know the buffer size calculated by driver
+	 * corresponding to the sample rate and channels set
+	 */
+	retval = ioctl(proxydrvrfd, AUDIO_GET_CONFIG, &config);
+	if (retval < 0) {
+		perror("Proxyporttest:set config failed\n");
+		goto err;
+	}
+
+	buffsize = config.buffer_size;
+	buff = malloc(buffsize);
+
+	printf("sample rate %d channels %d\n",
+		config.sample_rate, config.channel_count);
+
+	retval = ioctl(proxydrvrfd, AUDIO_START, NULL);
+	if (retval < 0) {
+		perror("proxyporttest:START failed\n");
+		goto err;
+	}
+
+	outfilefp  = fopen(audio_test.outfile, "wb");
+
+	if (outfilefp == 0) {
+		perror("proxyporttest:out file drvr open failed\n");
+		goto err;
+	}
+
+	/* Set aside Space for Wave Header */
+	fseek(outfilefp , sizeof(append_header), SEEK_SET);
+
+	for(i = 0, totallen = 0; i < value; i++, totallen+=len){
+		len = read(proxydrvrfd, buff, buffsize);
+		if (len == buffsize)
+			printf("read chuck(%d) from proxy port success\n", i);
+
+		retval = fwrite(buff, buffsize, 1, outfilefp);
+		if (retval > 0)
+			printf("write chuck(%d) to file success\n", i);
+	}
+
+	create_wav_header(totallen);
+	fseek(outfilefp, 0, SEEK_SET);
+	fwrite((char *)&append_header, sizeof(append_header), 1, outfilefp);
+	fclose(outfilefp);
+	close(proxydrvrfd);
+	if(buff)
+		free(buff);
+	printf("\n\nProxy port test SUCCESS, find the PCM samples(bytes %d) at %s\n\n",
+		totallen, audio_test.outfile);
+	return;
+
+err:
+	printf("\n\nProxy port test failed.\n\n");
+	return;
+}
+#endif
+
+
 int devmgr_devctl_handler()
 {
 
 	char *token;
 	int ret_val = 0, sid, dev_source, dev_dest, index, dev_id,
 		mute, txdev_id, rxdev_id;
-
+	int loopcounter = 1000;
 #ifdef QDSP6V2
 	char *anc_device = "anc_headset_stereo_rx";
 	int device = 0;
@@ -507,6 +646,56 @@ int devmgr_devctl_handler()
 						}
 					}
 				}
+#ifdef QDSP6V2
+				if (!memcmp(token, "-proxyporttest=", (sizeof("-proxyporttest=") - 1))) {
+					dev_id = atoi(&token [sizeof("-proxyporttest=") - 1]);
+				printf("-->proxy port dev id %d\n", dev_id);
+
+				/* setup defaults */
+				audio_test.freq = 48000;
+				audio_test.channels = 2;
+				loopcounter = 1000;
+
+				while (token != NULL) {
+					if (!memcmp(token, "-outfile=", (sizeof("-outfile=") - 1))) {
+						token = &token[sizeof("-outfile=") - 1];
+						audio_test.outfile = token;
+						printf("-->outfile %s\n", token);
+					} else if (!memcmp(token, "-channels=", (sizeof("-channels=") - 1))) {
+						audio_test.channels=atoi(&token[sizeof("-channels=") - 1]);
+						printf("-->channels %d\n", audio_test.channels);
+					} else if (!memcmp(token,"-samplerate=", (sizeof("-samplerate=" - 1)))) {
+						audio_test.freq = atoi(&token[sizeof("-samplerate=") - 1]);
+						printf("-->sample rate %d\n", audio_test.freq);
+					} else if (!memcmp(token, "-time=", (sizeof("-time=") - 1))) {
+						loopcounter = atoi(&token[sizeof("-time=") - 1]);
+						printf("-->loopcounter %d\n", loopcounter);
+					}
+					token = strtok(NULL, " ");
+				}
+
+					for (index = 0; index < devmgr_sid_count_rx; index++) {
+						msm_route_stream (DIR_RX, devmgr_sid_rx_array[index], dev_id, 1);
+						if ( (devmgr_enable_device(dev_id, DIR_RX) ) == 0) {
+							printf("Proxy Device Switch on Success\n");
+						}
+						else
+							printf("Proxy Device switch on failure\n");
+					}
+
+					proxyport_test(loopcounter);
+
+					for (index = 0; index < devmgr_sid_count_rx; index++) {
+						msm_route_stream (DIR_RX, devmgr_sid_rx_array[index], dev_id, 0);
+						if ( (devmgr_disable_device(dev_id, DIR_RX) ) == 0) {
+							printf("Proxy Device Switch off Success\n");
+						}
+						else
+							printf("Proxy Device switch off failure\n");
+					}
+
+				}
+#endif /*QDSP6V2*/
 			} else if (!strcmp(token, "dev_switch_tx")) {
 				token = strtok(NULL, " ");
 				if (!memcmp(token, "-dev_id=",

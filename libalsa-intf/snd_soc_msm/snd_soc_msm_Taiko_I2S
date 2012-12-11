@@ -1,0 +1,497 @@
+
+# Master file for snd_soc_msm taiko sound card
+# Lists all use case verbs
+SectionUseCase."HiFi" {
+Comment "Music playback use case"
+SectionVerb
+	Name "HiFi"
+
+	EnableSequence
+		'MI2S_RX Audio Mixer MultiMedia1':1:1
+	EndSequence
+
+	DisableSequence
+		'MI2S_RX Audio Mixer MultiMedia1':1:0
+	EndSequence
+
+	# ALSA PCMs
+	CapturePCM 0
+	PlaybackPCM 0
+
+EndSection
+
+}
+
+SectionUseCase."HiFi Rec" {
+Comment "Recording use case"
+SectionVerb
+	Name "HiFi Rec"
+
+	EnableSequence
+		'MultiMedia1 Mixer MI2S_TX':1:1
+	EndSequence
+
+	DisableSequence
+		'MultiMedia1 Mixer MI2S_TX':1:0
+	EndSequence
+
+	# ALSA PCMs
+	CapturePCM 0
+	PlaybackPCM 0
+
+EndSection
+
+}
+
+SectionUseCase."Voice Call IP" {
+Comment "VOIP Call use case"
+SectionVerb
+	Name "Voice Call IP"
+
+	EnableSequence
+		'MI2S_RX_Voice Mixer Voip':1:1
+		'Voip_Tx Mixer MI2S_TX_Voip':1:1
+	EndSequence
+
+	DisableSequence
+		'MI2S_RX_Voice Mixer Voip':1:0
+		'Voip_Tx Mixer MI2S_TX_Voip':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 1
+	CapturePCM 1
+
+EndSection
+}
+
+SectionUseCase."Voice Call" {
+Comment "Voice Call use case"
+SectionVerb
+	Name "Voice Call"
+
+	EnableSequence
+		'MI2S_RX_Voice Mixer CSVoice':1:1
+		'Voice_Tx Mixer MI2S_TX_Voice':1:1
+	EndSequence
+
+	DisableSequence
+		'MI2S_RX_Voice Mixer CSVoice':1:0
+		'Voice_Tx Mixer MI2S_TX_Voice':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 2
+	CapturePCM 2
+
+EndSection
+}
+
+SectionUseCase."VoLTE" {
+Comment "VoLTE use case"
+SectionVerb
+	Name "VoLTE"
+
+	EnableSequence
+		'MI2S_RX_Voice Mixer VoLTE':1:1
+		'VoLTE_Tx Mixer MI2S_TX_VoLTE':1:1
+	EndSequence
+
+	DisableSequence
+		'MI2S_RX_Voice Mixer VoLTE':1:0
+		'VoLTE_Tx Mixer MI2S_TX_VoLTE':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 4
+	capturePCM 4
+
+EndSection
+}
+
+SectionDevice
+	Name "Earpiece"
+	Comment "Handset Rx device"
+
+	EnableSequence
+		'SLIM RX1 MUX':0:AIF1_PB
+		'MI2S_RX Channels':0:One
+		'RX1 MIX1 INP1':0:RX1
+		'RX1 Digital Volume':1:67
+		'DAC1 Switch':1:1
+	EndSequence
+
+	DisableSequence
+		'SLIM RX1 MUX':0:ZERO
+		'RX1 MIX1 INP1':0:ZERO
+		'RX1 Digital Volume':1:0
+		'DAC1 Switch':1:0
+	EndSequence
+
+	ACDBID	7:1
+	EffectsMixerCTL "SRS TruMedia"
+	EC_REF_RXMixerCTL "MI2S_RX"
+
+EndSection
+
+SectionDevice
+	Name "DMIC Endfire"
+	Comment "Dual MIC Endfire Tx device"
+
+	EnableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:1
+		'AIF1_CAP Mixer SLIM TX8':1:1
+		'SLIM TX7 MUX':0:DEC7
+		'DEC7 MUX':0:DMIC1
+		'SLIM TX8 MUX':0:DEC10
+		'DEC10 MUX':0:DMIC3
+		'MICBIAS1 CAPLESS Switch':1:1
+		'MICBIAS3 CAPLESS Switch':1:1
+		'MI2S_TX Channels':0:Two
+	EndSequence
+
+	DisableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:0
+		'AIF1_CAP Mixer SLIM TX8':1:0
+		'SLIM TX7 MUX':0:ZERO
+		'DEC7 MUX':0:ZERO
+		'SLIM TX8 MUX':0:ZERO
+		'DEC10 MUX':0:ZERO
+		'MICBIAS1 CAPLESS Switch':1:0
+		'MICBIAS3 CAPLESS Switch':1:0
+	EndSequence
+
+	ACDBID	6:2
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionDevice
+	Name "Speaker DMIC Broadside"
+	Comment "Dual MIC Broadside Tx device"
+
+	EnableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:1
+		'AIF1_CAP Mixer SLIM TX8':1:1
+		'SLIM TX7 MUX':0:DEC7
+		'DEC7 MUX':0:DMIC1
+		'SLIM TX8 MUX':0:DEC8
+		'DEC8 MUX':0:DMIC2
+		'MICBIAS1 CAPLESS Switch':1:1
+		'MI2S_TX Channels':0:Two
+	EndSequence
+
+	DisableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:0
+		'AIF1_CAP Mixer SLIM TX8':1:0
+		'SLIM TX7 MUX':0:ZERO
+		'DEC7 MUX':0:ZERO
+		'SLIM TX8 MUX':0:ZERO
+		'DEC8 MUX':0:ZERO
+		'MICBIAS1 CAPLESS Switch':1:0
+	EndSequence
+
+	ACDBID	12:2
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionDevice
+	Name "Voice Earpiece"
+	Comment "Handset Rx device for voice call"
+
+	EnableSequence
+		'SLIM RX1 MUX':0:AIF1_PB
+		'MI2S_RX Channels':0:One
+		'RX1 MIX1 INP1':0:RX1
+		'RX1 Digital Volume':1:67
+		'DAC1 Switch':1:1
+	EndSequence
+
+	DisableSequence
+		'SLIM RX1 MUX':0:ZERO
+		'RX1 MIX1 INP1':0:ZERO
+		'RX1 Digital Volume':1:0
+		'DAC1 Switch':1:0
+	EndSequence
+
+	ACDBID	7:1
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionDevice
+	Name "Speaker"
+	Comment "Speaker Rx device"
+
+	EnableSequence
+		'SLIM RX1 MUX':0:AIF1_PB
+		'MI2S_RX Channels':0:One
+		'RX1 MIX1 INP1':0:RX1
+		'RX1 Digital Volume':1:67
+		'DAC1 Switch':1:1
+	EndSequence
+
+	DisableSequence
+		'SLIM RX1 MUX':0:ZERO
+		'RX1 MIX1 INP1':0:ZERO
+		'RX1 Digital Volume':1:0
+		'DAC1 Switch':1:0
+	EndSequence
+
+	ACDBID	15:1
+	EffectsMixerCTL "SRS TruMedia"
+	EC_REF_RXMixerCTL "MI2S_RX"
+
+EndSection
+
+SectionDevice
+	Name "Headphones"
+	Comment "Headset Rx device"
+
+	EnableSequence
+		'SLIM RX1 MUX':0:AIF1_PB
+		'SLIM RX2 MUX':0:AIF1_PB
+		'MI2S_RX Channels':0:Two
+		'RX1 MIX1 INP1':0:RX1
+		'RX2 MIX1 INP1':0:RX2
+		'HPHL DAC Switch':1:1
+		'HPHL Volume':1:80
+		'HPHR Volume':1:80
+		'RX1 Digital Volume':1:67
+		'RX2 Digital Volume':1:67
+	EndSequence
+
+	DisableSequence
+		'SLIM RX1 MUX':0:ZERO
+		'SLIM RX2 MUX':0:ZERO
+		'RX1 MIX1 INP1':0:ZERO
+		'RX2 MIX1 INP1':0:ZERO
+		'HPHL DAC Switch':1:0
+		'HPHL Volume':1:0
+		'HPHR Volume':1:0
+		'RX1 Digital Volume':1:0
+		'RX2 Digital Volume':1:0
+	EndSequence
+
+	ACDBID	10:1
+	EffectsMixerCTL "SRS TruMedia"
+	EC_REF_RXMixerCTL "MI2S_RX"
+
+EndSection
+
+SectionDevice
+	Name "Voice Headphones"
+	Comment "Headset Rx device for voice call"
+
+	EnableSequence
+		'SLIM RX1 MUX':0:AIF1_PB
+		'SLIM RX2 MUX':0:AIF1_PB
+		'MI2S_RX Channels':0:Two
+		'RX1 MIX1 INP1':0:RX1
+		'RX2 MIX1 INP1':0:RX2
+		'HPHL DAC Switch':1:1
+		'HPHL Volume':1:80
+		'HPHR Volume':1:80
+		'RX1 Digital Volume':1:67
+		'RX2 Digital Volume':1:67
+	EndSequence
+
+	DisableSequence
+		'SLIM RX1 MUX':0:ZERO
+		'SLIM RX2 MUX':0:ZERO
+		'RX1 MIX1 INP1':0:ZERO
+		'RX2 MIX1 INP1':0:ZERO
+		'HPHL DAC Switch':1:0
+		'HPHL Volume':1:0
+		'HPHR Volume':1:0
+		'RX1 Digital Volume':1:0
+		'RX2 Digital Volume':1:0
+	EndSequence
+
+	ACDBID	10:1
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionDevice
+	Name "Speaker Headset"
+	Comment "Speaker Headset Rx combo device"
+
+	EnableSequence
+		'SLIM RX1 MUX':0:AIF1_PB
+		'SLIM RX2 MUX':0:AIF1_PB
+		'MI2S_RX Channels':0:Two
+		'RX1 MIX1 INP1':0:RX1
+		'RX2 MIX1 INP1':0:RX2
+		'DAC1 Switch':1:1
+		'HPHL DAC Switch':1:1
+		'HPHL Volume':1:80
+		'HPHR Volume':1:80
+		'RX1 Digital Volume':1:67
+		'RX2 Digital Volume':1:67
+	EndSequence
+
+	DisableSequence
+		'SLIM RX1 MUX':0:ZERO
+		'SLIM RX2 MUX':0:ZERO
+		'RX1 MIX1 INP1':0:ZERO
+		'RX2 MIX1 INP1':0:ZERO
+		'DAC1 Switch':1:0
+		'HPHL DAC Switch':1:0
+		'HPHL Volume':1:0
+		'HPHR Volume':1:0
+		'RX1 Digital Volume':1:0
+		'RX2 Digital Volume':1:0
+	EndSequence
+
+	ACDBID	10:1
+	EffectsMixerCTL "SRS TruMedia"
+	EC_REF_RXMixerCTL "MI2S_RX"
+
+EndSection
+
+SectionDevice
+	Name "Headset"
+	Comment "Headset Tx device"
+
+	EnableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:1
+		'MI2S_TX Channels':0:One
+		'SLIM TX7 MUX':0:DEC5
+		'DEC5 MUX':0:ADC2
+		'DEC5 Volume':1:67
+		'ADC2 Volume':1:100
+	EndSequence
+
+	DisableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:0
+		'SLIM TX7 MUX':0:ZERO
+		'DEC5 MUX':0:ZERO
+		'ADC2 Volume':1:0
+		'DEC5 Volume':1:0
+	EndSequence
+
+	ACDBID	8:2
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionDevice
+	Name "Handset"
+	Comment "Handset Tx device"
+
+	EnableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:1
+		'MI2S_TX Channels':0:One
+		'SLIM TX7 MUX':0:DEC6
+		'DEC6 MUX':0:ADC1
+		'ADC1 Volume':1:100
+		'DEC6 Volume':1:67
+	EndSequence
+
+	DisableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:0
+		'SLIM TX7 MUX':0:ZERO
+		'DEC6 MUX':0:ZERO
+		'ADC1 Volume':1:0
+	EndSequence
+
+	ACDBID	4:2
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionModifier
+	Name "Play Music"
+	Comment "Modifier for music playback"
+
+	EnableSequence
+		'MI2S_RX Audio Mixer MultiMedia1':1:1
+	EndSequence
+
+	DisableSequence
+		'MI2S_RX Audio Mixer MultiMedia1':1:0
+	EndSequence
+
+	# ALSA PCMs
+	CapturePCM 0
+	PlaybackPCM 0
+
+EndSection
+
+SectionModifier
+	Name "Capture Music"
+
+	EnableSequence
+		'MultiMedia1 Mixer MI2S_TX':1:1
+	EndSequence
+
+	DisableSequence
+		'MultiMedia1 Mixer MI2S_TX':1:0
+	EndSequence
+
+	# ALSA PCMs
+	CapturePCM 0
+	PlaybackPCM 0
+
+EndSection
+
+SectionModifier
+	Name "Play Voice"
+
+	EnableSequence
+		'MI2S_RX_Voice Mixer CSVoice':1:1
+		'Voice_Tx Mixer MI2S_TX_Voice':1:1
+	EndSequence
+
+	DisableSequence
+		'MI2S_RX_Voice Mixer CSVoice':1:0
+		'Voice_Tx Mixer MI2S_TX_Voice':1:0
+	EndSequence
+
+	# ALSA PCMs
+	CapturePCM 2
+	PlaybackPCM 2
+
+EndSection
+
+SectionModifier
+	Name "Play VOIP"
+
+	EnableSequence
+		'MI2S_RX_Voice Mixer Voip':1:1
+		'Voip_Tx Mixer MI2S_TX_Voip':1:1
+	EndSequence
+
+	DisableSequence
+		'MI2S_RX_Voice Mixer Voip':1:0
+		'Voip_Tx Mixer MI2S_TX_Voip':1:0
+	EndSequence
+
+       # ALSA PCMs
+	PlaybackPCM 1
+	CapturePCM 1
+
+EndSection
+
+SectionModifier
+	Name "Play VoLTE"
+
+	EnableSequence
+		'SMI2S_RX_Voice Mixer VoLTE':1:1
+		'VoLTE_Tx Mixer MI2S_TX_VoLTE':1:1
+	EndSequence
+
+	DisableSequence
+		'MI2S_RX_Voice Mixer VoLTE':1:0
+		'VoLTE_Tx Mixer MI2S_TX_VoLTE':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 4
+	capturePCM 4
+
+EndSection
+
+# End of master file

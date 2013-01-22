@@ -1,6 +1,6 @@
 /*
 ** Copyright 2010, The Android Open-Source Project
-** Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+** Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -43,12 +43,6 @@ struct pcm {
     int device_no;
     int start;
 };
-
-enum decoder_alias {
-    FORMAT_MP3,
-    FORMAT_AC3_PASS_THROUGH = 2,
-};
-
 #define FORMAT(v) SNDRV_PCM_FORMAT_##v
 
 #define PCM_OUT        0x00000000
@@ -58,6 +52,7 @@ enum decoder_alias {
 #define PCM_MONO       0x01000000
 #define PCM_QUAD       0x02000000
 #define PCM_5POINT1    0x04000000
+#define PCM_7POINT1    0x08000000
 
 #define PCM_44100HZ    0x00000000
 #define PCM_48000HZ    0x00100000
@@ -149,9 +144,12 @@ void param_set_max(struct snd_pcm_hw_params *p, int n, unsigned val);
 int param_set_hw_refine(struct pcm *pcm, struct snd_pcm_hw_params *params);
 int param_set_hw_params(struct pcm *pcm, struct snd_pcm_hw_params *params);
 int param_set_sw_params(struct pcm *pcm, struct snd_pcm_sw_params *sparams);
+int get_compressed_format(const char *format);
 void param_dump(struct snd_pcm_hw_params *p);
 int pcm_prepare(struct pcm *pcm);
 long pcm_avail(struct pcm *pcm);
+int pcm_set_channel_map(struct pcm *pcm, struct mixer *mixer,
+                        int max_channels, char *chmap);
 
 /* Returns a human readable reason for the last error. */
 const char *pcm_error(struct pcm *pcm);

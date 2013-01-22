@@ -1,6 +1,6 @@
 /*
 ** Copyright 2010, The Android Open-Source Project
-** Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+** Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -24,9 +24,10 @@
 #else /* ANDROID */
 #define strlcat g_strlcat
 #define strlcpy g_strlcpy
-#define LOGI(...)      fprintf(stdout, __VA_ARGS__)
-#define LOGE(...)      fprintf(stderr, __VA_ARGS__)
-#define LOGV(...)      fprintf(stderr, __VA_ARGS__)
+#define ALOGI(...)      fprintf(stdout, __VA_ARGS__)
+#define ALOGE(...)      fprintf(stderr, __VA_ARGS__)
+#define ALOGV(...)      fprintf(stderr, __VA_ARGS__)
+#define ALOGD(...)      fprintf(stderr, __VA_ARGS__)
 #endif /* ANDROID */
 
 #include <stdio.h>
@@ -43,7 +44,7 @@
 #include <sys/poll.h>
 #include <linux/ioctl.h>
 #include <linux/types.h>
-
+#include <sound/compress_params.h>
 #include "alsa_audio.h"
 
 #define __force
@@ -78,7 +79,7 @@ enum format_alias {
       IMA_ADPCM,
       MPEG,
       GSM,
-      SPECIAL = 31, 
+      SPECIAL = 31,
       S24_3LE,
       S24_3BE,
       U24_3LE,
@@ -118,7 +119,7 @@ const char *formats_list[][2] = {
         {"A_LAW", "A-Law"},
         {"IMA_ADPCM", "Ima-ADPCM"},
         {"MPEG", "MPEG"},
-        {"GSM", "GSM"}, 
+        {"GSM", "GSM"},
         [31] = {"SPECIAL", "Special"},
         {"S24_3LE", "Signed 24 bit Little Endian in 3bytes"},
         {"S24_3BE", "Signed 24 bit Big Endian in 3bytes"},
@@ -133,6 +134,18 @@ const char *formats_list[][2] = {
         {"U18_3LE", "Unsigned 18 bit Little Endian in 3bytes"},
         {"U18_3BE", "Unsigned 18 bit Big Endian in 3bytes"},
 };
+enum decoder_alias {
+    FORMAT_MP3              = SND_AUDIOCODEC_MP3,
+    FORMAT_AAC              = SND_AUDIOCODEC_AAC,
+    FORMAT_AC3_PASS_THROUGH = SND_AUDIOCODEC_AC3_PASS_THROUGH,
+    FORMAT_WMA              = SND_AUDIOCODEC_WMA,
+    FORMAT_WMA_PRO          = SND_AUDIOCODEC_WMA_PRO,
+    FORMAT_DTS              = SND_AUDIOCODEC_DTS,
+    FORMAT_DTS_LBR          = SND_AUDIOCODEC_DTS_LBR,
+    FORMAT_DTS_PASS_THROUGH = SND_AUDIOCODEC_DTS_PASS_THROUGH,
+    FORMAT_AMRWB            = SND_AUDIOCODEC_AMRWB,
+    FORMAT_AMRWB_PLUS       = SND_AUDIOCODEC_AMRWBPLUS
+};
 
 int get_compressed_format(const char *format)
 {
@@ -143,6 +156,30 @@ int get_compressed_format(const char *format)
         } else if (strcmp(ch, "AC3_PASS_THROUGH") == 0) {
                 printf("AC3 PASS THROUGH is selected\n");
                 return FORMAT_AC3_PASS_THROUGH;
+        } else if (strcmp(ch, "AAC") == 0) {
+                printf("AAC is selected\n");
+                return FORMAT_AAC;
+        } else if (strcmp(ch, "AC3_PASS_THROUGH") == 0) {
+                printf("AC3_PASS_THROUGH is selected\n");
+                return FORMAT_AC3_PASS_THROUGH;
+        } else if (strcmp(ch, "WMA") == 0) {
+                printf("WMA is selected\n");
+                return FORMAT_WMA;
+        }else if (strcmp(ch, "WMA_PRO") == 0) {
+                printf("WMA_PRO is selected\n");
+                return FORMAT_WMA_PRO;
+        }else if (strcmp(ch, "DTS") == 0) {
+                printf("DTS is selected\n");
+                return FORMAT_DTS;
+        } else if (strcmp(ch, "DTS_LBR") == 0) {
+                printf("DTS_LBR is selected\n");
+                return FORMAT_DTS_LBR;
+        } else if (strcmp(ch, "AMR_WB") == 0) {
+                printf("AMR_WB is selected\n");
+                return FORMAT_AMRWB;
+        }else if (strcmp(ch, "AMR_WB_PLUS") == 0) {
+                printf("FORMAT_AMRWB_PLUS is selected\n");
+                return FORMAT_AMRWB_PLUS;
         } else {
                 printf("invalid format\n");
                 return -1;
@@ -156,7 +193,7 @@ int get_format(const char* name)
         for (format = 0; format < FORMAT_LAST; format++) {
                 if (formats_list[format][0] &&
                     strcasecmp(name, formats_list[format][0]) == 0) {
-                        LOGV("format_names %s", name);
+                        ALOGV("format_names %s", name);
                         return  format;
                 }
         }
@@ -291,35 +328,35 @@ void param_dump(struct snd_pcm_hw_params *p)
     for (n = SNDRV_PCM_HW_PARAM_FIRST_MASK;
          n <= SNDRV_PCM_HW_PARAM_LAST_MASK; n++) {
             struct snd_mask *m = param_to_mask(p, n);
-            LOGV("%s = %08x%08x\n", param_name[n],
+            ALOGV("%s = %08x%08x\n", param_name[n],
                    m->bits[1], m->bits[0]);
     }
     for (n = SNDRV_PCM_HW_PARAM_FIRST_INTERVAL;
          n <= SNDRV_PCM_HW_PARAM_LAST_INTERVAL; n++) {
             struct snd_interval *i = param_to_interval(p, n);
-            LOGV("%s = (%d,%d) omin=%d omax=%d int=%d empty=%d\n",
+            ALOGV("%s = (%d,%d) omin=%d omax=%d int=%d empty=%d\n",
                    param_name[n], i->min, i->max, i->openmin,
                    i->openmax, i->integer, i->empty);
     }
-    LOGV("info = %08x\n", p->info);
-    LOGV("msbits = %d\n", p->msbits);
-    LOGV("rate = %d/%d\n", p->rate_num, p->rate_den);
-    LOGV("fifo = %d\n", (int) p->fifo_size);
+    ALOGV("info = %08x\n", p->info);
+    ALOGV("msbits = %d\n", p->msbits);
+    ALOGV("rate = %d/%d\n", p->rate_num, p->rate_den);
+    ALOGV("fifo = %d\n", (int) p->fifo_size);
 }
 
 static void info_dump(struct snd_pcm_info *info)
 {
-    LOGV("device = %d\n", info->device);
-    LOGV("subdevice = %d\n", info->subdevice);
-    LOGV("stream = %d\n", info->stream);
-    LOGV("card = %d\n", info->card);
-    LOGV("id = '%s'\n", info->id);
-    LOGV("name = '%s'\n", info->name);
-    LOGV("subname = '%s'\n", info->subname);
-    LOGV("dev_class = %d\n", info->dev_class);
-    LOGV("dev_subclass = %d\n", info->dev_subclass);
-    LOGV("subdevices_count = %d\n", info->subdevices_count);
-    LOGV("subdevices_avail = %d\n", info->subdevices_avail);
+    ALOGV("device = %d\n", info->device);
+    ALOGV("subdevice = %d\n", info->subdevice);
+    ALOGV("stream = %d\n", info->stream);
+    ALOGV("card = %d\n", info->card);
+    ALOGV("id = '%s'\n", info->id);
+    ALOGV("name = '%s'\n", info->name);
+    ALOGV("subname = '%s'\n", info->subname);
+    ALOGV("dev_class = %d\n", info->dev_class);
+    ALOGV("dev_subclass = %d\n", info->dev_subclass);
+    ALOGV("subdevices_count = %d\n", info->subdevices_count);
+    ALOGV("subdevices_avail = %d\n", info->subdevices_avail);
 }
 #else
 void param_dump(struct snd_pcm_hw_params *p) {}
@@ -329,7 +366,7 @@ static void info_dump(struct snd_pcm_info *info) {}
 int param_set_hw_refine(struct pcm *pcm, struct snd_pcm_hw_params *params)
 {
     if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_HW_REFINE, params)) {
-        LOGE("SNDRV_PCM_IOCTL_HW_REFINE failed");
+        ALOGE("SNDRV_PCM_IOCTL_HW_REFINE failed");
         return -EPERM;
     }
     return 0;
@@ -356,7 +393,7 @@ int param_set_sw_params(struct pcm *pcm, struct snd_pcm_sw_params *sparams)
 int pcm_buffer_size(struct snd_pcm_hw_params *params)
 {
     struct snd_interval *i = param_to_interval(params, SNDRV_PCM_HW_PARAM_BUFFER_BYTES);
-            LOGV("%s = (%d,%d) omin=%d omax=%d int=%d empty=%d\n",
+            ALOGV("%s = (%d,%d) omin=%d omax=%d int=%d empty=%d\n",
                    param_name[SNDRV_PCM_HW_PARAM_BUFFER_BYTES],
                    i->min, i->max, i->openmin,
                    i->openmax, i->integer, i->empty);
@@ -366,7 +403,7 @@ int pcm_buffer_size(struct snd_pcm_hw_params *params)
 int pcm_period_size(struct snd_pcm_hw_params *params)
 {
     struct snd_interval *i = param_to_interval(params, SNDRV_PCM_HW_PARAM_PERIOD_BYTES);
-            LOGV("%s = (%d,%d) omin=%d omax=%d int=%d empty=%d\n",
+            ALOGV("%s = (%d,%d) omin=%d omax=%d int=%d empty=%d\n",
                    param_name[SNDRV_PCM_HW_PARAM_PERIOD_BYTES],
                    i->min, i->max, i->openmin,
                    i->openmax, i->integer, i->empty);
@@ -398,7 +435,7 @@ long pcm_avail(struct pcm *pcm)
 {
      struct snd_pcm_sync_ptr *sync_ptr = pcm->sync_ptr;
      if (pcm->flags & DEBUG_ON) {
-        LOGV("hw_ptr = %d buf_size = %d appl_ptr = %d\n",
+        ALOGV("hw_ptr = %d buf_size = %d appl_ptr = %d\n",
                 sync_ptr->s.status.hw_ptr,
                 pcm->buffer_size,
                 sync_ptr->c.control.appl_ptr);
@@ -409,7 +446,20 @@ long pcm_avail(struct pcm *pcm)
                 avail += pcm->sw_p->boundary;
         return avail;
      } else {
-         long avail = sync_ptr->s.status.hw_ptr - sync_ptr->c.control.appl_ptr + ((pcm->flags & PCM_MONO) ? pcm->buffer_size/2 : pcm->buffer_size/4);
+         int buffer_size = 0;
+         long avail;
+         if(pcm->flags & PCM_MONO)
+             buffer_size = pcm->buffer_size/2;
+         else if(pcm->flags & PCM_QUAD)
+             buffer_size = pcm->buffer_size/8;
+         else if(pcm->flags & PCM_5POINT1)
+             buffer_size = pcm->buffer_size/12;
+         else if(pcm->flags & PCM_7POINT1)
+             buffer_size = pcm->buffer_size/16;
+         else
+             buffer_size = pcm->buffer_size/4;
+
+         avail = sync_ptr->s.status.hw_ptr - sync_ptr->c.control.appl_ptr + buffer_size;
          if (avail < 0)
               avail += pcm->sw_p->boundary;
          else if ((unsigned long) avail >= pcm->sw_p->boundary)
@@ -424,7 +474,7 @@ int sync_ptr(struct pcm *pcm)
     err = ioctl(pcm->fd, SNDRV_PCM_IOCTL_SYNC_PTR, pcm->sync_ptr);
     if (err < 0) {
         err = errno;
-        LOGE("SNDRV_PCM_IOCTL_SYNC_PTR failed %d \n", err);
+        ALOGE("SNDRV_PCM_IOCTL_SYNC_PTR failed %d \n", err);
         return err;
     }
 
@@ -437,11 +487,22 @@ int mmap_buffer(struct pcm *pcm)
     char *ptr;
     unsigned size;
     struct snd_pcm_channel_info ch;
-    int channels = (pcm->flags & PCM_MONO) ? 1 : 2;
+    int channels;
+
+    if(pcm->flags & PCM_MONO)
+        channels = 1;
+    else if(pcm->flags & PCM_QUAD)
+        channels = 4;
+    else if(pcm->flags & PCM_5POINT1)
+        channels = 6;
+    else if(pcm->flags & PCM_7POINT1)
+        channels = 8;
+    else
+        channels = 2;
 
     size = pcm->buffer_size;
     if (pcm->flags & DEBUG_ON)
-        LOGV("size = %d\n", size);
+        ALOGV("size = %d\n", size);
     pcm->addr = mmap(NULL, size, PROT_READ|PROT_WRITE, MAP_SHARED,
                            pcm->fd, 0);
     if (pcm->addr)
@@ -461,8 +522,19 @@ u_int8_t *dst_address(struct pcm *pcm)
     unsigned long pcm_offset = 0;
     struct snd_pcm_sync_ptr *sync_ptr = pcm->sync_ptr;
     unsigned int appl_ptr = 0;
+    int channels;
+    if(pcm->flags & PCM_MONO)
+        channels = 1;
+    else if(pcm->flags & PCM_QUAD)
+        channels = 4;
+    else if(pcm->flags & PCM_5POINT1)
+        channels = 6;
+    else if(pcm->flags & PCM_7POINT1)
+        channels = 8;
+    else
+        channels = 2;
 
-    appl_ptr = (pcm->flags & PCM_MONO) ? sync_ptr->c.control.appl_ptr*2 : sync_ptr->c.control.appl_ptr*4;
+    appl_ptr = sync_ptr->c.control.appl_ptr*2*channels;
     pcm_offset = (appl_ptr % (unsigned long)pcm->buffer_size);
     return pcm->addr + pcm_offset;
 
@@ -475,7 +547,17 @@ int mmap_transfer(struct pcm *pcm, void *data, unsigned offset,
     unsigned size;
     u_int8_t *dst_addr, *mmaped_addr;
     u_int8_t *src_addr = data;
-    int channels = (pcm->flags & PCM_MONO) ? 1 : 2;
+    int channels;
+    if(pcm->flags & PCM_MONO)
+        channels = 1;
+    else if(pcm->flags & PCM_QUAD)
+        channels = 4;
+    else if(pcm->flags & PCM_5POINT1)
+        channels = 6;
+    else if(pcm->flags & PCM_7POINT1)
+        channels = 8;
+    else
+        channels = 2;
 
     dst_addr = dst_address(pcm);
 
@@ -497,9 +579,20 @@ int mmap_transfer_capture(struct pcm *pcm, void *data, unsigned offset,
     unsigned size;
     u_int8_t *dst_addr, *mmaped_addr;
     u_int8_t *src_addr;
-    int channels = (pcm->flags & PCM_MONO) ? 1 : 2;
-    unsigned int tmp = (pcm->flags & PCM_MONO) ? sync_ptr->c.control.appl_ptr*2 : sync_ptr->c.control.appl_ptr*4;
+    int channels;
+    unsigned int tmp;
 
+    if(pcm->flags & PCM_MONO)
+        channels = 1;
+    else if(pcm->flags & PCM_QUAD)
+        channels = 4;
+    else if(pcm->flags & PCM_5POINT1)
+        channels = 6;
+    else if(pcm->flags & PCM_7POINT1)
+        channels = 8;
+    else
+        channels = 2;
+    tmp = sync_ptr->c.control.appl_ptr*2*channels;
     pcm_offset = (tmp % (unsigned long)pcm->buffer_size);
     dst_addr = data;
     src_addr = pcm->addr + pcm_offset;
@@ -516,7 +609,7 @@ int mmap_transfer_capture(struct pcm *pcm, void *data, unsigned offset,
 int pcm_prepare(struct pcm *pcm)
 {
     if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_PREPARE)) {
-           LOGE("cannot prepare channel: errno =%d\n", -errno);
+           ALOGE("cannot prepare channel: errno =%d\n", -errno);
            return -errno;
     }
     pcm->running = 1;
@@ -528,13 +621,23 @@ static int pcm_write_mmap(struct pcm *pcm, void *data, unsigned count)
     long frames;
     int err;
     int bytes_written;
-
-    frames = (pcm->flags & PCM_MONO) ? (count / 2) : (count / 4);
+    int channels;
+    if(pcm->flags & PCM_MONO)
+        channels = 1;
+    else if(pcm->flags & PCM_QUAD)
+        channels = 4;
+    else if(pcm->flags & PCM_5POINT1)
+        channels = 6;
+    else if(pcm->flags & PCM_7POINT1)
+        channels = 8;
+    else
+        channels = 2;
+    frames = count / (2*channels);
 
     pcm->sync_ptr->flags = SNDRV_PCM_SYNC_PTR_APPL | SNDRV_PCM_SYNC_PTR_AVAIL_MIN;
     err = sync_ptr(pcm);
     if (err == EPIPE) {
-        LOGE("Failed in sync_ptr\n");
+        ALOGE("Failed in sync_ptr\n");
         /* we failed to make our window -- try to restart */
         pcm->underruns++;
         pcm->running = 0;
@@ -545,7 +648,7 @@ static int pcm_write_mmap(struct pcm *pcm, void *data, unsigned count)
 
     err = sync_ptr(pcm);
     if (err == EPIPE) {
-        LOGE("Failed in sync_ptr 2 \n");
+        ALOGE("Failed in sync_ptr 2 \n");
         /* we failed to make our window -- try to restart */
         pcm->underruns++;
         pcm->running = 0;
@@ -556,17 +659,17 @@ static int pcm_write_mmap(struct pcm *pcm, void *data, unsigned count)
         if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_START)) {
             err = -errno;
             if (errno == EPIPE) {
-                LOGE("Failed in SNDRV_PCM_IOCTL_START\n");
+                ALOGE("Failed in SNDRV_PCM_IOCTL_START\n");
                 /* we failed to make our window -- try to restart */
                 pcm->underruns++;
                 pcm->running = 0;
                 pcm_prepare(pcm);
             } else {
-                LOGE("Error no %d \n", errno);
+                ALOGE("Error no %d \n", errno);
                 return -errno;
             }
         } else {
-             LOGE(" start\n");
+             ALOGD(" start\n");
              pcm->start = 1;
         }
     }
@@ -576,7 +679,17 @@ static int pcm_write_mmap(struct pcm *pcm, void *data, unsigned count)
 static int pcm_write_nmmap(struct pcm *pcm, void *data, unsigned count)
 {
     struct snd_xferi x;
-    int channels = (pcm->flags & PCM_MONO) ? 1 : ((pcm->flags & PCM_5POINT1)? 6 : 2 );
+    int channels;
+    if(pcm->flags & PCM_MONO)
+        channels = 1;
+    else if(pcm->flags & PCM_QUAD)
+        channels = 4;
+    else if(pcm->flags & PCM_5POINT1)
+        channels = 6;
+    else if(pcm->flags & PCM_7POINT1)
+        channels = 8;
+    else
+        channels = 2;
 
     if (pcm->flags & PCM_IN)
         return -EINVAL;
@@ -591,7 +704,7 @@ static int pcm_write_nmmap(struct pcm *pcm, void *data, unsigned count)
         if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_WRITEI_FRAMES, &x)) {
             if (errno == EPIPE) {
                     /* we failed to make our window -- try to restart */
-                LOGE("Underrun Error\n");
+                ALOGE("Underrun Error\n");
                 pcm->underruns++;
                 pcm->running = 0;
                 continue;
@@ -599,7 +712,7 @@ static int pcm_write_nmmap(struct pcm *pcm, void *data, unsigned count)
             return -errno;
         }
         if (pcm->flags & DEBUG_ON)
-          LOGV("Sent frame\n");
+          ALOGV("Sent frame\n");
         return 0;
     }
 }
@@ -626,6 +739,8 @@ int pcm_read(struct pcm *pcm, void *data, unsigned count)
         x.frames = (count / 8);
     } else if (pcm->flags & PCM_5POINT1) {
         x.frames = (count / 12);
+    } else if (pcm->flags & PCM_7POINT1) {
+        x.frames = (count / 16);
     } else {
         x.frames = (count / 4);
     }
@@ -635,7 +750,7 @@ int pcm_read(struct pcm *pcm, void *data, unsigned count)
             if (pcm_prepare(pcm))
                 return -errno;
             if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_START)) {
-                LOGE("Arec:SNDRV_PCM_IOCTL_START failed\n");
+                ALOGE("Arec:SNDRV_PCM_IOCTL_START failed\n");
                 return -errno;
             }
             pcm->running = 1;
@@ -643,12 +758,12 @@ int pcm_read(struct pcm *pcm, void *data, unsigned count)
         if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_READI_FRAMES, &x)) {
             if (errno == EPIPE) {
                 /* we failed to make our window -- try to restart */
-                LOGE("Arec:Overrun Error\n");
+                ALOGE("Arec:Overrun Error\n");
                 pcm->underruns++;
                 pcm->running = 0;
                 continue;
             } else if (errno == ESTRPIPE) {
-                LOGV("Resume from suspended\n");
+                ALOGV("Resume from suspended\n");
                 for (;;) {
                     if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_RESUME)) {
                         if (errno == EAGAIN ) {
@@ -662,7 +777,7 @@ int pcm_read(struct pcm *pcm, void *data, unsigned count)
                 }
                 continue;
             }
-            LOGE("Arec: error%d\n", errno);
+            ALOGE("Arec: error%d\n", errno);
             return -errno;
         }
         return 0;
@@ -678,14 +793,14 @@ static int enable_timer(struct pcm *pcm) {
     pcm->timer_fd = open("/dev/snd/timer", O_RDWR | O_NONBLOCK);
     if (pcm->timer_fd < 0) {
        close(pcm->fd);
-       LOGE("cannot open timer device 'timer'");
+       ALOGE("cannot open timer device 'timer'");
        return &bad_pcm;
     }
     int arg = 1;
     struct snd_timer_params timer_param;
     struct snd_timer_select sel;
     if (ioctl(pcm->timer_fd, SNDRV_TIMER_IOCTL_TREAD, &arg) < 0) {
-           LOGE("extended read is not supported (SNDRV_TIMER_IOCTL_TREAD)\n");
+           ALOGE("extended read is not supported (SNDRV_TIMER_IOCTL_TREAD)\n");
     }
     memset(&sel, 0, sizeof(sel));
     sel.id.dev_class = SNDRV_TIMER_CLASS_PCM;
@@ -698,14 +813,14 @@ static int enable_timer(struct pcm *pcm) {
         sel.id.subdevice = 0;
 
     if (pcm->flags & DEBUG_ON) {
-        LOGE("sel.id.dev_class= %d\n", sel.id.dev_class);
-        LOGE("sel.id.dev_sclass = %d\n", sel.id.dev_sclass);
-        LOGE("sel.id.card = %d\n", sel.id.card);
-        LOGE("sel.id.device = %d\n", sel.id.device);
-        LOGE("sel.id.subdevice = %d\n", sel.id.subdevice);
+        ALOGD("sel.id.dev_class= %d\n", sel.id.dev_class);
+        ALOGD("sel.id.dev_sclass = %d\n", sel.id.dev_sclass);
+        ALOGD("sel.id.card = %d\n", sel.id.card);
+        ALOGD("sel.id.device = %d\n", sel.id.device);
+        ALOGD("sel.id.subdevice = %d\n", sel.id.subdevice);
     }
     if (ioctl(pcm->timer_fd, SNDRV_TIMER_IOCTL_SELECT, &sel) < 0) {
-          LOGE("SNDRV_TIMER_IOCTL_SELECT failed.\n");
+          ALOGE("SNDRV_TIMER_IOCTL_SELECT failed.\n");
           close(pcm->timer_fd);
           close(pcm->fd);
           return &bad_pcm;
@@ -716,11 +831,11 @@ static int enable_timer(struct pcm *pcm) {
     timer_param.filter = (1<<SNDRV_TIMER_EVENT_MSUSPEND) | (1<<SNDRV_TIMER_EVENT_MRESUME) | (1<<SNDRV_TIMER_EVENT_TICK);
 
     if (ioctl(pcm->timer_fd, SNDRV_TIMER_IOCTL_PARAMS, &timer_param)< 0) {
-           LOGE("SNDRV_TIMER_IOCTL_PARAMS failed\n");
+           ALOGE("SNDRV_TIMER_IOCTL_PARAMS failed\n");
     }
     if (ioctl(pcm->timer_fd, SNDRV_TIMER_IOCTL_START) < 0) {
            close(pcm->timer_fd);
-           LOGE("SNDRV_TIMER_IOCTL_START failed\n");
+           ALOGE("SNDRV_TIMER_IOCTL_START failed\n");
     }
     return 0;
 }
@@ -729,7 +844,7 @@ static int disable_timer(struct pcm *pcm) {
      if (pcm == &bad_pcm)
          return 0;
      if (ioctl(pcm->timer_fd, SNDRV_TIMER_IOCTL_STOP) < 0)
-         LOGE("SNDRV_TIMER_IOCTL_STOP failed\n");
+         ALOGE("SNDRV_TIMER_IOCTL_STOP failed\n");
      return close(pcm->timer_fd);
 }
 
@@ -741,14 +856,14 @@ int pcm_close(struct pcm *pcm)
     if (pcm->flags & PCM_MMAP) {
         disable_timer(pcm);
         if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_DROP) < 0) {
-            LOGE("Reset failed");
+            ALOGE("Reset failed");
         }
 
         if (munmap(pcm->addr, pcm->buffer_size))
-            LOGE("munmap failed");
+            ALOGE("munmap failed");
 
         if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_HW_FREE) < 0) {
-            LOGE("HW_FREE failed");
+            ALOGE("HW_FREE failed");
         }
     }
 
@@ -779,8 +894,8 @@ struct pcm *pcm_open(unsigned flags, char *device)
     char *tmp;
 
     if (flags & DEBUG_ON) {
-        LOGV("pcm_open(0x%08x)",flags);
-        LOGV("device %s\n",device);
+        ALOGV("pcm_open(0x%08x)",flags);
+        ALOGV("device %s\n",device);
     }
 
     pcm = calloc(1, sizeof(struct pcm));
@@ -789,7 +904,7 @@ struct pcm *pcm_open(unsigned flags, char *device)
 
     tmp = device+4;
     if ((strncmp(device, "hw:",3) != 0) || (strncmp(tmp, ",",1) != 0)){
-        LOGE("Wrong device fromat\n");
+        ALOGE("Wrong device fromat\n");
         free(pcm);
         return -EINVAL;
     }
@@ -824,7 +939,7 @@ struct pcm *pcm_open(unsigned flags, char *device)
         strlcat(dname, "p", (sizeof("p")+strlen(dname)));
     }
     if (pcm->flags & DEBUG_ON)
-        LOGV("Device name %s\n", dname);
+        ALOGV("Device name %s\n", dname);
 
     pcm->sync_ptr = calloc(1, sizeof(struct snd_pcm_sync_ptr));
     if (!pcm->sync_ptr) {
@@ -837,7 +952,7 @@ struct pcm *pcm_open(unsigned flags, char *device)
     if (pcm->fd < 0) {
         free(pcm->sync_ptr);
         free(pcm);
-        LOGE("cannot open device '%s', errno %d", dname, errno);
+        ALOGE("cannot open device '%s', errno %d", dname, errno);
         return &bad_pcm;
     }
 
@@ -846,7 +961,7 @@ struct pcm *pcm_open(unsigned flags, char *device)
         close(pcm->fd);
         free(pcm->sync_ptr);
         free(pcm);
-        LOGE("failed to change the flag, errno %d", errno);
+        ALOGE("failed to change the flag, errno %d", errno);
         return &bad_pcm;
     }
 
@@ -854,9 +969,9 @@ struct pcm *pcm_open(unsigned flags, char *device)
         enable_timer(pcm);
 
     if (pcm->flags & DEBUG_ON)
-        LOGV("pcm_open() %s\n", dname);
+        ALOGV("pcm_open() %s\n", dname);
     if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_INFO, &info)) {
-        LOGE("cannot get info - %s", dname);
+        ALOGE("cannot get info - %s", dname);
     }
     if (pcm->flags & DEBUG_ON)
        info_dump(&info);
@@ -867,4 +982,47 @@ struct pcm *pcm_open(unsigned flags, char *device)
 int pcm_ready(struct pcm *pcm)
 {
     return pcm->fd >= 0;
+}
+
+int pcm_set_channel_map(struct pcm *pcm, struct mixer *mixer,
+                        int max_channels, char *chmap)
+{
+    struct mixer_ctl *ctl;
+    char control_name[44]; // max length of name is 44 as defined
+    char device_num[3]; // device number upto 2 digit
+    char **set_values;
+    int i;
+
+    ALOGV("pcm_set_channel_map");
+    set_values = (char**)malloc(max_channels*sizeof(char*));
+    if(set_values) {
+        for(i=0; i< max_channels; i++) {
+            set_values[i] = (char*)malloc(4*sizeof(char));
+            if(set_values[i]) {
+                sprintf(set_values[i],"%d",chmap[i]);
+            } else {
+                ALOGE("memory allocation for set channel map failed");
+                return -1;
+            }
+        }
+    } else {
+        ALOGE("memory allocation for set channel map failed");
+        return -1;
+    }
+    strlcpy(control_name, "Playback Channel Map", sizeof(control_name));
+    sprintf(device_num, "%d", pcm->device_no);
+    strcat(control_name, device_num);
+    ALOGV("pcm_set_channel_map: control name:%s", control_name);
+    ctl = mixer_get_control(mixer, control_name, 0);
+    if(ctl == NULL) {
+        ALOGE(stderr, "Could not get the mixer control\n");
+        return -1;
+    }
+    mixer_ctl_set_value(ctl, max_channels, set_values);
+    for(i=0; i< max_channels; i++)
+        if(set_values[i])
+            free(set_values[i]);
+    if(set_values)
+        free(set_values);
+    return 0;
 }

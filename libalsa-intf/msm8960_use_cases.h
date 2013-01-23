@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+ * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -180,6 +180,7 @@ static const char *card_list[] = {
     "snd_soc_msm_2x_Fusion3",
     "snd_soc_msm_Sitar",
     "snd_soc_msm_I2S",
+    "snd_soc_msm_Taiko_I2S",
 };
 
 typedef struct card_mapping {
@@ -194,6 +195,7 @@ static card_mapping_t card_mapping_list[] = {
     {"snd_soc_msm_2x_Fusion3", 0},
     {"snd_soc_msm_Sitar", 0},
     {"snd_soc_msm_I2S", 0},
+    {"snd_soc_msm_Taiko_I2S", 0},
 };
 
 /* New use cases, devices and modifiers added

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -37,10 +37,10 @@
 #include <math.h>
 #define strlcat g_strlcat
 #define strlcpy g_strlcpy
-#define LOGI(...)      fprintf(stdout, __VA_ARGS__)
-#define LOGE(...)      fprintf(stderr, __VA_ARGS__)
-#define LOGV(...)      fprintf(stderr, __VA_ARGS__)
-#define LOGD(...)      fprintf(stderr, __VA_ARGS__)
+#define ALOGI(...)      fprintf(stdout, __VA_ARGS__)
+#define ALOGE(...)      fprintf(stderr, __VA_ARGS__)
+#define ALOGV(...)      fprintf(stderr, __VA_ARGS__)
+#define ALOGD(...)      fprintf(stderr, __VA_ARGS__)
 #endif /* ANDROID */
 
 #include <stdio.h>
@@ -78,7 +78,7 @@
  */
 char *snd_use_case_identifier(const char *fmt, ...)
 {
-    LOGE("API not implemented for now, to be updated if required");
+    ALOGE("API not implemented for now, to be updated if required");
     return NULL;
 }
 
@@ -119,7 +119,7 @@ int snd_use_case_get_list(snd_use_case_mgr_t *uc_mgr,
     pthread_mutex_lock(&uc_mgr->card_ctxt_ptr->card_lock);
     if ((uc_mgr->snd_card_index >= (int)MAX_NUM_CARDS) ||
         (uc_mgr->snd_card_index < 0) || (uc_mgr->card_ctxt_ptr == NULL)) {
-        LOGE("snd_use_case_get_list(): failed, invalid arguments");
+        ALOGE("snd_use_case_get_list(): failed, invalid arguments");
         pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
         return -EINVAL;
     }
@@ -127,7 +127,7 @@ int snd_use_case_get_list(snd_use_case_mgr_t *uc_mgr,
     if (!strncmp(identifier, "_verbs", 6)) {
         while(strncmp(uc_mgr->card_ctxt_ptr->verb_list[index],
             SND_UCM_END_OF_LIST, strlen(SND_UCM_END_OF_LIST))) {
-            LOGV("Index:%d Verb:%s", index,
+            ALOGV("Index:%d Verb:%s", index,
                  uc_mgr->card_ctxt_ptr->verb_list[index]);
             index++;
         }
@@ -137,7 +137,7 @@ int snd_use_case_get_list(snd_use_case_mgr_t *uc_mgr,
     } else  if (!strncmp(identifier, "_devices", 8)) {
         if (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
             SND_USE_CASE_VERB_INACTIVE, strlen(SND_USE_CASE_VERB_INACTIVE))) {
-            LOGE("Use case verb name not set, invalid current verb");
+            ALOGE("Use case verb name not set, invalid current verb");
             pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
             return -EINVAL;
         }
@@ -151,7 +151,7 @@ int snd_use_case_get_list(snd_use_case_mgr_t *uc_mgr,
         index = 0;
         while(strncmp(verb_list[verb_index].device_list[index],
             SND_UCM_END_OF_LIST, strlen(SND_UCM_END_OF_LIST))) {
-            LOGV("Index:%d Device:%s", index,
+            ALOGV("Index:%d Device:%s", index,
                  verb_list[verb_index].device_list[index]);
             index++;
         }
@@ -161,7 +161,7 @@ int snd_use_case_get_list(snd_use_case_mgr_t *uc_mgr,
     } else  if (!strncmp(identifier, "_modifiers", 10)) {
         if (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
                     SND_USE_CASE_VERB_INACTIVE, MAX_STR_LEN)) {
-            LOGE("Use case verb name not set, invalid current verb");
+            ALOGE("Use case verb name not set, invalid current verb");
             pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
             return -EINVAL;
         }
@@ -175,7 +175,7 @@ int snd_use_case_get_list(snd_use_case_mgr_t *uc_mgr,
         index = 0;
         while(strncmp(verb_list[verb_index].modifier_list[index],
                     SND_UCM_END_OF_LIST, strlen(SND_UCM_END_OF_LIST))) {
-            LOGV("Index:%d Modifier:%s", index,
+            ALOGV("Index:%d Modifier:%s", index,
                  verb_list[verb_index].modifier_list[index]);
             index++;
         }
@@ -195,7 +195,7 @@ int snd_use_case_get_list(snd_use_case_mgr_t *uc_mgr,
         list_size =
             snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->dev_list_head);
         uc_mgr->device_list_count = list_size;
-	if (list_size > 0) {
+    if (list_size > 0) {
             uc_mgr->current_device_list =
                 (char **)malloc(sizeof(char *)*list_size);
             if (uc_mgr->current_device_list == NULL) {
@@ -225,7 +225,7 @@ int snd_use_case_get_list(snd_use_case_mgr_t *uc_mgr,
         list_size =
             snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->mod_list_head);
         uc_mgr->modifier_list_count = list_size;
-	if (list_size > 0) {
+    if (list_size > 0) {
             uc_mgr->current_modifier_list =
                 (char **)malloc(sizeof(char *) * list_size);
             if (uc_mgr->current_modifier_list == NULL) {
@@ -243,7 +243,7 @@ int snd_use_case_get_list(snd_use_case_mgr_t *uc_mgr,
         pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
         return (list_size);
     } else {
-        LOGE("Invalid identifier: %s", identifier);
+        ALOGE("Invalid identifier: %s", identifier);
         pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
         return -EINVAL;
     }
@@ -274,7 +274,7 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
     pthread_mutex_lock(&uc_mgr->card_ctxt_ptr->card_lock);
     if ((uc_mgr->snd_card_index >= (int)MAX_NUM_CARDS) ||
         (uc_mgr->snd_card_index < 0) || (uc_mgr->card_ctxt_ptr == NULL)) {
-        LOGE("snd_use_case_get(): failed, invalid arguments");
+        ALOGE("snd_use_case_get(): failed, invalid arguments");
         pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
         return -EINVAL;
     }
@@ -301,7 +301,7 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
 
     strlcpy(ident, identifier, sizeof(ident));
     if(!(ident1 = strtok_r(ident, "/", &temp_ptr))) {
-        LOGE("No valid identifier found: %s", ident);
+        ALOGE("No valid identifier found: %s", ident);
         ret = -EINVAL;
     } else {
         if ((!strncmp(ident1, "PlaybackPCM", 11)) ||
@@ -319,7 +319,7 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
                 if((verb_index < 0) ||
                     (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
                     SND_UCM_END_OF_LIST, 3)) || (ctrl_list == NULL)) {
-                    LOGE("Invalid current verb value: %s - %d",
+                    ALOGE("Invalid current verb value: %s - %d",
                          uc_mgr->card_ctxt_ptr->current_verb, verb_index);
                     pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
                     return -EINVAL;
@@ -339,7 +339,7 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
                 ret = -EINVAL;
             }
             if (ret < 0) {
-                LOGE("No valid device/modifier found with given identifier: %s",
+                ALOGE("No valid device/modifier found with given identifier: %s",
                      ident2);
             } else {
                 if(!strncmp(ident1, "PlaybackPCM", 11)) {
@@ -357,7 +357,7 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
                         ret = -ENODEV;
                     }
                 } else {
-                    LOGE("No valid device name exists for given identifier: %s",
+                    ALOGE("No valid device name exists for given identifier: %s",
                          ident2);
                     *value = NULL;
                     ret = -ENODEV;
@@ -368,7 +368,7 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
             if(uc_mgr->card_ctxt_ptr->control_device != NULL) {
                 *value = strdup(uc_mgr->card_ctxt_ptr->control_device);
             } else {
-                LOGE("No valid control device found");
+                ALOGE("No valid control device found");
                 *value = NULL;
                 ret = -ENODEV;
             }
@@ -380,7 +380,7 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
                (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
                 SND_UCM_END_OF_LIST, 3)) ||
                 (verb_list[verb_index].verb_ctrls == NULL)) {
-                LOGE("Invalid current verb value: %s - %d",
+                ALOGE("Invalid current verb value: %s - %d",
                      uc_mgr->card_ctxt_ptr->current_verb, verb_index);
                 pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
                 return -EINVAL;
@@ -399,7 +399,7 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
                 }
             }
             if (ret < 0) {
-                LOGE("No valid device/modifier found with given identifier: %s",
+                ALOGE("No valid device/modifier found with given identifier: %s",
                       ident2);
             } else {
                 if (verb_list[verb_index].device_ctrls[index].acdb_id) {
@@ -416,7 +416,7 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
                (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
                 SND_UCM_END_OF_LIST, 3)) ||
                 (verb_list[verb_index].verb_ctrls == NULL)) {
-                LOGE("Invalid current verb value: %s - %d",
+                ALOGE("Invalid current verb value: %s - %d",
                      uc_mgr->card_ctxt_ptr->current_verb, verb_index);
                 pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
                 return -EINVAL;
@@ -434,7 +434,7 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
                 }
             }
             if (ret < 0) {
-                LOGE("No valid device/modifier found with given identifier: %s",
+                ALOGE("No valid device/modifier found with given identifier: %s",
                       ident2);
             } else {
                 if (verb_list[verb_index].device_ctrls[index].effects_mixer_ctl) {
@@ -452,7 +452,7 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
                (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
                 SND_UCM_END_OF_LIST, 3)) ||
                 (verb_list[verb_index].verb_ctrls == NULL)) {
-                LOGE("Invalid current verb value: %s - %d",
+                ALOGE("Invalid current verb value: %s - %d",
                      uc_mgr->card_ctxt_ptr->current_verb, verb_index);
                 pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
                 return -EINVAL;
@@ -470,7 +470,7 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
                 }
             }
             if (ret < 0) {
-                LOGE("No valid device/modifier found with given identifier: %s",
+                ALOGE("No valid device/modifier found with given identifier: %s",
                       ident2);
             } else {
                 if (verb_list[verb_index].device_ctrls[index].ec_ref_rx_mixer_ctl) {
@@ -481,7 +481,7 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
                 }
             }
         } else {
-            LOGE("Unsupported identifier value: %s", ident1);
+            ALOGE("Unsupported identifier value: %s", ident1);
             *value = NULL;
             ret = -EINVAL;
         }
@@ -508,7 +508,7 @@ int snd_use_case_geti(snd_use_case_mgr_t *uc_mgr,
     pthread_mutex_lock(&uc_mgr->card_ctxt_ptr->card_lock);
     if ((uc_mgr->snd_card_index >= (int)MAX_NUM_CARDS) ||
         (uc_mgr->snd_card_index < 0) || (uc_mgr->card_ctxt_ptr == NULL)) {
-        LOGE("snd_use_case_geti(): failed, invalid arguments");
+        ALOGE("snd_use_case_geti(): failed, invalid arguments");
         pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
         return -EINVAL;
     }
@@ -516,7 +516,7 @@ int snd_use_case_geti(snd_use_case_mgr_t *uc_mgr,
     *value = 0;
     strlcpy(ident, identifier, sizeof(ident));
     if(!(ident1 = strtok_r(ident, "/", &temp_ptr))) {
-        LOGE("No valid identifier found: %s", ident);
+        ALOGE("No valid identifier found: %s", ident);
         ret = -EINVAL;
     } else {
         if (!strncmp(ident1, "_devstatus", 10)) {
@@ -566,7 +566,7 @@ int snd_use_case_geti(snd_use_case_mgr_t *uc_mgr,
                 ret = 0;
             }
         } else {
-            LOGE("Unknown identifier: %s", ident1);
+            ALOGE("Unknown identifier: %s", ident1);
         }
     }
     pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
@@ -583,15 +583,19 @@ const char *use_case)
         strlen(SND_USE_CASE_VERB_VOICECALL))) ||
         (!strncmp(use_case, SND_USE_CASE_VERB_SGLTECALL,
         strlen(SND_USE_CASE_VERB_SGLTECALL))) ||
+        (!strncmp(use_case, SND_USE_CASE_VERB_VOLTE,
+        strlen(SND_USE_CASE_VERB_VOLTE))) ||
         (!strncmp(use_case, SND_USE_CASE_VERB_IP_VOICECALL,
         strlen(SND_USE_CASE_VERB_IP_VOICECALL))) ||
         (!strncmp(use_case, SND_USE_CASE_MOD_PLAY_VOICE,
         strlen(SND_USE_CASE_MOD_PLAY_VOICE))) ||
         (!strncmp(use_case, SND_USE_CASE_MOD_PLAY_SGLTE,
         strlen(SND_USE_CASE_MOD_PLAY_SGLTE))) ||
+        (!strncmp(use_case, SND_USE_CASE_MOD_PLAY_VOLTE,
+        strlen(SND_USE_CASE_MOD_PLAY_VOLTE))) ||
         (!strncmp(use_case, SND_USE_CASE_MOD_PLAY_VOIP,
         strlen(SND_USE_CASE_MOD_PLAY_VOIP)))) {
-        LOGV("check_devices_for_voice_call(): voice cap detected\n");
+        ALOGV("check_devices_for_voice_call(): voice cap detected\n");
         list_size =
         snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->dev_list_head);
         for (index = 0; index < list_size; index++) {
@@ -606,10 +610,10 @@ const char *use_case)
             }
         }
         if (rx_dev_status == 1 && tx_dev_status == 1) {
-            LOGV("check_devices_for_voice_call(): Rx and Tx devices enabled\n");
+            ALOGV("check_devices_for_voice_call(): Rx and Tx devices enabled\n");
             return 0;
         } else {
-            LOGV("check_devices_for_voice_call(): Rx/Tx dev not enabled: \
+            ALOGV("check_devices_for_voice_call(): Rx/Tx dev not enabled: \
                   %d,%d\n", rx_dev_status, tx_dev_status);
             return 1;
         }
@@ -626,6 +630,8 @@ int use_case_index)
 
     /* Check if voice call use case/modifier exists */
     if ((!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
+        SND_USE_CASE_VERB_VOLTE, strlen(SND_USE_CASE_VERB_VOLTE))) ||
+	(!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
         SND_USE_CASE_VERB_VOICECALL, strlen(SND_USE_CASE_VERB_VOICECALL))) ||
         (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
         SND_USE_CASE_VERB_SGLTECALL, strlen(SND_USE_CASE_VERB_SGLTECALL))) ||
@@ -641,7 +647,9 @@ int use_case_index)
             if ((ident_value =
                 snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->mod_list_head,
                 index))) {
-                if ((!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_VOICE,
+                if ((!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_VOLTE,
+                    strlen(SND_USE_CASE_MOD_PLAY_VOLTE))) ||
+		    (!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_VOICE,
                     strlen(SND_USE_CASE_MOD_PLAY_VOICE))) ||
                     (!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_SGLTE,
                     strlen(SND_USE_CASE_MOD_PLAY_SGLTE))) ||
@@ -662,7 +670,7 @@ int use_case_index)
     if((verb_index < 0) ||
         (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
         SND_UCM_END_OF_LIST, 3))) {
-        LOGE("Invalid current verb value: %s - %d",
+        ALOGE("Invalid current verb value: %s - %d",
             uc_mgr->card_ctxt_ptr->current_verb, verb_index);
         return -EINVAL;
     }
@@ -695,7 +703,7 @@ int use_case_index)
                 index++;
             }
             if (ret < 0) {
-                LOGE("No valid device found: %s",ident_value);
+                ALOGE("No valid device found: %s",ident_value);
             } else {
                 if (ctrl_list[use_case_index].capability == CAP_RX) {
                     rx_id = ctrl_list[use_case_index].acdb_id;
@@ -704,11 +712,11 @@ int use_case_index)
                     rx_id = ctrl_list[index].acdb_id;
                     tx_id = ctrl_list[use_case_index].acdb_id;
                 }
-                if(rx_id == DEVICE_SPEAKER_RX_ACDB_ID &&
-                   tx_id == DEVICE_HANDSET_TX_ACDB_ID) {
+                if(((rx_id == DEVICE_SPEAKER_MONO_RX_ACDB_ID)||(rx_id == DEVICE_SPEAKER_STEREO_RX_ACDB_ID))
+                    && tx_id == DEVICE_HANDSET_TX_ACDB_ID) {
                     tx_id = DEVICE_SPEAKER_TX_ACDB_ID;
-                } else if (rx_id == DEVICE_SPEAKER_RX_ACDB_ID &&
-                           tx_id == DEVICE_HANDSET_TX_FV5_ACDB_ID) {
+                } else if (((rx_id == DEVICE_SPEAKER_MONO_RX_ACDB_ID )||(rx_id == DEVICE_SPEAKER_STEREO_RX_ACDB_ID))
+                    && tx_id == DEVICE_HANDSET_TX_FV5_ACDB_ID) {
                     tx_id = DEVICE_SPEAKER_TX_FV5_ACDB_ID;
                 }
 
@@ -716,13 +724,14 @@ int use_case_index)
                     (tx_id != uc_mgr->current_tx_device)) {
                     uc_mgr->current_rx_device = rx_id;
                     uc_mgr->current_tx_device = tx_id;
-                    LOGD("Voice acdb: rx id %d tx id %d",
+                    ALOGD("Voice acdb: rx id %d tx id %d",
                           uc_mgr->current_rx_device,
                           uc_mgr->current_tx_device);
-                    acdb_loader_send_voice_cal(uc_mgr->current_rx_device,
-                        uc_mgr->current_tx_device);
+                    if (!uc_mgr->isFusion3Platform)
+                        acdb_loader_send_voice_cal(uc_mgr->current_rx_device,
+                                                    uc_mgr->current_tx_device);
                 } else {
-                    LOGV("Voice acdb: Required acdb already pushed \
+                    ALOGV("Voice acdb: Required acdb already pushed \
                          rx id %d tx id %d", uc_mgr->current_rx_device,
                          uc_mgr->current_tx_device);
                 }
@@ -731,7 +740,7 @@ int use_case_index)
             ident_value = NULL;
         }
     } else {
-        LOGV("No voice use case found");
+        ALOGV("No voice use case found");
         uc_mgr->current_rx_device = -1; uc_mgr->current_tx_device = -1;
         ret = -ENODEV;
     }
@@ -762,7 +771,7 @@ int ctrl_list_type)
     if((verb_index < 0) ||
       (!strncmp(uc_mgr->card_ctxt_ptr->current_verb, SND_UCM_END_OF_LIST, 3)) ||
       (ctrl_list == NULL) || (ctrl_list[index].case_name == NULL)) {
-        LOGE("Invalid current verb value: %s - %d",
+        ALOGE("Invalid current verb value: %s - %d",
                 uc_mgr->card_ctxt_ptr->current_verb, verb_index);
         return -EINVAL;
     }
@@ -774,7 +783,7 @@ int ctrl_list_type)
         }
         index++;
         if (ctrl_list[index].case_name == NULL) {
-            LOGE("Invalid case_name at index %d", index);
+            ALOGE("Invalid case_name at index %d", index);
             ret = -EINVAL;
             break;
         }
@@ -815,26 +824,26 @@ const char *use_case, int enable, int ctrl_list_type, int uc_index)
     if((verb_index < 0) ||
       (!strncmp(uc_mgr->card_ctxt_ptr->current_verb, SND_UCM_END_OF_LIST, 3)) ||
       (ctrl_list == NULL)) {
-        LOGE("Invalid current verb value: %s - %d",
+        ALOGE("Invalid current verb value: %s - %d",
             uc_mgr->card_ctxt_ptr->current_verb, verb_index);
         return -EINVAL;
     }
     if (uc_index < 0) {
-        LOGE("No valid use case found with the use case: %s", use_case);
+        ALOGE("No valid use case found with the use case: %s", use_case);
         ret = -ENODEV;
     } else {
         if (!uc_mgr->card_ctxt_ptr->mixer_handle) {
-            LOGE("Control device not initialized");
+            ALOGE("Control device not initialized");
             ret = -ENODEV;
         } else {
             if (enable &&
                 (check_devices_for_voice_call(uc_mgr, use_case) != NULL))
                 return ret;
-            LOGD("Set mixer controls for %s enable %d", use_case, enable);
-            if (ctrl_list[uc_index].acdb_id && ctrl_list[uc_index].capability) {
+            ALOGD("Set mixer controls for %s enable %d", use_case, enable);
+            if ((ctrl_list[uc_index].acdb_id >= 0) && ctrl_list[uc_index].capability) {
                 if (enable) {
                     snd_use_case_apply_voice_acdb(uc_mgr, uc_index);
-                    LOGD("acdb_id %d cap %d enable %d",
+                    ALOGD("acdb_id %d cap %d enable %d",
                                         ctrl_list[uc_index].acdb_id,
                             ctrl_list[uc_index].capability, enable);
                     acdb_loader_send_audio_cal(
@@ -851,27 +860,27 @@ const char *use_case, int enable, int ctrl_list_type, int uc_index)
             }
             for(index = 0; index < mixer_count; index++) {
                 if (mixer_list == NULL) {
-                    LOGE("No valid controls exist for this case: %s", use_case);
+                    ALOGE("No valid controls exist for this case: %s", use_case);
                     break;
                 }
                 ctl = mixer_get_control(uc_mgr->card_ctxt_ptr->mixer_handle,
                           mixer_list[index].control_name, 0);
                 if (ctl) {
                     if (mixer_list[index].type == TYPE_INT) {
-                        LOGD("Setting mixer control: %s, value: %d",
+                        ALOGD("Setting mixer control: %s, value: %d",
                              mixer_list[index].control_name,
                              mixer_list[index].value);
                         ret = mixer_ctl_set(ctl, mixer_list[index].value);
                     } else if (mixer_list[index].type == TYPE_MULTI_VAL) {
-                        LOGD("Setting multi value: %s",
+                        ALOGD("Setting multi value: %s",
                             mixer_list[index].control_name);
                         ret = mixer_ctl_set_value(ctl, mixer_list[index].value,
                                 mixer_list[index].mulval);
                         if (ret < 0)
-                            LOGE("Failed to set multi value control %s\n",
+                            ALOGE("Failed to set multi value control %s\n",
                                 mixer_list[index].control_name);
                     } else {
-                        LOGD("Setting mixer control: %s, value: %s",
+                        ALOGD("Setting mixer control: %s, value: %s",
                             mixer_list[index].control_name,
                             mixer_list[index].string);
                         ret = mixer_ctl_select(ctl, mixer_list[index].string);
@@ -895,7 +904,7 @@ const char *use_case, int enable, int ctrl_list_type, int uc_index)
                                }
                            }
                        }
-                       LOGE("Failed to enable the mixer controls for %s",
+                       ALOGE("Failed to enable the mixer controls for %s",
                             use_case);
                        break;
                     }
@@ -908,9 +917,11 @@ const char *use_case, int enable, int ctrl_list_type, int uc_index)
 
 int getUseCaseType(const char *useCase)
 {
-    LOGV("getUseCaseType: use case is %s\n", useCase);
+    ALOGV("getUseCaseType: use case is %s\n", useCase);
     if (!strncmp(useCase, SND_USE_CASE_VERB_HIFI,
            MAX_LEN(useCase,SND_USE_CASE_VERB_HIFI)) ||
+        !strncmp(useCase, SND_USE_CASE_VERB_HIFI_LOWLATENCY_MUSIC,
+           MAX_LEN(useCase,SND_USE_CASE_VERB_HIFI_LOWLATENCY_MUSIC)) ||
         !strncmp(useCase, SND_USE_CASE_VERB_HIFI_LOW_POWER,
            MAX_LEN(useCase,SND_USE_CASE_VERB_HIFI_LOW_POWER)) ||
         !strncmp(useCase, SND_USE_CASE_VERB_HIFI_TUNNEL,
@@ -925,6 +936,8 @@ int getUseCaseType(const char *useCase)
             MAX_LEN(useCase,SND_USE_CASE_VERB_DIGITAL_RADIO)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_PLAY_MUSIC,
             MAX_LEN(useCase,SND_USE_CASE_MOD_PLAY_MUSIC)) ||
+        !strncmp(useCase, SND_USE_CASE_MOD_PLAY_LOWLATENCY_MUSIC,
+            MAX_LEN(useCase,SND_USE_CASE_MOD_PLAY_LOWLATENCY_MUSIC)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_PLAY_MUSIC2,
             MAX_LEN(useCase,SND_USE_CASE_MOD_PLAY_MUSIC2)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_PLAY_MUSIC3,
@@ -936,12 +949,18 @@ int getUseCaseType(const char *useCase)
         !strncmp(useCase, SND_USE_CASE_MOD_PLAY_TUNNEL2,
             MAX_LEN(useCase,SND_USE_CASE_MOD_PLAY_TUNNEL2)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_PLAY_FM,
-            MAX_LEN(useCase,SND_USE_CASE_MOD_PLAY_FM))) {
+            MAX_LEN(useCase,SND_USE_CASE_MOD_PLAY_FM))||
+        !strncmp(useCase, SND_USE_CASE_MOD_PSEUDO_TUNNEL,
+            MAX_LEN(useCase,SND_USE_CASE_MOD_PSEUDO_TUNNEL))||
+        !strncmp(useCase, SND_USE_CASE_VERB_HIFI_PSEUDO_TUNNEL,
+            MAX_LEN(useCase,SND_USE_CASE_VERB_HIFI_PSEUDO_TUNNEL))) {
         return CAP_RX;
     } else if (!strncmp(useCase, SND_USE_CASE_VERB_HIFI_REC,
             MAX_LEN(useCase,SND_USE_CASE_VERB_HIFI_REC)) ||
         !strncmp(useCase, SND_USE_CASE_VERB_HIFI_REC2,
             MAX_LEN(useCase,SND_USE_CASE_VERB_HIFI_REC2)) ||
+        !strncmp(useCase, SND_USE_CASE_VERB_HIFI_REC_COMPRESSED,
+            MAX_LEN(useCase,SND_USE_CASE_VERB_HIFI_REC_COMPRESSED)) ||
         !strncmp(useCase, SND_USE_CASE_VERB_FM_REC,
             MAX_LEN(useCase,SND_USE_CASE_VERB_FM_REC)) ||
         !strncmp(useCase, SND_USE_CASE_VERB_FM_A2DP_REC,
@@ -950,6 +969,12 @@ int getUseCaseType(const char *useCase)
             MAX_LEN(useCase,SND_USE_CASE_MOD_CAPTURE_MUSIC)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_CAPTURE_MUSIC2,
             MAX_LEN(useCase,SND_USE_CASE_MOD_CAPTURE_MUSIC2)) ||
+        !strncmp(useCase, SND_USE_CASE_VERB_HIFI_LOWLATENCY_REC,
+            MAX_LEN(useCase,SND_USE_CASE_VERB_HIFI_LOWLATENCY_REC)) ||
+        !strncmp(useCase, SND_USE_CASE_MOD_CAPTURE_LOWLATENCY_MUSIC,
+            MAX_LEN(useCase,SND_USE_CASE_MOD_CAPTURE_LOWLATENCY_MUSIC)) ||
+        !strncmp(useCase, SND_USE_CASE_MOD_CAPTURE_MUSIC_COMPRESSED,
+            MAX_LEN(useCase,SND_USE_CASE_MOD_CAPTURE_MUSIC_COMPRESSED)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_CAPTURE_FM,
             MAX_LEN(useCase,SND_USE_CASE_MOD_CAPTURE_FM)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_CAPTURE_A2DP_FM,
@@ -965,6 +990,10 @@ int getUseCaseType(const char *useCase)
             MAX_LEN(useCase,SND_USE_CASE_VERB_DL_REC)) ||
         !strncmp(useCase, SND_USE_CASE_VERB_UL_DL_REC,
             MAX_LEN(useCase,SND_USE_CASE_VERB_UL_DL_REC)) ||
+        !strncmp(useCase, SND_USE_CASE_VERB_CAPTURE_COMPRESSED_VOICE_DL,
+            MAX_LEN(useCase,SND_USE_CASE_VERB_CAPTURE_COMPRESSED_VOICE_DL)) ||
+        !strncmp(useCase, SND_USE_CASE_VERB_CAPTURE_COMPRESSED_VOICE_UL_DL,
+            MAX_LEN(useCase,SND_USE_CASE_VERB_CAPTURE_COMPRESSED_VOICE_UL_DL)) ||
         !strncmp(useCase, SND_USE_CASE_VERB_INCALL_REC,
             MAX_LEN(useCase,SND_USE_CASE_VERB_INCALL_REC)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_PLAY_VOICE,
@@ -977,13 +1006,17 @@ int getUseCaseType(const char *useCase)
             MAX_LEN(useCase,SND_USE_CASE_MOD_CAPTURE_VOICE_DL)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_CAPTURE_VOICE_UL_DL,
             MAX_LEN(useCase,SND_USE_CASE_MOD_CAPTURE_VOICE_UL_DL)) ||
+        !strncmp(useCase, SND_USE_CASE_MOD_CAPTURE_COMPRESSED_VOICE_DL,
+            MAX_LEN(useCase,SND_USE_CASE_MOD_CAPTURE_COMPRESSED_VOICE_DL)) ||
+        !strncmp(useCase, SND_USE_CASE_MOD_CAPTURE_COMPRESSED_VOICE_UL_DL,
+            MAX_LEN(useCase,SND_USE_CASE_MOD_CAPTURE_COMPRESSED_VOICE_UL_DL)) ||
         !strncmp(useCase, SND_USE_CASE_VERB_VOLTE,
             MAX_LEN(useCase,SND_USE_CASE_VERB_VOLTE)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_PLAY_VOLTE,
             MAX_LEN(useCase, SND_USE_CASE_MOD_PLAY_VOLTE))) {
         return CAP_VOICE;
     } else {
-        LOGE("unknown use case %s, returning voice capablity", useCase);
+        ALOGE("unknown use case %s, returning voice capablity", useCase);
         return CAP_VOICE;
     }
 }
@@ -1002,7 +1035,7 @@ const char *ident, int enable, int ctrl_list_type)
     int list_size, index, uc_index, ret = 0, intdev_flag = 0;
     int verb_index, capability = 0, ident_cap = 0, dev_cap = 0;
 
-    LOGV("set_use_case_ident_for_all_devices(): %s", ident);
+    ALOGV("set_use_case_ident_for_all_devices(): %s", ident);
     if ((verb_index = uc_mgr->card_ctxt_ptr->current_verb_index) < 0)
         verb_index = 0;
     dev_list =
@@ -1022,8 +1055,11 @@ const char *ident, int enable, int ctrl_list_type)
         current_device =
         snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->dev_list_head, index);
         if (current_device != NULL) {
-            uc_index = get_use_case_index(uc_mgr, current_device,
-                       CTRL_LIST_DEVICE);
+            if ((uc_index = get_use_case_index(uc_mgr, current_device,
+                       CTRL_LIST_DEVICE)) < 0) {
+                ALOGE("No valid device found: %s", current_device);
+                continue;
+            }
             dev_cap = dev_list[uc_index].capability;
             if (!capability) {
                 capability = dev_list[uc_index].capability;
@@ -1035,7 +1071,7 @@ const char *ident, int enable, int ctrl_list_type)
                     if (!snd_ucm_get_status_at_index(
                         uc_mgr->card_ctxt_ptr->dev_list_head, current_device)) {
                         if (uc_index >= 0) {
-                            LOGV("Applying mixer controls for device: %s",
+                            ALOGV("Applying mixer controls for device: %s",
                                 current_device);
                             ret = snd_use_case_apply_mixer_controls(uc_mgr,
                                   current_device, enable, CTRL_LIST_DEVICE,
@@ -1051,10 +1087,10 @@ const char *ident, int enable, int ctrl_list_type)
                 }
                 strlcpy(use_case, ident, sizeof(use_case));
                 strlcat(use_case, current_device, sizeof(use_case));
-                LOGV("Applying mixer controls for use case: %s", use_case);
+                ALOGV("Applying mixer controls for use case: %s", use_case);
                 if ((uc_index =
                     get_use_case_index(uc_mgr, use_case, ctrl_list_type)) < 0) {
-                    LOGV("No valid use case found: %s", use_case);
+                    ALOGV("No valid use case found: %s", use_case);
                     intdev_flag++;
                 } else {
                     ret = snd_use_case_apply_mixer_controls(uc_mgr, use_case,
@@ -1067,7 +1103,7 @@ const char *ident, int enable, int ctrl_list_type)
     }
     if (intdev_flag) {
         if ((uc_index = get_use_case_index(uc_mgr, ident, ctrl_list_type)) < 0) {
-            LOGE("use case %s not valid without device combination", ident);
+            ALOGE("use case %s not valid without device combination", ident);
         } else {
             if (capability == CAP_VOICE || capability == ident_cap ||
                 ident_cap == CAP_VOICE) {
@@ -1094,7 +1130,7 @@ const char *ident, const char *device, int enable, int ctrl_list_type)
     int list_size, index, dev_index, uc_index, ret = 0;
     int verb_index, capability = 0;
 
-    LOGV("set_use_case_ident_for_device(): use case %s device %s", ident,
+    ALOGV("set_use_case_ident_for_device(): use case %s device %s", ident,
         device);
     if ((verb_index = uc_mgr->card_ctxt_ptr->current_verb_index) < 0)
         verb_index = 0;
@@ -1102,7 +1138,11 @@ const char *ident, const char *device, int enable, int ctrl_list_type)
         uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].device_ctrls;
     if (device != NULL) {
         if (enable) {
-            dev_index = get_use_case_index(uc_mgr, device, CTRL_LIST_DEVICE);
+            if ((dev_index =
+                get_use_case_index(uc_mgr, device, CTRL_LIST_DEVICE)) < 0) {
+                ALOGE("No valid device found: %s", device);
+                return dev_index;
+            }
             capability = dev_list[dev_index].capability;
             if (!snd_ucm_get_status_at_index(
                 uc_mgr->card_ctxt_ptr->dev_list_head, device)) {
@@ -1116,13 +1156,17 @@ const char *ident, const char *device, int enable, int ctrl_list_type)
         }
         strlcpy(use_case, ident, sizeof(use_case));
         strlcat(use_case, device, sizeof(use_case));
-	LOGV("Applying mixer controls for use case: %s", use_case);
+	ALOGV("Applying mixer controls for use case: %s", use_case);
         if ((uc_index = get_use_case_index(uc_mgr, use_case, ctrl_list_type)) < 0) {
-            LOGV("No valid use case found: %s", use_case );
-            uc_index = get_use_case_index(uc_mgr, ident, ctrl_list_type);
+            ALOGV("No valid use case found: %s", use_case );
+            if ((uc_index =
+                get_use_case_index(uc_mgr, ident, ctrl_list_type)) < 0) {
+                    ALOGE("No valid use case found: %s", ident);
+                    return uc_index;
+            }
             if (snd_use_case_apply_mixer_controls(uc_mgr, ident, enable,
                 ctrl_list_type, uc_index) < 0) {
-                 LOGV("use case %s not valid without device combination also",
+                 ALOGV("use case %s not valid without device combination also",
                      ident);
             }
         } else {
@@ -1130,10 +1174,14 @@ const char *ident, const char *device, int enable, int ctrl_list_type)
                       ctrl_list_type, uc_index);
         }
     } else {
-        uc_index = get_use_case_index(uc_mgr, ident, ctrl_list_type);
+        if ((uc_index =
+            get_use_case_index(uc_mgr, ident, ctrl_list_type)) < 0) {
+            ALOGE("No valid use case found: %s", ident);
+            return uc_index;
+        }
         if (snd_use_case_apply_mixer_controls(uc_mgr, ident, enable,
             ctrl_list_type, uc_index) < 0) {
-             LOGV("use case %s not valid without device combination also",
+             ALOGV("use case %s not valid without device combination also",
                  ident);
         }
     }
@@ -1154,13 +1202,18 @@ const char *device, int enable)
     int verb_index, uc_index, dev_index, capability = 0;
     int list_size, index = 0, ret = -ENODEV, flag = 0, intdev_flag = 0;
 
-    LOGV("set_controls_of_device_for_all_usecases: %s", device);
+    ALOGV("set_controls_of_device_for_all_usecases: %s", device);
     if ((verb_index = uc_mgr->card_ctxt_ptr->current_verb_index) < 0)
         verb_index = 0;
     dev_list =
          uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].device_ctrls;
-    dev_index = get_use_case_index(uc_mgr, device, CTRL_LIST_DEVICE);
-    capability = dev_list[dev_index].capability;
+    if ((dev_index =
+        get_use_case_index(uc_mgr, device, CTRL_LIST_DEVICE)) < 0) {
+        ALOGE("No valid device %s found", device);
+        return dev_index;
+    }
+    if (dev_index >= 0)
+        capability = dev_list[dev_index].capability;
     if (strncmp(uc_mgr->card_ctxt_ptr->current_verb, SND_USE_CASE_VERB_INACTIVE,
         strlen(SND_USE_CASE_VERB_INACTIVE))) {
         uc_list =
@@ -1173,7 +1226,7 @@ const char *device, int enable)
             strlcat(use_case, device, sizeof(use_case));
             if ((uc_index =
                 get_use_case_index(uc_mgr, use_case, CTRL_LIST_VERB)) < 0) {
-                LOGV("No valid use case found: %s", use_case);
+                ALOGV("No valid use case found: %s", use_case);
                 intdev_flag = 1;
             } else {
                 if (enable) {
@@ -1188,11 +1241,11 @@ const char *device, int enable)
                             flag = 1;
                     }
                 }
-                LOGV("set %d for use case value: %s", enable, use_case);
+                ALOGV("set %d for use case value: %s", enable, use_case);
                 ret = snd_use_case_apply_mixer_controls(uc_mgr, use_case,
                           enable, CTRL_LIST_VERB, uc_index);
                 if (ret != 0)
-                     LOGE("No valid controls exists for usecase %s and device \
+                     ALOGE("No valid controls exists for usecase %s and device \
                           %s, enable: %d", use_case, device, enable);
             }
         }
@@ -1212,17 +1265,19 @@ const char *device, int enable)
             use_case[0] = 0;
             strlcpy(use_case, uc_mgr->card_ctxt_ptr->current_verb,
                 sizeof(use_case));
-            uc_index = get_use_case_index(uc_mgr, use_case, CTRL_LIST_VERB);
-            if (capability == CAP_VOICE ||
+            if ((uc_index =
+                get_use_case_index(uc_mgr, use_case, CTRL_LIST_VERB)) < 0) {
+                ALOGE("No valid use case %s found", use_case);
+            } else if (capability == CAP_VOICE ||
                 capability ==
                 getUseCaseType(uc_mgr->card_ctxt_ptr->current_verb) ||
                 getUseCaseType(uc_mgr->card_ctxt_ptr->current_verb) ==
                 CAP_VOICE) {
-                LOGV("set %d for use case value: %s", enable, use_case);
+                ALOGV("set %d for use case value: %s", enable, use_case);
                 ret = snd_use_case_apply_mixer_controls(uc_mgr, use_case,
                           enable, CTRL_LIST_VERB, uc_index);
                 if (ret != 0)
-                      LOGE("No valid controls exists for usecase %s and \
+                      ALOGE("No valid controls exists for usecase %s and \
                            device %s, enable: %d", use_case, device, enable);
             }
             intdev_flag = 0;
@@ -1244,7 +1299,7 @@ const char *device, int enable)
                 strlcat(use_case, device, sizeof(use_case));
                 if ((uc_index = get_use_case_index(uc_mgr, use_case,
                     CTRL_LIST_MODIFIER)) < 0) {
-                    LOGV("No valid use case found: %s", use_case);
+                    ALOGV("No valid use case found: %s", use_case);
                     intdev_flag = 1;
                 } else {
                     if (enable && !flag) {
@@ -1260,11 +1315,11 @@ const char *device, int enable)
                             flag = 1;
                         }
                     }
-                    LOGV("set %d for use case value: %s", enable, use_case);
+                    ALOGV("set %d for use case value: %s", enable, use_case);
                     ret = snd_use_case_apply_mixer_controls(uc_mgr,
                           use_case, enable, CTRL_LIST_MODIFIER, uc_index);
                     if (ret != 0)
-                        LOGE("No valid controls exists for usecase %s and \
+                        ALOGE("No valid controls exists for usecase %s and \
                             device %s, enable: %d", use_case, device, enable);
                 }
             }
@@ -1283,16 +1338,18 @@ const char *device, int enable)
                 }
                 use_case[0] = 0;
                 strlcpy(use_case, ident_value, sizeof(use_case));
-                uc_index =
-                    get_use_case_index(uc_mgr, ident_value, CTRL_LIST_MODIFIER);
-                if (capability == CAP_VOICE ||
+                if ((uc_index =
+                    get_use_case_index(uc_mgr, ident_value,
+                    CTRL_LIST_MODIFIER)) < 0) {
+                    ALOGE("No valid use case %s found", ident_value);
+                } else if (capability == CAP_VOICE ||
                     capability == getUseCaseType(ident_value) ||
                     getUseCaseType(ident_value) == CAP_VOICE) {
-                    LOGV("set %d for use case value: %s", enable, use_case);
+                    ALOGV("set %d for use case value: %s", enable, use_case);
                     ret = snd_use_case_apply_mixer_controls(uc_mgr, use_case,
                           enable, CTRL_LIST_MODIFIER, uc_index);
                     if (ret != 0)
-                         LOGE("No valid controls exists for usecase %s and \
+                         ALOGE("No valid controls exists for usecase %s and \
                               device %s, enable: %d", use_case, device, enable);
                 }
                 intdev_flag = 0;
@@ -1350,19 +1407,34 @@ static int set_controls_of_device_for_usecase(snd_use_case_mgr_t *uc_mgr,
     int ret = -ENODEV, uc_index, dev_index;
     int verb_index, capability = 0;
 
-    LOGV("set_device_for_ident(): %s %s", device, usecase);
+    ALOGV("set_device_for_ident(): %s %s", device, usecase);
     if ((verb_index = uc_mgr->card_ctxt_ptr->current_verb_index) < 0)
         verb_index = 0;
     dev_list =
          uc_mgr->card_ctxt_ptr->use_case_verb_list[verb_index].device_ctrls;
-    dev_index = get_use_case_index(uc_mgr, device, CTRL_LIST_DEVICE);
+    if ((dev_index =
+        get_use_case_index(uc_mgr, device, CTRL_LIST_DEVICE)) < 0) {
+        ALOGE("No valid device %s found", device);
+        return dev_index;
+    }
     capability = dev_list[dev_index].capability;
     if (usecase != NULL) {
         strlcpy(use_case, usecase, sizeof(use_case));
         strlcat(use_case, device, sizeof(use_case));
         if ((uc_index = get_use_case_index(uc_mgr, use_case,
             get_usecase_type(uc_mgr, usecase))) < 0) {
-            LOGV("No valid use case found: %s", use_case);
+            ALOGV("No valid use case found: %s,\
+                   set %d for use case value: %s",use_case, enable, usecase);
+            if ((uc_index =
+                get_use_case_index(uc_mgr, usecase, get_usecase_type(uc_mgr, usecase))) < 0) {
+                    ALOGE("No valid use case found: %s", usecase);
+            } else {
+                ret = snd_use_case_apply_mixer_controls(uc_mgr, usecase, enable,
+                          get_usecase_type(uc_mgr, usecase), uc_index);
+                if (ret != 0)
+                    ALOGE("No valid controls exists for usecase %s and device %s, \
+                         enable: %d", usecase, device, enable);
+            }
         } else {
             if (enable) {
                 if (!snd_ucm_get_status_at_index(
@@ -1375,11 +1447,11 @@ static int set_controls_of_device_for_usecase(snd_use_case_mgr_t *uc_mgr,
                         capability);
                 }
             }
-            LOGV("set %d for use case value: %s", enable, use_case);
+            ALOGV("set %d for use case value: %s", enable, use_case);
             ret = snd_use_case_apply_mixer_controls(uc_mgr, use_case, enable,
                       get_usecase_type(uc_mgr, usecase), uc_index);
             if (ret != 0)
-                LOGE("No valid controls exists for usecase %s and device %s, \
+                ALOGE("No valid controls exists for usecase %s and device %s, \
                      enable: %d", use_case, device, enable);
         }
         use_case[0] = 0;
@@ -1426,36 +1498,36 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
     if ((uc_mgr->snd_card_index >= (int)MAX_NUM_CARDS) || (value == NULL) ||
         (uc_mgr->snd_card_index < 0) || (uc_mgr->card_ctxt_ptr == NULL) ||
         (identifier == NULL)) {
-        LOGE("snd_use_case_set(): failed, invalid arguments");
+        ALOGE("snd_use_case_set(): failed, invalid arguments");
         pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
         return -EINVAL;
     }
 
-    LOGD("snd_use_case_set(): uc_mgr %p identifier %s value %s", uc_mgr,
+    ALOGD("snd_use_case_set(): uc_mgr %p identifier %s value %s", uc_mgr,
          identifier, value);
     strlcpy(ident, identifier, sizeof(ident));
     if(!(ident1 = strtok_r(ident, "/", &temp_ptr))) {
-        LOGV("No multiple identifiers found in identifier value");
+        ALOGV("No multiple identifiers found in identifier value");
         ident[0] = 0;
     } else {
         if (!strncmp(ident1, "_swdev", 6)) {
             if(!(ident2 = strtok_r(NULL, "/", &temp_ptr))) {
-                LOGD("Invalid disable device value: %s, but enabling new \
+                ALOGD("Invalid disable device value: %s, but enabling new \
                      device", ident2);
             } else {
                 ret = snd_ucm_del_ident_from_list(
                           &uc_mgr->card_ctxt_ptr->dev_list_head, ident2);
                 if (ret < 0) {
-                    LOGV("Ignore device %s disable, device not part of \
+                    ALOGV("Ignore device %s disable, device not part of \
                          enabled list", ident2);
                 } else {
-                    LOGV("swdev: device value to be disabled: %s", ident2);
+                    ALOGV("swdev: device value to be disabled: %s", ident2);
                     /* Disable mixer controls for
                      * corresponding use cases and device */
                     ret = set_controls_of_device_for_all_usecases(uc_mgr,
                               ident2, 0);
                     if (ret < 0) {
-                        LOGV("Device %s not disabled, no valid use case \
+                        ALOGV("Device %s not disabled, no valid use case \
                               found: %d", ident2, errno);
                     }
                 }
@@ -1463,30 +1535,30 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
             pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
             ret = snd_use_case_set(uc_mgr, "_enadev", value);
             if (ret < 0) {
-                LOGV("Device %s not enabled, no valid use case found: %d",
+                ALOGV("Device %s not enabled, no valid use case found: %d",
                     value, errno);
             }
             return ret;
         } else if (!strncmp(ident1, "_swmod", 6)) {
             pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
             if(!(ident2 = strtok_r(NULL, "/", &temp_ptr))) {
-                LOGD("Invalid modifier value: %s, but enabling new modifier",
+                ALOGD("Invalid modifier value: %s, but enabling new modifier",
                     ident2);
             } else {
                 ret = snd_use_case_set(uc_mgr, "_dismod", ident2);
                 if (ret < 0) {
-                    LOGV("Modifier %s not disabled, no valid use case \
+                    ALOGV("Modifier %s not disabled, no valid use case \
                          found: %d", ident2, errno);
                 }
             }
             ret = snd_use_case_set(uc_mgr, "_enamod", value);
             if (ret < 0) {
-                LOGV("Modifier %s not enabled, no valid use case found: %d",
+                ALOGV("Modifier %s not enabled, no valid use case found: %d",
                     value, errno);
             }
             return ret;
         } else {
-            LOGV("No switch device/modifier option found: %s", ident1);
+            ALOGV("No switch device/modifier option found: %s", ident1);
         }
         ident[0] = 0;
     }
@@ -1504,9 +1576,9 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
         }
         if ((ret < 0) && (strncmp(value, SND_USE_CASE_VERB_INACTIVE,
             strlen(SND_USE_CASE_VERB_INACTIVE)))) {
-            LOGE("Invalid verb identifier value");
+            ALOGE("Invalid verb identifier value");
         } else {
-            LOGV("Index:%d Verb:%s", index,
+            ALOGV("Index:%d Verb:%s", index,
                 uc_mgr->card_ctxt_ptr->verb_list[index]);
             /* Disable the mixer controls for current use case
              * for all the enabled devices */
@@ -1516,7 +1588,7 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
                 ret = set_controls_of_usecase_for_all_devices(uc_mgr,
                       uc_mgr->card_ctxt_ptr->current_verb, 0, CTRL_LIST_VERB);
                 if (ret != 0)
-                    LOGE("Failed to disable controls for use case: %s",
+                    ALOGE("Failed to disable controls for use case: %s",
                         uc_mgr->card_ctxt_ptr->current_verb);
             }
             strlcpy(uc_mgr->card_ctxt_ptr->current_verb, value, MAX_STR_LEN);
@@ -1539,7 +1611,7 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
                 snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->dev_list_head,
                 index))) {
                 if (!strncmp(ident1, value, (strlen(value)+1))) {
-                    LOGV("Ignore enable as %s device is already part of \
+                    ALOGV("Ignore enable as %s device is already part of \
                          enabled list", value);
                     free(ident1);
                     break;
@@ -1548,7 +1620,7 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
             }
         }
         if (index == list_size) {
-            LOGV("enadev: device value to be enabled: %s", value);
+            ALOGV("enadev: device value to be enabled: %s", value);
             snd_ucm_add_ident_to_list(&uc_mgr->card_ctxt_ptr->dev_list_head,
                 value);
         }
@@ -1559,36 +1631,41 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
         ret = snd_ucm_get_status_at_index(uc_mgr->card_ctxt_ptr->dev_list_head,
                   value);
         if (ret < 0) {
-            LOGD("disdev: device %s not enabled, no need to disable", value);
+            ALOGD("disdev: device %s not enabled, no need to disable", value);
         } else if (ret == 0) {
-            LOGV("disdev: device %s not active, remove from the list", value);
+            ALOGV("disdev: device %s not active, remove from the list", value);
             ret =
             snd_ucm_del_ident_from_list(&uc_mgr->card_ctxt_ptr->dev_list_head,
             value);
             if (ret < 0) {
-                LOGE("Invalid device: Device not part of enabled device list");
+                ALOGE("Invalid device: Device not part of enabled device list");
             }
         } else {
             ret =
             snd_ucm_del_ident_from_list(&uc_mgr->card_ctxt_ptr->dev_list_head,
             value);
             if (ret < 0) {
-                LOGE("Invalid device: Device not part of enabled device list");
+                ALOGE("Invalid device: Device not part of enabled device list");
             } else {
-                LOGV("disdev: device value to be disabled: %s", value);
-                index = get_use_case_index(uc_mgr, value, CTRL_LIST_DEVICE);
-                /* Apply Mixer controls for corresponding device and modifier */
-                ret = snd_use_case_apply_mixer_controls(uc_mgr, value, 0,
+                ALOGV("disdev: device value to be disabled: %s", value);
+                if ((index =
+                    get_use_case_index(uc_mgr, value, CTRL_LIST_DEVICE)) < 0) {
+                    ALOGE("Device %s not found", value);
+                    ret = -EINVAL;
+                } else {
+                    /* Apply Mixer controls for device and modifier */
+                    ret = snd_use_case_apply_mixer_controls(uc_mgr, value, 0,
                           CTRL_LIST_DEVICE, index);
+                }
             }
         }
     } else if (!strncmp(identifier, "_enamod", 7)) {
         index = 0; ret = 0;
         verb_index = uc_mgr->card_ctxt_ptr->current_verb_index;
         if (verb_index < 0) {
-            LOGE("Invalid verb identifier value");
+            ALOGE("Invalid verb identifier value");
         } else {
-            LOGV("Index:%d Verb:%s", verb_index,
+            ALOGV("Index:%d Verb:%s", verb_index,
                  uc_mgr->card_ctxt_ptr->verb_list[verb_index]);
             verb_list = uc_mgr->card_ctxt_ptr->use_case_verb_list;
             while(strncmp(verb_list[verb_index].modifier_list[index], value,
@@ -1601,7 +1678,7 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
                 index++;
             }
             if (ret < 0) {
-                LOGE("Invalid modifier identifier value");
+                ALOGE("Invalid modifier identifier value");
             } else {
                 snd_ucm_add_ident_to_list(&uc_mgr->card_ctxt_ptr->mod_list_head,
                     value);
@@ -1615,16 +1692,16 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
         ret = snd_ucm_del_ident_from_list(&uc_mgr->card_ctxt_ptr->mod_list_head,
                   value);
         if (ret < 0) {
-            LOGE("Modifier not enabled currently, invalid modifier");
+            ALOGE("Modifier not enabled currently, invalid modifier");
         } else {
-            LOGV("dismod: modifier value to be disabled: %s", value);
+            ALOGV("dismod: modifier value to be disabled: %s", value);
             /* Enable the mixer controls for the new use case
              * for all the enabled devices */
             ret = set_controls_of_usecase_for_all_devices(uc_mgr, value, 0,
                       CTRL_LIST_MODIFIER);
         }
     } else {
-        LOGE("Unknown identifier value: %s", identifier);
+        ALOGE("Unknown identifier value: %s", identifier);
     }
     pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
     return ret;
@@ -1651,36 +1728,36 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
     if ((uc_mgr->snd_card_index >= (int)MAX_NUM_CARDS) || (value == NULL) ||
         (uc_mgr->snd_card_index < 0) || (uc_mgr->card_ctxt_ptr == NULL) ||
         (identifier == NULL)) {
-        LOGE("snd_use_case_set_case(): failed, invalid arguments");
+        ALOGE("snd_use_case_set_case(): failed, invalid arguments");
         pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
         return -EINVAL;
     }
 
-    LOGD("snd_use_case_set_case(): uc_mgr %p identifier %s value %s",
+    ALOGD("snd_use_case_set_case(): uc_mgr %p identifier %s value %s",
         uc_mgr, identifier, value);
     strlcpy(ident, identifier, sizeof(ident));
     if(!(ident1 = strtok_r(ident, "/", &temp_ptr))) {
-        LOGV("No multiple identifiers found in identifier value");
+        ALOGV("No multiple identifiers found in identifier value");
         ident[0] = 0;
     } else {
         if (!strncmp(ident1, "_swdev", 6)) {
             if(!(ident2 = strtok_r(NULL, "/", &temp_ptr))) {
-                LOGD("Invalid disable device value: %s, but enabling new \
+                ALOGD("Invalid disable device value: %s, but enabling new \
                      device", ident2);
             } else {
                 ret = snd_ucm_del_ident_from_list(
                           &uc_mgr->card_ctxt_ptr->dev_list_head, ident2);
                 if (ret < 0) {
-                    LOGV("Ignore device %s disable, device not part of \
+                    ALOGV("Ignore device %s disable, device not part of \
                          enabled list", ident2);
                 } else {
-                    LOGV("swdev: device value to be disabled: %s", ident2);
+                    ALOGV("swdev: device value to be disabled: %s", ident2);
                     /* Disable mixer controls for
                      * corresponding use cases and device */
                     ret = set_controls_of_device_for_usecase(uc_mgr, ident2,
                               usecase, 0);
                     if (ret < 0) {
-                        LOGV("Device %s not disabled, no valid use case \
+                        ALOGV("Device %s not disabled, no valid use case \
                              found: %d", ident2, errno);
                     }
                 }
@@ -1688,30 +1765,30 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
             pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
             ret = snd_use_case_set_case(uc_mgr, "_enadev", value, usecase);
             if (ret < 0) {
-                LOGV("Device %s not enabled, no valid use case found: %d",
+                ALOGV("Device %s not enabled, no valid use case found: %d",
                     value, errno);
             }
             return ret;
         } else if (!strncmp(ident1, "_swmod", 6)) {
             pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
             if(!(ident2 = strtok_r(NULL, "/", &temp_ptr))) {
-                LOGD("Invalid modifier value: %s, but enabling new modifier",
+                ALOGD("Invalid modifier value: %s, but enabling new modifier",
                     ident2);
             } else {
                 ret = snd_use_case_set_case(uc_mgr, "_dismod", ident2, usecase);
                 if (ret < 0) {
-                    LOGV("Modifier %s not disabled, no valid use case \
+                    ALOGV("Modifier %s not disabled, no valid use case \
                          found: %d", ident2, errno);
                 }
             }
             ret = snd_use_case_set_case(uc_mgr, "_enamod", value, usecase);
             if (ret < 0) {
-                LOGV("Modifier %s not enabled, no valid use case found: %d",
+                ALOGV("Modifier %s not enabled, no valid use case found: %d",
                     value, errno);
             }
             return ret;
         } else {
-            LOGV("No switch device/modifier option found: %s", ident1);
+            ALOGV("No switch device/modifier option found: %s", ident1);
         }
         ident[0] = 0;
     }
@@ -1729,9 +1806,9 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
         }
         if ((ret < 0) && (strncmp(value, SND_USE_CASE_VERB_INACTIVE,
             MAX_STR_LEN))) {
-            LOGE("Invalid verb identifier value");
+            ALOGE("Invalid verb identifier value");
         } else {
-            LOGV("Index:%d Verb:%s", index,
+            ALOGV("Index:%d Verb:%s", index,
                  uc_mgr->card_ctxt_ptr->verb_list[index]);
             /* Disable the mixer controls for current use case
              * for specified device */
@@ -1741,7 +1818,7 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
                           uc_mgr->card_ctxt_ptr->current_verb, usecase,
                           0, CTRL_LIST_VERB);
                 if (ret != 0)
-                    LOGE("Failed to disable controls for use case: %s",
+                    ALOGE("Failed to disable controls for use case: %s",
                         uc_mgr->card_ctxt_ptr->current_verb);
             }
             strlcpy(uc_mgr->card_ctxt_ptr->current_verb, value, MAX_STR_LEN);
@@ -1757,7 +1834,7 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
                    if ((ident1 = snd_ucm_get_value_at_index(
                        uc_mgr->card_ctxt_ptr->dev_list_head, index))) {
                        if (!strncmp(ident1, usecase, MAX_STR_LEN)) {
-                           LOGV("Device already part of enabled list: %s",
+                           ALOGV("Device already part of enabled list: %s",
                                usecase);
                            free(ident1);
                            break;
@@ -1766,7 +1843,7 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
                    }
                }
                if (index == list_size) {
-                   LOGV("enadev: device value to be enabled: %s", usecase);
+                   ALOGV("enadev: device value to be enabled: %s", usecase);
                    snd_ucm_add_ident_to_list(&uc_mgr->card_ctxt_ptr->dev_list_head,
                         usecase);
                }
@@ -1784,7 +1861,7 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
                 snd_ucm_get_value_at_index(uc_mgr->card_ctxt_ptr->dev_list_head,
                 index))) {
                 if (!strncmp(ident1, value, MAX_STR_LEN)) {
-                    LOGV("Device already part of enabled list: %s", value);
+                    ALOGV("Device already part of enabled list: %s", value);
                     free(ident1);
                     break;
                 }
@@ -1792,7 +1869,7 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
             }
         }
         if (index == list_size) {
-            LOGV("enadev: device value to be enabled: %s", value);
+            ALOGV("enadev: device value to be enabled: %s", value);
             snd_ucm_add_ident_to_list(&uc_mgr->card_ctxt_ptr->dev_list_head,
                 value);
         }
@@ -1803,23 +1880,23 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
         ret = snd_ucm_get_status_at_index(uc_mgr->card_ctxt_ptr->dev_list_head,
                   value);
         if (ret < 0) {
-            LOGD("disdev: device %s not enabled, no need to disable", value);
+            ALOGD("disdev: device %s not enabled, no need to disable", value);
         } else if (ret == 0) {
-            LOGV("disdev: device %s not active, remove from the list", value);
+            ALOGV("disdev: device %s not active, remove from the list", value);
             ret =
             snd_ucm_del_ident_from_list(&uc_mgr->card_ctxt_ptr->dev_list_head,
             value);
             if (ret < 0) {
-                LOGE("Invalid device: Device not part of enabled device list");
+                ALOGE("Invalid device: Device not part of enabled device list");
             }
         } else {
             ret =
             snd_ucm_del_ident_from_list(&uc_mgr->card_ctxt_ptr->dev_list_head,
             value);
             if (ret < 0) {
-                LOGE("Invalid device: Device not part of enabled device list");
+                ALOGE("Invalid device: Device not part of enabled device list");
             } else {
-                LOGV("disdev: device value to be disabled: %s", value);
+                ALOGV("disdev: device value to be disabled: %s", value);
                 /* Apply Mixer controls of usecase for this device*/
                 ret = set_controls_of_device_for_usecase(uc_mgr, value,
                           usecase, 0);
@@ -1828,7 +1905,7 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
     } else if (!strncmp(identifier, "_enamod", 7)) {
         if (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
             SND_USE_CASE_VERB_INACTIVE, MAX_STR_LEN)) {
-            LOGE("Invalid use case verb value");
+            ALOGE("Invalid use case verb value");
             ret = -EINVAL;
         } else {
             ret = 0;
@@ -1843,11 +1920,11 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
             }
         }
         if (ret < 0) {
-            LOGE("Invalid verb identifier value");
+            ALOGE("Invalid verb identifier value");
         } else {
             verb_index = index; index = 0; ret = 0;
             verb_list = uc_mgr->card_ctxt_ptr->use_case_verb_list;
-            LOGV("Index:%d Verb:%s", verb_index,
+            ALOGV("Index:%d Verb:%s", verb_index,
                  uc_mgr->card_ctxt_ptr->verb_list[verb_index]);
             while(strncmp(verb_list[verb_index].modifier_list[index],
                 value, MAX_STR_LEN)) {
@@ -1859,7 +1936,7 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
                 index++;
             }
             if (ret < 0) {
-                LOGE("Invalid modifier identifier value");
+                ALOGE("Invalid modifier identifier value");
             } else {
                 index = 0;
                 list_size =
@@ -1868,7 +1945,7 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
                     if ((ident1 = snd_ucm_get_value_at_index(
                         uc_mgr->card_ctxt_ptr->dev_list_head, index))) {
                         if (!strncmp(ident1, usecase, MAX_STR_LEN)) {
-                            LOGV("Device already part of enabled list: %s",
+                            ALOGV("Device already part of enabled list: %s",
                                 usecase);
                             free(ident1);
                             break;
@@ -1877,7 +1954,7 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
                     }
                 }
                 if (index == list_size) {
-                    LOGV("enadev: device value to be enabled: %s", usecase);
+                    ALOGV("enadev: device value to be enabled: %s", usecase);
                     snd_ucm_add_ident_to_list(&uc_mgr->card_ctxt_ptr->dev_list_head,
                          usecase);
                 }
@@ -1893,16 +1970,16 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
         ret = snd_ucm_del_ident_from_list(&uc_mgr->card_ctxt_ptr->mod_list_head,
               value);
         if (ret < 0) {
-            LOGE("Modifier not enabled currently, invalid modifier");
+            ALOGE("Modifier not enabled currently, invalid modifier");
         } else {
-            LOGV("dismod: modifier value to be disabled: %s", value);
+            ALOGV("dismod: modifier value to be disabled: %s", value);
             /* Enable the mixer controls for the new use case
              * for all the enabled devices */
             ret = set_controls_of_usecase_for_device(uc_mgr, value, usecase,
                       0, CTRL_LIST_MODIFIER);
         }
     } else {
-        LOGE("Unknown identifier value: %s", identifier);
+        ALOGE("Unknown identifier value: %s", identifier);
     }
     pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
     return ret;
@@ -1920,10 +1997,10 @@ int snd_use_case_mgr_open(snd_use_case_mgr_t **uc_mgr, const char *card_name)
     int index, ret = -EINVAL;
     char tmp[2];
 
-    LOGV("snd_use_case_open(): card_name %s", card_name);
+    ALOGV("snd_use_case_open(): card_name %s", card_name);
 
     if (card_name == NULL) {
-        LOGE("snd_use_case_mgr_open: failed, invalid arguments");
+        ALOGE("snd_use_case_mgr_open: failed, invalid arguments");
         return ret;
     }
 
@@ -1936,19 +2013,19 @@ int snd_use_case_mgr_open(snd_use_case_mgr_t **uc_mgr, const char *card_name)
     }
 
     if (ret < 0) {
-        LOGE("Card %s not found", card_name);
+        ALOGE("Card %s not found", card_name);
     } else {
         uc_mgr_ptr = (snd_use_case_mgr_t *)calloc(1,
                          sizeof(snd_use_case_mgr_t));
         if (uc_mgr_ptr == NULL) {
-            LOGE("Failed to allocate memory for instance");
+            ALOGE("Failed to allocate memory for instance");
             return -ENOMEM;
         }
         uc_mgr_ptr->snd_card_index = index;
         uc_mgr_ptr->card_ctxt_ptr = (card_ctxt_t *)calloc(1,
                                         sizeof(card_ctxt_t));
         if (uc_mgr_ptr->card_ctxt_ptr == NULL) {
-            LOGE("Failed to allocate memory for card context");
+            ALOGE("Failed to allocate memory for card context");
             free(uc_mgr_ptr);
             uc_mgr_ptr = NULL;
             return -ENOMEM;
@@ -1958,7 +2035,7 @@ int snd_use_case_mgr_open(snd_use_case_mgr_t **uc_mgr, const char *card_name)
         uc_mgr_ptr->card_ctxt_ptr->card_name =
             (char *)malloc((strlen(card_name)+1)*sizeof(char));
         if (uc_mgr_ptr->card_ctxt_ptr->card_name == NULL) {
-            LOGE("Failed to allocate memory for card name");
+            ALOGE("Failed to allocate memory for card name");
             free(uc_mgr_ptr->card_ctxt_ptr);
             free(uc_mgr_ptr);
             uc_mgr_ptr = NULL;
@@ -1969,7 +2046,7 @@ int snd_use_case_mgr_open(snd_use_case_mgr_t **uc_mgr, const char *card_name)
         uc_mgr_ptr->card_ctxt_ptr->control_device =
             (char *)malloc((strlen("/dev/snd/controlC")+2)*sizeof(char));
         if (uc_mgr_ptr->card_ctxt_ptr->control_device == NULL) {
-            LOGE("Failed to allocate memory for control device string");
+            ALOGE("Failed to allocate memory for control device string");
             free(uc_mgr_ptr->card_ctxt_ptr->card_name);
             free(uc_mgr_ptr->card_ctxt_ptr);
             free(uc_mgr_ptr);
@@ -1995,22 +2072,22 @@ int snd_use_case_mgr_open(snd_use_case_mgr_t **uc_mgr, const char *card_name)
                 SND_USE_CASE_VERB_INACTIVE, MAX_STR_LEN);
         /* Reset all mixer controls if any applied
          * previously for the same card */
-	snd_use_case_mgr_reset(uc_mgr_ptr);
+    snd_use_case_mgr_reset(uc_mgr_ptr);
         uc_mgr_ptr->card_ctxt_ptr->current_verb_index = -1;
         /* Parse config files and update mixer controls */
         ret = snd_ucm_parse(&uc_mgr_ptr);
         if(ret < 0) {
-            LOGE("Failed to parse config files: %d", ret);
+            ALOGE("Failed to parse config files: %d", ret);
             snd_ucm_free_mixer_list(&uc_mgr_ptr);
         }
-        LOGV("Open mixer device: %s",
+        ALOGV("Open mixer device: %s",
             uc_mgr_ptr->card_ctxt_ptr->control_device);
         uc_mgr_ptr->card_ctxt_ptr->mixer_handle =
             mixer_open(uc_mgr_ptr->card_ctxt_ptr->control_device);
-        LOGV("Mixer handle %p", uc_mgr_ptr->card_ctxt_ptr->mixer_handle);
+        ALOGV("Mixer handle %p", uc_mgr_ptr->card_ctxt_ptr->mixer_handle);
         *uc_mgr = uc_mgr_ptr;
     }
-    LOGV("snd_use_case_open(): returning instance %p", uc_mgr_ptr);
+    ALOGV("snd_use_case_open(): returning instance %p", uc_mgr_ptr);
     return ret;
 }
 
@@ -2021,7 +2098,7 @@ int snd_use_case_mgr_open(snd_use_case_mgr_t **uc_mgr, const char *card_name)
  * \return zero if success, otherwise a negative error code
  */
 int snd_use_case_mgr_reload(snd_use_case_mgr_t *uc_mgr) {
-    LOGE("Reload is not implemented for now as there is no use case currently");
+    ALOGE("Reload is not implemented for now as there is no use case currently");
     return 0;
 }
 
@@ -2036,14 +2113,14 @@ int snd_use_case_mgr_close(snd_use_case_mgr_t *uc_mgr)
 
     if ((uc_mgr->snd_card_index >= (int)MAX_NUM_CARDS) ||
         (uc_mgr->snd_card_index < 0) || (uc_mgr->card_ctxt_ptr == NULL)) {
-        LOGE("snd_use_case_mgr_close(): failed, invalid arguments");
+        ALOGE("snd_use_case_mgr_close(): failed, invalid arguments");
         return -EINVAL;
     }
 
-    LOGV("snd_use_case_close(): instance %p", uc_mgr);
+    ALOGV("snd_use_case_close(): instance %p", uc_mgr);
     ret = snd_use_case_mgr_reset(uc_mgr);
     if (ret < 0)
-        LOGE("Failed to reset ucm session");
+        ALOGE("Failed to reset ucm session");
     snd_ucm_free_mixer_list(&uc_mgr);
     pthread_mutexattr_destroy(&uc_mgr->card_ctxt_ptr->card_lock_attr);
     pthread_mutex_destroy(&uc_mgr->card_ctxt_ptr->card_lock);
@@ -2060,7 +2137,7 @@ int snd_use_case_mgr_close(snd_use_case_mgr_t *uc_mgr)
     uc_mgr->card_ctxt_ptr = NULL;
     free(uc_mgr);
     uc_mgr = NULL;
-    LOGV("snd_use_case_mgr_close(): card instace closed successfully");
+    ALOGV("snd_use_case_mgr_close(): card instace closed successfully");
     return ret;
 }
 
@@ -2074,11 +2151,11 @@ int snd_use_case_mgr_reset(snd_use_case_mgr_t *uc_mgr)
     char *ident_value;
     int index, list_size, ret = 0;
 
-    LOGV("snd_use_case_reset(): instance %p", uc_mgr);
+    ALOGV("snd_use_case_reset(): instance %p", uc_mgr);
     pthread_mutex_lock(&uc_mgr->card_ctxt_ptr->card_lock);
     if ((uc_mgr->snd_card_index >= (int)MAX_NUM_CARDS) ||
         (uc_mgr->snd_card_index < 0) || (uc_mgr->card_ctxt_ptr == NULL)) {
-        LOGE("snd_use_case_mgr_reset(): failed, invalid arguments");
+        ALOGE("snd_use_case_mgr_reset(): failed, invalid arguments");
         pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
         return -EINVAL;
     }
@@ -2093,8 +2170,8 @@ int snd_use_case_mgr_reset(snd_use_case_mgr_t *uc_mgr)
                 ident_value);
             ret = set_controls_of_usecase_for_all_devices(uc_mgr,
                       ident_value, 0, CTRL_LIST_MODIFIER);
-	    if (ret != 0)
-                LOGE("Failed to disable mixer controls for %s", ident_value);
+        if (ret != 0)
+                ALOGE("Failed to disable mixer controls for %s", ident_value);
             free(ident_value);
         }
     }
@@ -2114,7 +2191,7 @@ int snd_use_case_mgr_reset(snd_use_case_mgr_t *uc_mgr)
         ret = set_controls_of_usecase_for_all_devices(uc_mgr,
                   uc_mgr->card_ctxt_ptr->current_verb, 0, CTRL_LIST_VERB);
         if (ret != 0)
-            LOGE("Failed to disable mixer controls for %s",
+            ALOGE("Failed to disable mixer controls for %s",
                 uc_mgr->card_ctxt_ptr->current_verb);
         strlcpy(uc_mgr->card_ctxt_ptr->current_verb, SND_USE_CASE_VERB_INACTIVE,
             MAX_STR_LEN);
@@ -2129,10 +2206,10 @@ int snd_use_case_mgr_reset(snd_use_case_mgr_t *uc_mgr)
                 ident_value);
             ret = set_controls_of_device_for_all_usecases(uc_mgr,
                       ident_value, 0);
-	    if (ret != 0)
-                LOGE("Failed to disable or no mixer controls set for %s",
+        if (ret != 0)
+                ALOGE("Failed to disable or no mixer controls set for %s",
                     ident_value);
-	    free(ident_value);
+        free(ident_value);
         }
     }
     /* Clear the enabled devices list */
@@ -2164,21 +2241,21 @@ void *second_stage_parsing_thread(void *uc_mgr_ptr)
 
     strlcpy(path, CONFIG_DIR, (strlen(CONFIG_DIR)+1));
     strlcat(path, (*uc_mgr)->card_ctxt_ptr->card_name, sizeof(path));
-    LOGV("master config file path:%s", path);
+    ALOGV("master config file path:%s", path);
     fd = open(path, O_RDONLY);
     if (fd < 0) {
-        LOGE("failed to open config file %s error %d\n", path, errno);
+        ALOGE("failed to open config file %s error %d\n", path, errno);
         return NULL;
     }
     if (fstat(fd, &st) < 0) {
-        LOGE("failed to stat %s error %d\n", path, errno);
+        ALOGE("failed to stat %s error %d\n", path, errno);
         close(fd);
         return NULL;
     }
     read_buf = (char *) mmap(0, st.st_size, PROT_READ | PROT_WRITE,
                MAP_PRIVATE, fd, 0);
     if (read_buf == MAP_FAILED) {
-        LOGE("failed to mmap file error %d\n", errno);
+        ALOGE("failed to mmap file error %d\n", errno);
         close(fd);
         return NULL;
     }
@@ -2290,8 +2367,8 @@ void *second_stage_parsing_thread(void *uc_mgr_ptr)
         snd_ucm_print((*uc_mgr));
 #endif
     if(ret < 0)
-        LOGE("Failed to parse config files: %d", ret);
-    LOGE("Exiting parsing thread uc_mgr %p\n", uc_mgr);
+        ALOGE("Failed to parse config files: %d", ret);
+    ALOGE("Exiting parsing thread uc_mgr %p\n", uc_mgr);
     return NULL;
 }
 
@@ -2323,21 +2400,21 @@ static int snd_ucm_parse(snd_use_case_mgr_t **uc_mgr)
 
     strlcpy(path, CONFIG_DIR, (strlen(CONFIG_DIR)+1));
     strlcat(path, (*uc_mgr)->card_ctxt_ptr->card_name, sizeof(path));
-    LOGV("master config file path:%s", path);
+    ALOGV("master config file path:%s", path);
     fd = open(path, O_RDONLY);
     if (fd < 0) {
-        LOGE("failed to open config file %s error %d\n", path, errno);
+        ALOGE("failed to open config file %s error %d\n", path, errno);
         return -EINVAL;
     }
     if (fstat(fd, &st) < 0) {
-        LOGE("failed to stat %s error %d\n", path, errno);
+        ALOGE("failed to stat %s error %d\n", path, errno);
         close(fd);
         return -EINVAL;
     }
     read_buf = (char *) mmap(0, st.st_size+1, PROT_READ | PROT_WRITE,
                MAP_PRIVATE, fd, 0);
     if (read_buf == MAP_FAILED) {
-        LOGE("failed to mmap file error %d\n", errno);
+        ALOGE("failed to mmap file error %d\n", errno);
         close(fd);
         return -EINVAL;
     }
@@ -2347,21 +2424,21 @@ static int snd_ucm_parse(snd_use_case_mgr_t **uc_mgr)
     (*uc_mgr)->card_ctxt_ptr->use_case_verb_list =
         (use_case_verb_t *)malloc((verb_count+1)*(sizeof(use_case_verb_t)));
     if ((*uc_mgr)->card_ctxt_ptr->use_case_verb_list == NULL) {
-        LOGE("failed to allocate memory for use case verb list\n");
+        ALOGE("failed to allocate memory for use case verb list\n");
         munmap(read_buf, st.st_size);
         close(fd);
         return -ENOMEM;
     }
     if (((*uc_mgr)->card_ctxt_ptr->verb_list =
         (char **)malloc((verb_count+2)*(sizeof(char *)))) == NULL) {
-        LOGE("failed to allocate memory for verb list\n");
+        ALOGE("failed to allocate memory for verb list\n");
         munmap(read_buf, st.st_size);
         close(fd);
         return -ENOMEM;
     }
     verb_name = NULL;
     if ((ret = is_single_config_format(current_str))) {
-        LOGD("Single config file format detected\n");
+        ALOGD("Single config file format detected\n");
         ret = parse_single_config_format(uc_mgr, current_str, verb_count);
         munmap(read_buf, st.st_size);
         close(fd);
@@ -2434,7 +2511,7 @@ static int snd_ucm_parse(snd_use_case_mgr_t **uc_mgr)
             if (file_name != NULL) {
                 ret = snd_ucm_parse_verb(uc_mgr, file_name, index);
                 if (ret < 0)
-                    LOGE("Failed to parse config file %s\n", file_name);
+                    ALOGE("Failed to parse config file %s\n", file_name);
                 free(verb_name);
                 verb_name = NULL;
                 free(file_name);
@@ -2458,17 +2535,17 @@ static int snd_ucm_parse(snd_use_case_mgr_t **uc_mgr)
         strlcpy((*uc_mgr)->card_ctxt_ptr->verb_list[index], SND_UCM_END_OF_LIST,
                 ((strlen(SND_UCM_END_OF_LIST)+1)*sizeof(char)));
     } else {
-        LOGE("Failed to allocate memory\n");
+        ALOGE("Failed to allocate memory\n");
         ret = -ENOMEM;
     }
     if (!ret) {
-        LOGD("Creating Parsing thread uc_mgr %p\n", uc_mgr);
+        ALOGD("Creating Parsing thread uc_mgr %p\n", uc_mgr);
         rc = pthread_create(&(*uc_mgr)->thr, 0, second_stage_parsing_thread,
                  (void*)(*uc_mgr));
         if(rc < 0) {
-            LOGE("Failed to create parsing thread rc %d errno %d\n", rc, errno);
+            ALOGE("Failed to create parsing thread rc %d errno %d\n", rc, errno);
         } else {
-            LOGV("Prasing thread created successfully\n");
+            ALOGV("Prasing thread created successfully\n");
         }
     }
     if (verb_name)
@@ -2660,7 +2737,7 @@ char *current_str, int num_verbs)
                 SND_UCM_END_OF_LIST,
                 ((strlen(SND_UCM_END_OF_LIST)+1)*sizeof(char)));
         } else {
-            LOGE("Failed to allocate memory\n");
+            ALOGE("Failed to allocate memory\n");
             ret = -ENOMEM;
         }
     }
@@ -2727,9 +2804,9 @@ char *current_str, int num_verbs)
         verb_list[index].mod_count = verb_list[0].mod_count;
     }
     if (ret < 0) {
-        LOGE("Failed to parse config file ret %d errno %d\n", ret, errno);
+        ALOGE("Failed to parse config file ret %d errno %d\n", ret, errno);
     } else {
-        LOGV("Prasing done successfully\n");
+        ALOGV("Prasing done successfully\n");
 #if PARSE_DEBUG
         /* Prints use cases and mixer controls parsed from config files */
         snd_ucm_print((*uc_mgr));
@@ -2746,7 +2823,7 @@ static int get_num_verbs_config_format(const char *nxt_str)
 
     next_str = (char *)malloc((strlen(nxt_str)+1)*sizeof(char));
     if (next_str == NULL) {
-        LOGE("Failed to allocate memory");
+        ALOGE("Failed to allocate memory");
         return -ENOMEM;
     }
     strlcpy(next_str, nxt_str, ((strlen(nxt_str)+1)*sizeof(char)));
@@ -2780,7 +2857,7 @@ static int get_num_device_config_format(const char *nxt_str)
 
     next_str = (char *)malloc((strlen(nxt_str)+1)*sizeof(char));
     if (next_str == NULL) {
-        LOGE("Failed to allocate memory");
+        ALOGE("Failed to allocate memory");
         return -ENOMEM;
     }
     strlcpy(next_str, nxt_str, ((strlen(nxt_str)+1)*sizeof(char)));
@@ -2811,7 +2888,7 @@ static int get_num_mod_config_format(const char *nxt_str)
 
     next_str = (char *)malloc((strlen(nxt_str)+1)*sizeof(char));
     if (next_str == NULL) {
-        LOGE("Failed to allocate memory");
+        ALOGE("Failed to allocate memory");
         return -ENOMEM;
     }
     strlcpy(next_str, nxt_str, ((strlen(nxt_str)+1)*sizeof(char)));
@@ -2842,7 +2919,7 @@ static int get_verb_count(const char *nxt_str)
 
     next_str = (char *)malloc((strlen(nxt_str)+1)*sizeof(char));
     if (next_str == NULL) {
-        LOGE("Failed to allocate memory");
+        ALOGE("Failed to allocate memory");
         return -ENOMEM;
     }
     strlcpy(next_str, nxt_str, ((strlen(nxt_str)+1)*sizeof(char)));
@@ -2873,7 +2950,7 @@ static int is_single_config_format(const char *nxt_str)
 
     next_str = (char *)malloc((strlen(nxt_str)+1)*sizeof(char));
     if (next_str == NULL) {
-        LOGE("Failed to allocate memory");
+        ALOGE("Failed to allocate memory");
         return -ENOMEM;
     }
     strlcpy(next_str, nxt_str, ((strlen(nxt_str)+1)*sizeof(char)));
@@ -2918,7 +2995,7 @@ const char *file_name, int index)
 
     strlcpy(path, CONFIG_DIR, (strlen(CONFIG_DIR)+1));
     strlcat(path, file_name, sizeof(path));
-    LOGV("path:%s", path);
+    ALOGV("path:%s", path);
     verb_list = (*uc_mgr)->card_ctxt_ptr->use_case_verb_list;
     while(1) {
         device_count = 0; modifier_count = 0;
@@ -2934,18 +3011,18 @@ const char *file_name, int index)
         }
         fd = open(path, O_RDONLY);
         if (fd < 0) {
-             LOGE("failed to open config file %s error %d\n", path, errno);
+             ALOGE("failed to open config file %s error %d\n", path, errno);
              return -EINVAL;
         }
         if (fstat(fd, &st) < 0) {
-            LOGE("failed to stat %s error %d\n", path, errno);
+            ALOGE("failed to stat %s error %d\n", path, errno);
             close(fd);
             return -EINVAL;
         }
         read_buf = (char *) mmap(0, st.st_size, PROT_READ | PROT_WRITE,
                    MAP_PRIVATE, fd, 0);
         if (read_buf == MAP_FAILED) {
-            LOGE("failed to mmap file error %d\n", errno);
+            ALOGE("failed to mmap file error %d\n", errno);
             close(fd);
             return -EINVAL;
         }
@@ -3142,18 +3219,18 @@ static int print_list(card_mctrl_t *list, int verb_index, int count)
     int i, j;
 
     for(i=0; i < count; i++) {
-        LOGD("\tcase name: %s\n", list[i].case_name);
-        LOGD("\tEnable sequence: %d\n", list[i].ena_mixer_count);
+        ALOGD("\tcase name: %s\n", list[i].case_name);
+        ALOGD("\tEnable sequence: %d\n", list[i].ena_mixer_count);
         for(j=0; j<list[i].ena_mixer_count; j++) {
-            LOGE("\t\t%s : %d : %d: %s\n",
+            ALOGD("\t\t%s : %d : %d: %s\n",
                 list[i].ena_mixer_list[j].control_name,
                 list[i].ena_mixer_list[j].type,
                 list[i].ena_mixer_list[j].value,
                 list[i].ena_mixer_list[j].string);
         }
-        LOGD("\tDisable sequence: %d\n", list[i].dis_mixer_count);
+        ALOGD("\tDisable sequence: %d\n", list[i].dis_mixer_count);
         for(j=0; j<list[i].dis_mixer_count; j++) {
-            LOGE("\t\t%s : %d : %d : %s\n",
+            ALOGD("\t\t%s : %d : %d : %s\n",
                 list[i].dis_mixer_list[j].control_name,
                 list[i].dis_mixer_list[j].type,
                 list[i].dis_mixer_list[j].value,
@@ -3177,33 +3254,33 @@ static int snd_ucm_print(snd_use_case_mgr_t *uc_mgr)
     verb_list = uc_mgr->card_ctxt_ptr->use_case_verb_list;
     while(strncmp(uc_mgr->card_ctxt_ptr->verb_list[verb_index],
          SND_UCM_END_OF_LIST, 3)) {
-        LOGD("\nuse case verb: %s\n",
+        ALOGD("\nuse case verb: %s\n",
             uc_mgr->card_ctxt_ptr->verb_list[verb_index]);
         if(verb_list[verb_index].device_list) {
-            LOGD("\tValid device list:");
+            ALOGD("\tValid device list:");
             i = 0;
             while(strncmp(verb_list[verb_index].device_list[i],
                   SND_UCM_END_OF_LIST, 3)) {
-                LOGD("\t\t%s", verb_list[verb_index].device_list[i]);
+                ALOGD("\t\t%s", verb_list[verb_index].device_list[i]);
                 i++;
             }
         }
         if(verb_list[verb_index].modifier_list) {
-            LOGD("\tValid modifier list:");
+            ALOGD("\tValid modifier list:");
             i = 0;
             while(strncmp(verb_list[verb_index].modifier_list[i],
                   SND_UCM_END_OF_LIST, 3)) {
-                LOGD("\t\t%s", verb_list[verb_index].modifier_list[i]);
+                ALOGD("\t\t%s", verb_list[verb_index].modifier_list[i]);
                 i++;
             }
         }
-        LOGD("Verbs:\n");
+        ALOGD("Verbs:\n");
         list = verb_list[verb_index].verb_ctrls;
         print_list(list, verb_index, verb_list[verb_index].verb_count);
-        LOGD("Devices:\n");
+        ALOGD("Devices:\n");
         list = verb_list[verb_index].device_ctrls;
         print_list(list, verb_index, verb_list[verb_index].device_count);
-        LOGD("Modifier:\n");
+        ALOGD("Modifier:\n");
         list = verb_list[verb_index].mod_ctrls;
         print_list(list, verb_index, verb_list[verb_index].mod_count);
         verb_index++;
@@ -3220,7 +3297,7 @@ static int get_controls_count(const char *nxt_str)
 
     next_str = (char *)malloc((strlen(nxt_str)+1)*sizeof(char));
     if (next_str == NULL) {
-        LOGE("Failed to allocate memory");
+        ALOGE("Failed to allocate memory");
         return -ENOMEM;
     }
     strlcpy(next_str, nxt_str, ((strlen(nxt_str)+1)*sizeof(char)));
@@ -3268,7 +3345,7 @@ char **nxt_str, int verb_index, int ctrl_list_type)
         list = (verb_list[verb_index].mod_ctrls +
             verb_list[verb_index].mod_count);
     } else {
-        LOGE("Invalid list type: %d\n", ctrl_list_type);
+        ALOGE("Invalid list type: %d\n", ctrl_list_type);
         return -EINVAL;
     }
     list->case_name = NULL;
@@ -3295,7 +3372,7 @@ char **nxt_str, int verb_index, int ctrl_list_type)
             else if (disable_seq == 1)
                 disable_seq = 0;
             else
-                LOGE("Error: improper config file\n");
+                ALOGE("Error: improper config file\n");
         }
         if (enable_seq == 1) {
             ret = snd_ucm_extract_controls(current_str, &list->ena_mixer_list,
@@ -3313,40 +3390,40 @@ char **nxt_str, int verb_index, int ctrl_list_type)
             ret = snd_ucm_extract_name(current_str, &list->case_name);
             if (ret < 0)
                 break;
-            LOGV("Name of section is %s\n", list->case_name);
+            ALOGV("Name of section is %s\n", list->case_name);
         } else if (strcasestr(current_str, "PlaybackPCM") != NULL) {
             ret = snd_ucm_extract_dev_name(current_str,
                       &list->playback_dev_name);
             if (ret < 0)
                 break;
-            LOGV("Device name of playback is %s\n",
+            ALOGV("Device name of playback is %s\n",
                 list->playback_dev_name);
         } else if (strcasestr(current_str, "CapturePCM") != NULL) {
             ret = snd_ucm_extract_dev_name(current_str,
                       &list->capture_dev_name);
             if (ret < 0)
                 break;
-            LOGV("Device name of capture is %s\n", list->capture_dev_name);
+            ALOGV("Device name of capture is %s\n", list->capture_dev_name);
         } else if (strcasestr(current_str, "ACDBID") != NULL) {
             ret = snd_ucm_extract_acdb(current_str, &list->acdb_id,
                       &list->capability);
             if (ret < 0)
                 break;
-            LOGV("ACDB ID: %d CAPABILITY: %d\n", list->acdb_id,
+            ALOGV("ACDB ID: %d CAPABILITY: %d\n", list->acdb_id,
                 list->capability);
         } else if (strcasestr(current_str, "EffectsMixerCTL") != NULL) {
             ret = snd_ucm_extract_effects_mixer_ctl(current_str,
                       &list->effects_mixer_ctl);
             if (ret < 0)
                 break;
-            LOGV("Effects mixer ctl: %s:\n", list->effects_mixer_ctl);
+            ALOGV("Effects mixer ctl: %s:\n", list->effects_mixer_ctl);
         } else if (strcasestr(current_str, "EC_REF_RXMixerCTL") != NULL) {
             ret = snd_ucm_extract_ec_ref_rx_mixer_ctl(current_str,
                       &list->ec_ref_rx_mixer_ctl);
-            LOGE("EC_REF_RX mixer ctl: ret:%d\n", ret);
+            ALOGV("EC_REF_RX mixer ctl: ret:%d\n", ret);
             if (ret < 0)
                 break;
-            LOGE("EC_REF_RX mixer ctl: %s\n", list->ec_ref_rx_mixer_ctl);
+            ALOGE("EC_REF_RX mixer ctl: %s\n", list->ec_ref_rx_mixer_ctl);
         }
         if (strcasestr(current_str, "EnableSequence") != NULL) {
             controls_count = get_controls_count(next_str);
@@ -3529,7 +3606,7 @@ static int get_num_values(const char *buf)
 
     buf_addr = (char *)malloc((strlen(buf)+1)*sizeof(char));
     if (buf_addr == NULL) {
-        LOGE("Failed to allocate memory");
+        ALOGE("Failed to allocate memory");
         return -ENOMEM;
     }
     strlcpy(buf_addr, buf, ((strlen(buf)+1)*sizeof(char)));
@@ -3580,7 +3657,7 @@ int size)
         } else if(!strncmp(p, "2", 1)) {
             list->type = TYPE_MULTI_VAL;
         } else {
-            LOGE("Unknown type: p %s\n", p);
+            ALOGE("Unknown type: p %s\n", p);
         }
         p = strtok_r(NULL, seps, &temp_ptr);
         if (p == NULL)
@@ -3642,7 +3719,7 @@ int size)
                 list->string = NULL;
             }
         } else {
-            LOGE("Unknown type: p %s\n", p);
+            ALOGE("Unknown type: p %s\n", p);
             list->value = -1;
             list->string = NULL;
         }
@@ -3791,7 +3868,7 @@ const char *value)
     node =
         (struct snd_ucm_ident_node *)malloc(sizeof(struct snd_ucm_ident_node));
     if (node == NULL) {
-        LOGE("Failed to allocate memory for new node");
+        ALOGE("Failed to allocate memory for new node");
         return -ENOMEM;
     } else {
         node->next = NULL;
@@ -3808,7 +3885,7 @@ const char *value)
         }
         temp->next = node;
     }
-    LOGV("add_to_list: head %p, value %s", *head, node->ident);
+    ALOGV("add_to_list: head %p, value %s", *head, node->ident);
     return 0;
 }
 
@@ -3827,7 +3904,7 @@ const char *ident)
         head = head->next;
     }
     if (head == NULL) {
-        LOGV("Element not found in the list");
+        ALOGV("Element not found in the list");
     } else {
         return(head->active);
     }
@@ -3842,12 +3919,12 @@ struct snd_ucm_ident_node *snd_ucm_get_device_node(struct snd_ucm_ident_node *he
 int index)
 {
     if (head == NULL) {
-        LOGV("Empty list");
+        ALOGV("Empty list");
         return NULL;
     }
 
     if ((index < 0) || (index >= (snd_ucm_get_size_of_list(head)))) {
-        LOGE("Element with given index %d doesn't exist in the list", index);
+        ALOGE("Element with given index %d doesn't exist in the list", index);
         return NULL;
     }
 
@@ -3874,7 +3951,7 @@ const char *ident, int status, int capability)
         head = head->next;
     }
     if (head == NULL) {
-        LOGE("Element not found to set the status");
+        ALOGE("Element not found to set the status");
     } else {
         head->active = status;
         head->capability = capability;
@@ -3890,12 +3967,12 @@ static char *snd_ucm_get_value_at_index(struct snd_ucm_ident_node *head,
 int index)
 {
     if (head == NULL) {
-        LOGV("Empty list");
+        ALOGV("Empty list");
         return NULL;
     }
 
     if ((index < 0) || (index >= (snd_ucm_get_size_of_list(head)))) {
-        LOGE("Element with given index %d doesn't exist in the list", index);
+        ALOGE("Element with given index %d doesn't exist in the list", index);
         return NULL;
     }
 
@@ -3916,7 +3993,7 @@ static int snd_ucm_get_size_of_list(struct snd_ucm_ident_node *head)
     int index = 0;
 
     if (head == NULL) {
-        LOGV("Empty list");
+        ALOGV("Empty list");
         return 0;
     }
 
@@ -3932,18 +4009,18 @@ static void snd_ucm_print_list(struct snd_ucm_ident_node *head)
 {
     int index = 0;
 
-    LOGV("print_list: head %p", head);
+    ALOGV("print_list: head %p", head);
     if (head == NULL) {
-        LOGV("Empty list");
+        ALOGV("Empty list");
         return;
     }
 
     while (head->next != NULL) {
-        LOGV("index: %d, value: %s", index, head->ident);
+        ALOGV("index: %d, value: %s", index, head->ident);
         index++;
         head = head->next;
     }
-    LOGV("index: %d, value: %s", index, head->ident);
+    ALOGV("index: %d, value: %s", index, head->ident);
 }
 
 /* Delete an identifier from respective list
@@ -3959,7 +4036,7 @@ const char *value)
     int ret = -EINVAL;
 
     if (*head == NULL) {
-        LOGE("del_from_list: Empty list");
+        ALOGE("del_from_list: Empty list");
         return -EINVAL;
     } else if (!strncmp((*head)->ident, value, (strlen(value)+1))) {
             temp2 = *head;
@@ -3979,7 +4056,7 @@ const char *value)
         }
     }
     if (ret < 0) {
-        LOGE("Element not found in enabled list");
+        ALOGE("Element not found in enabled list");
     } else {
         temp2->next = NULL;
         temp2->ident[0] = 0;

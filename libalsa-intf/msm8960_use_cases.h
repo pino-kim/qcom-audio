@@ -36,6 +36,7 @@ extern "C" {
 #include "alsa_ucm.h"
 #include "alsa_audio.h"
 #include <pthread.h>
+#include <stdbool.h>
 #define SND_UCM_END_OF_LIST "end"
 
 /* ACDB Device ID macros */
@@ -46,6 +47,7 @@ extern "C" {
 #define DEVICE_HANDSET_TX_ACDB_ID                       4 // HANDSET_MIC
 #define DEVICE_SPEAKER_RX_ACDB_ID                       15// SPKR_PHONE_SPKR_STEREO
 #define DEVICE_SPEAKER_MONO_RX_ACDB_ID                  14// SPKR_PHONE_SPKR_MONO
+#define DEVICE_SPEAKER_STEREO_RX_ACDB_ID                15// SPKR_PHONE_SPKR_STEREO
 #define DEVICE_SPEAKER_TX_ACDB_ID                       11// SPKR_PHONE_MIC
 #define DEVICE_HEADSET_RX_ACDB_ID                       10// HEADSET_SPKR_STEREO
 #define DEVICE_HEADSET_TX_ACDB_ID                       8 // HEADSET_MIC
@@ -63,11 +65,11 @@ extern "C" {
 #define DEVICE_BT_SCO_TX_WB_ACDB_ID                     38// BT_SCO_WB_MIC
 #define DEVICE_SPEAKER_HEADSET_RX_ACDB_ID               DEVICE_HEADSET_RX_ACDB_ID // Use headset calibration
 #define DEVICE_HDMI_STEREO_RX_ACDB_ID                   18// HDMI_SPKR
-#define DEVICE_ANC_HEADSET_STEREO_RX_ACDB_ID            26//ANC RX, same as regular headset
+#define DEVICE_ANC_HEADSET_STEREO_RX_ACDB_ID            26// ANC RX, same as regular headset
 #define DEVICE_QUADMIC_ACDB_ID                          19// QUADMIC_SKPR
-#define DEVICE_PROXY_RX_ACDB_ID   	               DEVICE_HDMI_STEREO_RX_ACDB_ID
-#define DEVICE_TTY_VCO_HANDSET_TX_ACDB_ID		36 //TTY_VCO_HANDSET_MIC
-#define DEVICE_TTY_HCO_HANDSET_RX_ACDB_ID               37 //TTY_HCO_HANDSET_SPRK
+#define DEVICE_PROXY_RX_ACDB_ID                         DEVICE_HDMI_STEREO_RX_ACDB_ID
+#define DEVICE_TTY_VCO_HANDSET_TX_ACDB_ID               36// TTY_VCO_HANDSET_MIC
+#define DEVICE_TTY_HCO_HANDSET_RX_ACDB_ID               37// TTY_HCO_HANDSET_SPRK
 #define DEVICE_HANDSET_TX_FV5_ACDB_ID                   40
 #define DEVICE_DUALMIC_HANDSET_TX_ENDFIRE_FV5_ACDB_ID   41
 #define DEVICE_SPEAKER_TX_FV5_ACDB_ID                   42
@@ -75,6 +77,8 @@ extern "C" {
 #define DEVICE_INCALL_VOICE_RECORD_STEREO_ACDB_ID       45
 #define DEVICE_INCALL_MUSIC_DELIVERY_MONO_ACDB_ID       46
 #define DEVICE_INCALL_VOICE_RECORD_MONO_ACDB_ID         47
+#define DEVICE_CAMCORDER_TX_ACDB_ID                     61// CAMCORDER_TX
+#define DEVICE_VOICE_RECOGNITION_ACDB_ID                62// VOICE_RECOGNITION
 
 /* mixer control type */
 #define TYPE_INT            0
@@ -169,6 +173,7 @@ struct snd_use_case_mgr {
     int current_rx_device;
     card_ctxt_t *card_ctxt_ptr;
     pthread_t thr;
+    bool isFusion3Platform;
 };
 
 #define MAX_NUM_CARDS (sizeof(card_list)/sizeof(char *))
@@ -204,17 +209,23 @@ static card_mapping_t card_mapping_list[] = {
 #define SND_USE_CASE_VERB_FM_REC         "FM REC"
 #define SND_USE_CASE_VERB_FM_A2DP_REC   "FM A2DP REC"
 #define SND_USE_CASE_VERB_HIFI_REC       "HiFi Rec"
+#define SND_USE_CASE_VERB_HIFI_LOWLATENCY_REC       "HiFi Lowlatency Rec"
 #define SND_USE_CASE_VERB_DL_REC	 "DL REC"
 #define SND_USE_CASE_VERB_UL_DL_REC      "UL DL REC"
+#define SND_USE_CASE_VERB_CAPTURE_COMPRESSED_VOICE_DL	 "Compressed DL REC"
+#define SND_USE_CASE_VERB_CAPTURE_COMPRESSED_VOICE_UL_DL      "Compressed UL DL REC"
 #define SND_USE_CASE_VERB_HIFI_TUNNEL    "HiFi Tunnel"
+#define SND_USE_CASE_VERB_HIFI_LOWLATENCY_MUSIC    "HiFi Lowlatency"
 #define SND_USE_CASE_VERB_HIFI2       "HiFi2"
 #define SND_USE_CASE_VERB_INCALL_REC   "Incall REC"
+#define SND_USE_CASE_VERB_MI2S        "MI2S"
 #define SND_USE_CASE_VERB_VOLTE    "VoLTE"
 #define SND_USE_CASE_VERB_ADSP_TESTFWK "ADSP testfwk"
 #define SND_USE_CASE_VERB_HIFI_REC2       "HiFi Rec2"
 #define SND_USE_CASE_VERB_HIFI_REC_COMPRESSED    "HiFi Rec Compressed"
 #define SND_USE_CASE_VERB_HIFI3       "HiFi3"
 #define SND_USE_CASE_VERB_HIFI_TUNNEL2    "HiFi Tunnel2"
+#define SND_USE_CASE_VERB_HIFI_PSEUDO_TUNNEL    "HiFi Pseudo Tunnel"
 
 #define SND_USE_CASE_DEV_FM_TX           "FM Tx"
 #define SND_USE_CASE_DEV_ANC_HEADSET     "ANC Headset"
@@ -234,17 +245,25 @@ static card_mapping_t card_mapping_list[] = {
 #define SND_USE_CASE_DEV_TTY_HANDSET_ANALOG_TX  "TTY Handset Analog Tx"
 #define SND_USE_CASE_DEV_DUAL_MIC_BROADSIDE "DMIC Broadside"
 #define SND_USE_CASE_DEV_DUAL_MIC_ENDFIRE "DMIC Endfire"
+#define SND_USE_CASE_DEV_DUAL_MIC_ENDFIRE_SGLTE "DMIC Endfire SGLTE"
 #define SND_USE_CASE_DEV_DUAL_MIC_HANDSET_STEREO "Handset DMIC Stereo"
+#define SND_USE_CASE_DEV_DUAL_MIC_HANDSET_STEREO_SGLTE "Handset DMIC Stereo SGLTE"
 #define SND_USE_CASE_DEV_SPEAKER_DUAL_MIC_BROADSIDE "Speaker DMIC Broadside"
 #define SND_USE_CASE_DEV_SPEAKER_DUAL_MIC_ENDFIRE "Speaker DMIC Endfire"
+#define SND_USE_CASE_DEV_SPEAKER_DUAL_MIC_ENDFIRE_SGLTE "Speaker DMIC Endfire SGLTE"
 #define SND_USE_CASE_DEV_SPEAKER_DUAL_MIC_STEREO "Speaker DMIC Stereo"
+#define SND_USE_CASE_DEV_SPEAKER_DUAL_MIC_STEREO_SGLTE "Speaker DMIC Stereo SGLTE"
 #define SND_USE_CASE_DEV_HDMI_TX             "HDMI Tx"
 #define SND_USE_CASE_DEV_HDMI_SPDIF          "HDMI SPDIF"
+#define SND_USE_CASE_DEV_HDMI_SPDIF_SPEAKER   "HDMI SPDIF Speaker"
 #define SND_USE_CASE_DEV_QUAD_MIC "QMIC"
 #define SND_USE_CASE_DEV_SSR_QUAD_MIC "SSR QMIC"
 #define SND_USE_CASE_DEV_PROXY_RX     "PROXY Rx"
 #define SND_USE_CASE_DEV_PROXY_TX     "PROXY Tx"
+#define SND_USE_CASE_DEV_USB_PROXY_RX     "USB PROXY Rx"
+#define SND_USE_CASE_DEV_USB_PROXY_TX     "USB PROXY Tx"
 #define SND_USE_CASE_DEV_SPDIF_SPEAKER     "SPDIF Speaker"
+#define SND_USE_CASE_DEV_HDMI_SPEAKER      "HDMI Speaker"
 #define SND_USE_CASE_DEV_SPDIF_HANDSET     "SPDIF Earpiece"
 #define SND_USE_CASE_DEV_SPDIF_HEADSET     "SPDIF Headphones"
 #define SND_USE_CASE_DEV_SPDIF_ANC_HEADSET     "SPDIF ANC Headset"
@@ -257,25 +276,38 @@ static card_mapping_t card_mapping_list[] = {
 #define SND_USE_CASE_DEV_PROXY_RX_ANC_HEADSET     "PROXY Rx ANC Headset"
 #define SND_USE_CASE_DEV_PROXY_RX_SPEAKER_HEADSET "PROXY Rx Speaker Headset"
 #define SND_USE_CASE_DEV_PROXY_RX_SPEAKER_ANC_HEADSET "PROXY Rx Speaker ANC Headset"
-#define SND_USE_CASE_DEV_VOC_EARPIECE "Voice Earpiece"
-#define SND_USE_CASE_DEV_VOC_HEADPHONE "Voice Headphones"
-#define SND_USE_CASE_DEV_VOC_ANC_HEADSET "Voice ANC Headset"
+#define SND_USE_CASE_DEV_CAMCORDER_TX       "Camcorder Tx"
+#define SND_USE_CASE_DEV_VOICE_RECOGNITION  "Voice Recognition"
+#define SND_USE_CASE_DEV_VOC_EARPIECE       "Voice Earpiece"
+#define SND_USE_CASE_DEV_VOC_HEADPHONE      "Voice Headphones"
+#define SND_USE_CASE_DEV_VOC_HEADSET        "Voice Headset"
+#define SND_USE_CASE_DEV_VOC_ANC_HEADSET    "Voice ANC Headset"
+#define SND_USE_CASE_DEV_VOC_SPEAKER        "Voice Speaker"
+#define SND_USE_CASE_DEV_VOC_LINE           "Voice Line"
 
 #define SND_USE_CASE_MOD_PLAY_FM         "Play FM"
 #define SND_USE_CASE_MOD_CAPTURE_FM      "Capture FM"
+#define SND_USE_CASE_MOD_CAPTURE_LOWLATENCY_MUSIC     "Capture Lowlatency Music"
 #define SND_USE_CASE_MOD_CAPTURE_A2DP_FM "Capture A2DP FM"
 #define SND_USE_CASE_MOD_PLAY_LPA        "Play LPA"
 #define SND_USE_CASE_MOD_PLAY_VOIP       "Play VOIP"
 #define SND_USE_CASE_MOD_CAPTURE_VOIP    "Capture VOIP"
 #define SND_USE_CASE_MOD_CAPTURE_VOICE_DL       "Capture Voice Downlink"
 #define SND_USE_CASE_MOD_CAPTURE_VOICE_UL_DL    "Capture Voice Uplink Downlink"
+#define SND_USE_CASE_MOD_CAPTURE_COMPRESSED_VOICE_DL       "Capture Compressed Voice DL"
+#define SND_USE_CASE_MOD_CAPTURE_COMPRESSED_VOICE_UL_DL    "Capture Compressed Voice UL DL"
 #define SND_USE_CASE_MOD_PLAY_TUNNEL     "Play Tunnel"
+#define SND_USE_CASE_MOD_PLAY_LOWLATENCY_MUSIC     "Play Lowlatency Music"
 #define SND_USE_CASE_MOD_PLAY_MUSIC2       "Play Music2"
+#define SND_USE_CASE_MOD_PLAY_MI2S       "Play MI2S"
 #define SND_USE_CASE_MOD_PLAY_VOLTE   "Play VoLTE"
 #define SND_USE_CASE_MOD_CAPTURE_MUSIC2       "Capture Music2"
 #define SND_USE_CASE_MOD_CAPTURE_MUSIC_COMPRESSED    "Capture Music Compressed"
 #define SND_USE_CASE_MOD_PLAY_MUSIC3       "Play Music3"
+#define SND_USE_CASE_MOD_PLAY_TUNNEL1     "Play Tunnel1"
 #define SND_USE_CASE_MOD_PLAY_TUNNEL2     "Play Tunnel2"
+#define SND_USE_CASE_MOD_PSEUDO_TUNNEL     "Pseudo Tunnel"
+
 
 /* List utility functions for maintaining enabled devices and modifiers */
 static int snd_ucm_add_ident_to_list(struct snd_ucm_ident_node **head, const char *value);

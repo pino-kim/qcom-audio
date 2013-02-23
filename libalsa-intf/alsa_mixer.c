@@ -1,6 +1,6 @@
 /*
 ** Copyright 2010, The Android Open-Source Project
-** Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+** Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -42,9 +42,9 @@
 #include <utils/Log.h>
 #else /* ANDROID */
 #include <math.h>
-#define LOGI(...)      fprintf(stdout, __VA_ARGS__)
-#define LOGE(...)      fprintf(stderr, __VA_ARGS__)
-#define LOGV(...)      fprintf(stderr, __VA_ARGS__)
+#define ALOGI(...)      fprintf(stdout, __VA_ARGS__)
+#define ALOGE(...)      fprintf(stderr, __VA_ARGS__)
+#define ALOGV(...)      fprintf(stderr, __VA_ARGS__)
 #endif /* ANDROID */
 
 #define check_range(val, min, max) \
@@ -160,13 +160,13 @@ struct mixer *mixer_open(const char *device)
 
     fd = open(device, O_RDWR);
     if (fd < 0) {
-        LOGE("Control open failed\n");
+        ALOGE("Control open failed\n");
         return 0;
     }
 
     memset(&elist, 0, sizeof(elist));
     if (ioctl(fd, SNDRV_CTL_IOCTL_ELEM_LIST, &elist) < 0) {
-        LOGE("SNDRV_CTL_IOCTL_ELEM_LIST failed\n");
+        ALOGE("SNDRV_CTL_IOCTL_ELEM_LIST failed\n");
         goto fail;
     }
 
@@ -232,12 +232,12 @@ void mixer_dump(struct mixer *mixer)
 {
     unsigned n, m;
 
-    LOGV("  id iface dev sub idx num perms     type   isvolume  name\n");
+    ALOGV("  id iface dev sub idx num perms     type   isvolume  name\n");
     for (n = 0; n < mixer->count; n++) {
 	enum ctl_type type;
         struct snd_ctl_elem_info *ei = mixer->info + n;
 
-        LOGV("%4d %5s %3d %3d %3d %3d %c%c%c%c%c%c%c%c%c %-6s %8d  %s",
+        ALOGV("%4d %5s %3d %3d %3d %3d %c%c%c%c%c%c%c%c%c %-6s %8d  %s",
                ei->id.numid, elem_iface_name(ei->id.iface),
                ei->id.device, ei->id.subdevice, ei->id.index,
                ei->count,
@@ -255,14 +255,14 @@ void mixer_dump(struct mixer *mixer)
                ei->id.name);
         switch (ei->type) {
         case SNDRV_CTL_ELEM_TYPE_INTEGER:
-            LOGV(ei->value.integer.step ?
+            ALOGV(ei->value.integer.step ?
                    " { %ld-%ld, %ld }\n" : " { %ld-%ld }",
                    ei->value.integer.min,
                    ei->value.integer.max,
                    ei->value.integer.step);
             break;
         case SNDRV_CTL_ELEM_TYPE_INTEGER64:
-            LOGV(ei->value.integer64.step ?
+            ALOGV(ei->value.integer64.step ?
                    " { %lld-%lld, %lld }\n" : " { %lld-%lld }",
                    ei->value.integer64.min,
                    ei->value.integer64.max,
@@ -270,14 +270,14 @@ void mixer_dump(struct mixer *mixer)
             break;
         case SNDRV_CTL_ELEM_TYPE_ENUMERATED: {
             unsigned m;
-            LOGV(" { %s=0", mixer->ctl[n].ename[0]);
+            ALOGV(" { %s=0", mixer->ctl[n].ename[0]);
             for (m = 1; m < ei->value.enumerated.items; m++)
-                LOGV(", %s=%d", mixer->ctl[n].ename[m],m);
-            LOGV(" }");
+                ALOGV(", %s=%d", mixer->ctl[n].ename[m],m);
+            ALOGV(" }");
             break;
         }
         }
-        LOGV("\n");
+        ALOGV("\n");
     }
 }
 
@@ -305,7 +305,7 @@ struct mixer_ctl *mixer_get_nth_control(struct mixer *mixer, unsigned n)
 
 static void print_dB(long dB)
 {
-        LOGV("%li.%02lidB", dB / 100, (dB < 0 ? -dB : dB) % 100);
+        ALOGV("%li.%02lidB", dB / 100, (dB < 0 ? -dB : dB) % 100);
 }
 
 int mixer_ctl_read_tlv(struct mixer_ctl *ctl,
@@ -345,39 +345,39 @@ int mixer_ctl_read_tlv(struct mixer_ctl *ctl,
         case SNDRV_CTL_TLVT_DB_SCALE: {
                 int idx = 2;
                 int step;
-                LOGV("dBscale-");
+                ALOGV("dBscale-");
                 if (size != 2 * sizeof(unsigned int)) {
                         while (size > 0) {
-                                LOGV("0x%08x,", tlv[idx++]);
+                                ALOGV("0x%08x,", tlv[idx++]);
                                 size -= sizeof(unsigned int);
                         }
                 } else {
-                    LOGV(" min=");
+                    ALOGV(" min=");
                     print_dB((int)tlv[2]);
                     *min = (long)tlv[2];
-                    LOGV(" step=");
+                    ALOGV(" step=");
                     step = (tlv[3] & 0xffff);
                     print_dB(tlv[3] & 0xffff);
-                    LOGV(" max=");
+                    ALOGV(" max=");
                     *max = (ctl->info->value.integer.max);
                     print_dB((long)ctl->info->value.integer.max);
-                    LOGV(" mute=%i\n", (tlv[3] >> 16) & 1);
+                    ALOGV(" mute=%i\n", (tlv[3] >> 16) & 1);
                 }
             break;
         }
         case SNDRV_CTL_TLVT_DB_LINEAR: {
                 int idx = 2;
-                LOGV("dBLiner-");
+                ALOGV("dBLiner-");
                 if (size != 2 * sizeof(unsigned int)) {
                         while (size > 0) {
-                                LOGV("0x%08x,", tlv[idx++]);
+                                ALOGV("0x%08x,", tlv[idx++]);
                                 size -= sizeof(unsigned int);
                         }
                 } else {
-                    LOGV(" min=");
+                    ALOGV(" min=");
                     *min = tlv[2];
                     print_dB(tlv[2]);
-                    LOGV(" max=");
+                    ALOGV(" max=");
                     *max = tlv[3];
                     print_dB(tlv[3]);
                 }
@@ -401,10 +401,10 @@ void mixer_ctl_get(struct mixer_ctl *ctl, unsigned *value)
     long min, max;
 
     if (is_volume(ctl->info->id.name, &type)) {
-       LOGV("capability: volume\n");
+       ALOGV("capability: volume\n");
        tlv = calloc(1, DEFAULT_TLV_SIZE);
        if (tlv == NULL) {
-           LOGE("failed to allocate memory\n");
+           ALOGE("failed to allocate memory\n");
        } else {
 	   mixer_ctl_read_tlv(ctl, tlv, &min, &max, &tlv_type);
            free(tlv);
@@ -415,37 +415,37 @@ void mixer_ctl_get(struct mixer_ctl *ctl, unsigned *value)
     ev.id.numid = ctl->info->id.numid;
     if (ioctl(ctl->mixer->fd, SNDRV_CTL_IOCTL_ELEM_READ, &ev))
         return;
-    LOGV("%s:", ctl->info->id.name);
+    ALOGV("%s:", ctl->info->id.name);
 
     switch (ctl->info->type) {
     case SNDRV_CTL_ELEM_TYPE_BOOLEAN:
         for (n = 0; n < ctl->info->count; n++)
-            LOGV(" %s", ev.value.integer.value[n] ? "on" : "off");
+            ALOGV(" %s", ev.value.integer.value[n] ? "on" : "off");
         *value = ev.value.integer.value[0];
         break;
     case SNDRV_CTL_ELEM_TYPE_INTEGER: {
         for (n = 0; n < ctl->info->count; n++)
-            LOGV(" %ld", ev.value.integer.value[n]);
+            ALOGV(" %ld", ev.value.integer.value[n]);
         *value = ev.value.integer.value[0];
         break;
     }
     case SNDRV_CTL_ELEM_TYPE_INTEGER64:
         for (n = 0; n < ctl->info->count; n++)
-            LOGV(" %lld", ev.value.integer64.value[n]);
+            ALOGV(" %lld", ev.value.integer64.value[n]);
         *value = ev.value.integer64.value[0];
         break;
     case SNDRV_CTL_ELEM_TYPE_ENUMERATED:
         for (n = 0; n < ctl->info->count; n++) {
             unsigned v = ev.value.enumerated.item[n];
-            LOGV(" %d (%s)", v,
+            ALOGV(" %d (%s)", v,
                    (v < ctl->info->value.enumerated.items) ? ctl->ename[v] : "???");
         *value = ev.value.enumerated.item[0];
         }
         break;
     default:
-        LOGV(" ???");
+        ALOGV(" ???");
     }
-    LOGV("\n");
+    ALOGV("\n");
 }
 
 static long scale_int(struct snd_ctl_elem_info *ei, unsigned _percent)
@@ -482,7 +482,7 @@ int mixer_ctl_mulvalues(struct mixer_ctl *ctl, int count, char ** argv)
     unsigned n;
 
     if (!ctl) {
-        LOGV("can't find control\n");
+        ALOGV("can't find control\n");
         return -1;
     }
     if (count < ctl->info->count || count > ctl->info->count)
@@ -536,26 +536,26 @@ int mixer_ctl_set(struct mixer_ctl *ctl, unsigned percent)
     unsigned int tlv_type;
 
     if (!ctl) {
-        LOGV("can't find control\n");
+        ALOGV("can't find control\n");
         return -1;
     }
 
     if (is_volume(ctl->info->id.name, &type)) {
-        LOGV("capability: volume\n");
+        ALOGV("capability: volume\n");
         tlv = calloc(1, DEFAULT_TLV_SIZE);
         if (tlv == NULL) {
-            LOGE("failed to allocate memory\n");
+            ALOGE("failed to allocate memory\n");
         } else if (!mixer_ctl_read_tlv(ctl, tlv, &min, &max, &tlv_type)) {
             switch(tlv_type) {
             case SNDRV_CTL_TLVT_DB_LINEAR:
-                LOGV("tlv db linear: b4 %d\n", percent);
+                ALOGV("tlv db linear: b4 %d\n", percent);
 
 		if (min < 0) {
 			max = max - min;
 			min = 0;
 		}
                 percent = check_range(percent, min, max);
-                LOGV("tlv db linear: %d %d %d\n", percent, min, max);
+                ALOGV("tlv db linear: %d %d %d\n", percent, min, max);
                 volume = 1;
                 break;
             default:
@@ -565,7 +565,7 @@ int mixer_ctl_set(struct mixer_ctl *ctl, unsigned percent)
                 break;
             }
         } else
-            LOGV("mixer_ctl_read_tlv failed\n");
+            ALOGV("mixer_ctl_read_tlv failed\n");
         free(tlv);
     }
     memset(&ev, 0, sizeof(ev));
@@ -648,16 +648,16 @@ static int set_volume_simple(struct mixer_ctl *ctl,
         }
     }
     val = check_range(val, pmin, pmax);
-    LOGV("val = %x", val);
+    ALOGV("val = %x", val);
 
     if (!ctl) {
-        LOGV("can't find control\n");
+        ALOGV("can't find control\n");
         return -EPERM;
     }
     if (count < ctl->info->count || count > ctl->info->count)
         return -EINVAL;
 
-    LOGV("Value = ");
+    ALOGV("Value = ");
 
     memset(&ev, 0, sizeof(ev));
     ev.id.numid = ctl->info->id.numid;
@@ -686,7 +686,7 @@ static int set_volume_simple(struct mixer_ctl *ctl,
         return errno;
     }
 
-    LOGV("\n");
+    ALOGV("\n");
     return ioctl(ctl->mixer->fd, SNDRV_CTL_IOCTL_ELEM_WRITE, &ev);
 
 skip:
@@ -705,16 +705,16 @@ int mixer_ctl_set_value(struct mixer_ctl *ctl, int count, char ** argv)
     unsigned int tlv_type;
 
     if (is_volume(ctl->info->id.name, &type)) {
-        LOGV("capability: volume\n");
+        ALOGV("capability: volume\n");
         tlv = calloc(1, DEFAULT_TLV_SIZE);
         if (tlv == NULL) {
-            LOGE("failed to allocate memory\n");
+            ALOGE("failed to allocate memory\n");
         } else if (!mixer_ctl_read_tlv(ctl, tlv, &min, &max, &tlv_type)) {
-            LOGV("min = %x max = %x", min, max);
+            ALOGV("min = %x max = %x", min, max);
             if (set_volume_simple(ctl, argv, min, max, count))
                 mixer_ctl_mulvalues(ctl, count, argv);
         } else
-            LOGV("mixer_ctl_read_tlv failed\n");
+            ALOGV("mixer_ctl_read_tlv failed\n");
         free(tlv);
     } else {
         mixer_ctl_mulvalues(ctl, count, argv);

@@ -145,8 +145,6 @@ SectionDevice
 		'DEC7 MUX':0:DMIC1
 		'SLIM TX8 MUX':0:DEC10
 		'DEC10 MUX':0:DMIC3
-		'MICBIAS1 CAPLESS Switch':1:1
-		'MICBIAS3 CAPLESS Switch':1:1
 		'MI2S_TX Channels':0:Two
 	EndSequence
 
@@ -157,8 +155,6 @@ SectionDevice
 		'DEC7 MUX':0:ZERO
 		'SLIM TX8 MUX':0:ZERO
 		'DEC10 MUX':0:ZERO
-		'MICBIAS1 CAPLESS Switch':1:0
-		'MICBIAS3 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID	6:2
@@ -177,7 +173,6 @@ SectionDevice
 		'DEC7 MUX':0:DMIC1
 		'SLIM TX8 MUX':0:DEC8
 		'DEC8 MUX':0:DMIC2
-		'MICBIAS1 CAPLESS Switch':1:1
 		'MI2S_TX Channels':0:Two
 	EndSequence
 
@@ -188,7 +183,6 @@ SectionDevice
 		'DEC7 MUX':0:ZERO
 		'SLIM TX8 MUX':0:ZERO
 		'DEC8 MUX':0:ZERO
-		'MICBIAS1 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID	12:2
@@ -204,6 +198,20 @@ SectionDevice
 		'SLIM RX1 MUX':0:AIF1_PB
 		'MI2S_RX Channels':0:One
 		'RX1 MIX1 INP1':0:RX1
+		'IIR1 Band1':2:0x10000000 0x0 0x0 0x0 0x0
+		'IIR1 Band2':2:0x10000000 0x0 0x0 0x0 0x0
+		'IIR1 Band3':2:0x10000000 0x0 0x0 0x0 0x0
+		'IIR1 Band4':2:0x10000000 0x0 0x0 0x0 0x0
+		'IIR1 Band5':2:0x10000000 0x0 0x0 0x0 0x0
+		'IIR1 Enable Band1':1:1
+		'IIR1 Enable Band2':1:1
+		'IIR1 Enable Band3':1:1
+		'IIR1 Enable Band4':1:1
+		'IIR1 Enable Band5':1:1
+		'IIR1 INP1 Volume':1:65
+		'RX1 MIX2 INP1':0:IIR1
+		'IIR1 INP1 MUX':0:DEC7
+		'CLASS_H_DSM MUX':0:DSM_HPHL_RX1
 		'RX1 Digital Volume':1:67
 		'DAC1 Switch':1:1
 	EndSequence
@@ -211,6 +219,20 @@ SectionDevice
 	DisableSequence
 		'SLIM RX1 MUX':0:ZERO
 		'RX1 MIX1 INP1':0:ZERO
+		'IIR1 Band1':2:0x0 0x0 0x0 0x0 0x0
+		'IIR1 Band2':2:0x0 0x0 0x0 0x0 0x0
+		'IIR1 Band3':2:0x0 0x0 0x0 0x0 0x0
+		'IIR1 Band4':2:0x0 0x0 0x0 0x0 0x0
+		'IIR1 Band5':2:0x0 0x0 0x0 0x0 0x0
+		'IIR1 Enable Band1':1:0
+		'IIR1 Enable Band2':1:0
+		'IIR1 Enable Band3':1:0
+		'IIR1 Enable Band4':1:0
+		'IIR1 Enable Band5':1:0
+		'IIR1 INP1 Volume':1:0
+		'CLASS_H_DSM MUX':0:ZERO
+		'RX1 MIX2 INP1':0:ZERO
+		'IIR1 INP1 MUX':0:ZERO
 		'RX1 Digital Volume':1:0
 		'DAC1 Switch':1:0
 	EndSequence
@@ -290,6 +312,20 @@ SectionDevice
 		'MI2S_RX Channels':0:Two
 		'RX1 MIX1 INP1':0:RX1
 		'RX2 MIX1 INP1':0:RX2
+		'IIR1 Band1':2:0x10000000 0x0 0x0 0x0 0x0
+		'IIR1 Band2':2:0x10000000 0x0 0x0 0x0 0x0
+		'IIR1 Band3':2:0x10000000 0x0 0x0 0x0 0x0
+		'IIR1 Band4':2:0x10000000 0x0 0x0 0x0 0x0
+		'IIR1 Band5':2:0x10000000 0x0 0x0 0x0 0x0
+		'IIR1 Enable Band1':1:1
+		'IIR1 Enable Band2':1:1
+		'IIR1 Enable Band3':1:1
+		'IIR1 Enable Band4':1:1
+		'IIR1 Enable Band5':1:1
+		'IIR1 INP1 Volume':1:62
+		'RX1 MIX2 INP1':0:IIR1
+		'RX2 MIX2 INP1':0:IIR1
+		'CLASS_H_DSM MUX':0:DSM_HPHL_RX1
 		'HPHL DAC Switch':1:1
 		'HPHL Volume':1:80
 		'HPHR Volume':1:80
@@ -302,6 +338,20 @@ SectionDevice
 		'SLIM RX2 MUX':0:ZERO
 		'RX1 MIX1 INP1':0:ZERO
 		'RX2 MIX1 INP1':0:ZERO
+		'IIR1 Band1':2:0x0 0x0 0x0 0x0 0x0
+		'IIR1 Band2':2:0x0 0x0 0x0 0x0 0x0
+		'IIR1 Band3':2:0x0 0x0 0x0 0x0 0x0
+		'IIR1 Band4':2:0x0 0x0 0x0 0x0 0x0
+		'IIR1 Band5':2:0x0 0x0 0x0 0x0 0x0
+		'IIR1 Enable Band1':1:0
+		'IIR1 Enable Band2':1:0
+		'IIR1 Enable Band3':1:0
+		'IIR1 Enable Band4':1:0
+		'IIR1 Enable Band5':1:0
+		'IIR1 INP1 Volume':1:0
+		'RX1 MIX2 INP1':0:IIR1
+		'RX2 MIX2 INP1':0:IIR1
+		'CLASS_H_DSM MUX':0:ZERO
 		'HPHL DAC Switch':1:0
 		'HPHL Volume':1:0
 		'HPHR Volume':1:0
@@ -362,6 +412,7 @@ SectionDevice
 		'DEC5 MUX':0:ADC2
 		'DEC5 Volume':1:67
 		'ADC2 Volume':1:100
+		'IIR1 INP1 MUX':0:DEC5
 	EndSequence
 
 	DisableSequence
@@ -370,6 +421,7 @@ SectionDevice
 		'DEC5 MUX':0:ZERO
 		'ADC2 Volume':1:0
 		'DEC5 Volume':1:0
+		'IIR1 INP1 MUX':0:ZERO
 	EndSequence
 
 	ACDBID	8:2
@@ -384,17 +436,15 @@ SectionDevice
 	EnableSequence
 		'AIF1_CAP Mixer SLIM TX7':1:1
 		'MI2S_TX Channels':0:One
-		'SLIM TX7 MUX':0:DEC6
-		'DEC6 MUX':0:ADC1
-		'ADC1 Volume':1:100
-		'DEC6 Volume':1:67
+		'SLIM TX7 MUX':0:DEC7
+		'DEC7 MUX':0:DMIC1
+		'DEC7 Volume':1:67
 	EndSequence
 
 	DisableSequence
 		'AIF1_CAP Mixer SLIM TX7':1:0
 		'SLIM TX7 MUX':0:ZERO
-		'DEC6 MUX':0:ZERO
-		'ADC1 Volume':1:0
+		'DEC7 MUX':0:ZERO
 	EndSequence
 
 	ACDBID	4:2
@@ -435,7 +485,6 @@ SectionDevice
 		'SLIM TX7 MUX':0:DEC7
 		'DEC7 MUX':0:ADC1
 		'ADC1 Volume':1:100
-		'MICBIAS1 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
@@ -443,7 +492,6 @@ SectionDevice
 		'SLIM TX7 MUX':0:ZERO
 		'DEC7 MUX':0:ZERO
 		'ADC1 Volume':1:0
-		'MICBIAS1 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID  36:2
@@ -460,14 +508,12 @@ SectionDevice
 		'MI2S_TX Channels':0:One
 		'SLIM TX7 MUX':0:DEC7
 		'DEC7 MUX':0:DMIC1
-		'MICBIAS1 CAPLESS Switch':1:1
 	EndSequence
 
 	DisableSequence
 		'AIF1_CAP Mixer SLIM TX7':1:0
 		'SLIM TX7 MUX':0:ZERO
 		'DEC7 MUX':0:ZERO
-		'MICBIAS1 CAPLESS Switch':1:0
 	EndSequence
 
 	ACDBID  36:2

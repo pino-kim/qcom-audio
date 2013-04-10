@@ -117,6 +117,7 @@ SectionDevice
 		'SLIM RX1 MUX':0:AIF1_PB
 		'MI2S_RX Channels':0:One
 		'RX1 MIX1 INP1':0:RX1
+		'CLASS_H_DSM MUX':0:DSM_HPHL_RX1
 		'RX1 Digital Volume':1:67
 		'DAC1 Switch':1:1
 	EndSequence
@@ -124,6 +125,7 @@ SectionDevice
 	DisableSequence
 		'SLIM RX1 MUX':0:ZERO
 		'RX1 MIX1 INP1':0:ZERO
+		'CLASS_H_DSM MUX':0:ZERO
 		'RX1 Digital Volume':1:0
 		'DAC1 Switch':1:0
 	EndSequence
@@ -250,6 +252,7 @@ SectionDevice
 		'SLIM RX1 MUX':0:AIF1_PB
 		'MI2S_RX Channels':0:One
 		'RX1 MIX1 INP1':0:RX1
+		'CLASS_H_DSM MUX':0:DSM_HPHL_RX1
 		'RX1 Digital Volume':1:67
 		'DAC1 Switch':1:1
 	EndSequence
@@ -257,6 +260,7 @@ SectionDevice
 	DisableSequence
 		'SLIM RX1 MUX':0:ZERO
 		'RX1 MIX1 INP1':0:ZERO
+		'CLASS_H_DSM MUX':0:ZERO
 		'RX1 Digital Volume':1:0
 		'DAC1 Switch':1:0
 	EndSequence
@@ -280,6 +284,7 @@ SectionDevice
 		'HPHL DAC Switch':1:1
 		'HPHL Volume':1:80
 		'HPHR Volume':1:80
+		'CLASS_H_DSM MUX':0:DSM_HPHL_RX1
 		'RX1 Digital Volume':1:67
 		'RX2 Digital Volume':1:67
 	EndSequence
@@ -292,6 +297,7 @@ SectionDevice
 		'HPHL DAC Switch':1:0
 		'HPHL Volume':1:0
 		'HPHR Volume':1:0
+		'CLASS_H_DSM MUX':0:ZERO
 		'RX1 Digital Volume':1:0
 		'RX2 Digital Volume':1:0
 	EndSequence
@@ -376,6 +382,7 @@ SectionDevice
 		'RX2 MIX1 INP1':0:RX2
 		'DAC1 Switch':1:1
 		'HPHL DAC Switch':1:1
+		'CLASS_H_DSM MUX':0:DSM_HPHL_RX1
 		'HPHL Volume':1:80
 		'HPHR Volume':1:80
 		'RX1 Digital Volume':1:67
@@ -391,6 +398,7 @@ SectionDevice
 		'HPHL DAC Switch':1:0
 		'HPHL Volume':1:0
 		'HPHR Volume':1:0
+		'CLASS_H_DSM MUX':0:ZERO
 		'RX1 Digital Volume':1:0
 		'RX2 Digital Volume':1:0
 	EndSequence
@@ -445,6 +453,7 @@ SectionDevice
 		'AIF1_CAP Mixer SLIM TX7':1:0
 		'SLIM TX7 MUX':0:ZERO
 		'DEC7 MUX':0:ZERO
+		'DEC7 Volume':1:0
 	EndSequence
 
 	ACDBID	4:2
@@ -460,13 +469,16 @@ SectionDevice
 		'SLIM RX1 MUX':0:AIF1_PB
 		'MI2S_RX Channels':0:One
 		'RX1 MIX1 INP1':0:RX1
-		'EAR PA Gain':0:POS_2_DB
+		'CLASS_H_DSM MUX':0:DSM_HPHL_RX1
+		'RX1 Digital Volume':1:67
 		'DAC1 Switch':1:1
 	EndSequence
 
 	DisableSequence
 		'SLIM RX1 MUX':0:ZERO
+		'CLASS_H_DSM MUX':0:ZERO
 		'RX1 MIX1 INP1':0:ZERO
+		'RX1 Digital Volume':1:0
 		'DAC1 Switch':1:0
 	EndSequence
 
@@ -508,12 +520,14 @@ SectionDevice
 		'MI2S_TX Channels':0:One
 		'SLIM TX7 MUX':0:DEC7
 		'DEC7 MUX':0:DMIC1
+		'DEC7 Volume':1:67
 	EndSequence
 
 	DisableSequence
 		'AIF1_CAP Mixer SLIM TX7':1:0
 		'SLIM TX7 MUX':0:ZERO
 		'DEC7 MUX':0:ZERO
+		'DEC7 Volume':1:0
 	EndSequence
 
 	ACDBID  36:2
@@ -530,7 +544,9 @@ SectionDevice
 		'TTY Mode':0:VCO
 		'MI2S_RX Channels':0:One
 		'RX1 MIX1 INP1':0:RX1
+		'CLASS_H_DSM MUX':0:DSM_HPHL_RX1
 		'HPHL DAC Switch':1:1
+		'RX1 Digital Volume':1:67
 		'HPHL Volume':1:80
 	EndSequence
 
@@ -538,7 +554,9 @@ SectionDevice
 		'SLIM RX1 MUX':0:ZERO
 		'TTY Mode':0:ZERO
 		'RX1 MIX1 INP1':0:ZERO
+		'CLASS_H_DSM MUX':0:ZERO
 		'HPHL DAC Switch':1:0
+		'RX1 Digital Volume':1:0
 		'HPHL Volume':1:0
 	EndSequence
 
@@ -555,8 +573,9 @@ SectionDevice
 		'AIF1_CAP Mixer SLIM TX7':1:1
 		'TTY Mode':0:HCO
 		'MI2S_TX Channels':0:One
-		'SLIM TX7 MUX':0:DEC8
-		'DEC8 MUX':0:ADC2
+		'SLIM TX7 MUX':0:DEC5
+		'DEC5 MUX':0:ADC2
+		'DEC5 Volume':1:67
 		'ADC2 Volume':1:100
 	EndSequence
 
@@ -564,8 +583,9 @@ SectionDevice
 		'AIF1_CAP Mixer SLIM TX7':1:0
 		'TTY Mode':0:ZERO
 		'SLIM TX7 MUX':0:ZERO
-		'DEC8 MUX':0:ZERO
+		'DEC5 MUX':0:ZERO
 		'ADC2 Volume':1:0
+		'DEC5 Volume':1:0
 	EndSequence
 
 	ACDBID	16:2
@@ -582,7 +602,9 @@ SectionDevice
 		'TTY Mode':0:FULL
 		'MI2S_RX Channels':0:One
 		'RX1 MIX1 INP1':0:RX1
+		'CLASS_H_DSM MUX':0:DSM_HPHL_RX1
 		'HPHL DAC Switch':1:1
+		'RX1 Digital Volume':1:67
 		'HPHL Volume':1:80
 	EndSequence
 
@@ -590,7 +612,9 @@ SectionDevice
 		'SLIM RX1 MUX':0:ZERO
 		'TTY Mode':0:ZERO
 		'RX1 MIX1 INP1':0:ZERO
+		'CLASS_H_DSM MUX':0:ZERO
 		'HPHL DAC Switch':1:0
+		'RX1 Digital Volume':1:0
 		'HPHL Volume':1:0
 	EndSequence
 
@@ -606,15 +630,19 @@ SectionDevice
 	EnableSequence
 		'AIF1_CAP Mixer SLIM TX7':1:1
 		'MI2S_TX Channels':0:One
-		'SLIM TX7 MUX':0:DEC8
-		'DEC8 MUX':0:ADC2
+		'SLIM TX7 MUX':0:DEC5
+		'DEC5 MUX':0:ADC2
+		'DEC5 Volume':1:67
 		'ADC2 Volume':1:100
+		'IIR1 INP1 MUX':0:DEC5
 	EndSequence
 
 	DisableSequence
 		'AIF1_CAP Mixer SLIM TX7':1:0
 		'SLIM TX7 MUX':0:ZERO
-		'DEC8 MUX':0:ZERO
+		'DEC5 MUX':0:ZERO
+		'DEC5 Volume':1:0
+		'IIR1 INP1 MUX':0:ZERO
 		'ADC2 Volume':1:0
 	EndSequence
 

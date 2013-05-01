@@ -339,8 +339,9 @@ int snd_use_case_get(snd_use_case_mgr_t *uc_mgr,
                 ret = -EINVAL;
             }
             if (ret < 0) {
-                ALOGE("No valid device/modifier found with given identifier: %s",
-                     ident2);
+                if (ident2 != NULL)
+                    ALOGE("No valid device/modifier found with given identifier: %s",
+                          ident2);
             } else {
                 if(!strncmp(ident1, "PlaybackPCM", 11)) {
                     if (ctrl_list[index].playback_dev_name) {
@@ -1512,8 +1513,9 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
     } else {
         if (!strncmp(ident1, "_swdev", 6)) {
             if(!(ident2 = strtok_r(NULL, "/", &temp_ptr))) {
-                ALOGD("Invalid disable device value: %s, but enabling new \
-                     device", ident2);
+                if (ident2 != NULL)
+                    ALOGD("Invalid disable device value: %s, but enabling new \
+                          device", ident2);
             } else {
                 ret = snd_ucm_del_ident_from_list(
                           &uc_mgr->card_ctxt_ptr->dev_list_head, ident2);
@@ -1542,8 +1544,9 @@ int snd_use_case_set(snd_use_case_mgr_t *uc_mgr,
         } else if (!strncmp(ident1, "_swmod", 6)) {
             pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
             if(!(ident2 = strtok_r(NULL, "/", &temp_ptr))) {
-                ALOGD("Invalid modifier value: %s, but enabling new modifier",
-                    ident2);
+                if (ident2 != NULL)
+                    ALOGD("Invalid modifier value: %s, but enabling new modifier",
+                          ident2);
             } else {
                 ret = snd_use_case_set(uc_mgr, "_dismod", ident2);
                 if (ret < 0) {
@@ -1742,8 +1745,9 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
     } else {
         if (!strncmp(ident1, "_swdev", 6)) {
             if(!(ident2 = strtok_r(NULL, "/", &temp_ptr))) {
-                ALOGD("Invalid disable device value: %s, but enabling new \
-                     device", ident2);
+                if (ident2 != NULL)
+                    ALOGD("Invalid disable device value: %s, but enabling new \
+                          device", ident2);
             } else {
                 ret = snd_ucm_del_ident_from_list(
                           &uc_mgr->card_ctxt_ptr->dev_list_head, ident2);
@@ -1772,8 +1776,9 @@ int snd_use_case_set_case(snd_use_case_mgr_t *uc_mgr,
         } else if (!strncmp(ident1, "_swmod", 6)) {
             pthread_mutex_unlock(&uc_mgr->card_ctxt_ptr->card_lock);
             if(!(ident2 = strtok_r(NULL, "/", &temp_ptr))) {
-                ALOGD("Invalid modifier value: %s, but enabling new modifier",
-                    ident2);
+                if (ident2 != NULL)
+                    ALOGD("Invalid modifier value: %s, but enabling new modifier",
+                          ident2);
             } else {
                 ret = snd_use_case_set_case(uc_mgr, "_dismod", ident2, usecase);
                 if (ret < 0) {
@@ -2840,9 +2845,9 @@ static int get_num_verbs_config_format(const char *nxt_str)
         buf = strcasestr(current_str, "SectionVerb");
         if (buf != NULL)
             count++;
-        if (*next_str == (char)EOF)
-            break;
         if((current_str = next_str) == NULL)
+            break;
+        if (*next_str == (char)EOF)
             break;
     }
     free(str_addr);
@@ -2871,9 +2876,9 @@ static int get_num_device_config_format(const char *nxt_str)
         buf = strcasestr(current_str, "SectionDevice");
         if (buf != NULL)
             count++;
-        if (*next_str == (char)EOF)
-            break;
         if((current_str = next_str) == NULL)
+            break;
+        if (*next_str == (char)EOF)
             break;
     }
     free(str_addr);
@@ -2902,9 +2907,9 @@ static int get_num_mod_config_format(const char *nxt_str)
         buf = strcasestr(current_str, "SectionModifier");
         if (buf != NULL)
             count++;
-        if (*next_str == (char)EOF)
-            break;
         if((current_str = next_str) == NULL)
+            break;
+        if (*next_str == (char)EOF)
             break;
     }
     free(str_addr);
@@ -2933,9 +2938,9 @@ static int get_verb_count(const char *nxt_str)
         buf = strstr(current_str, "SectionUseCase");
         if (buf != NULL)
             count++;
-        if (*next_str == (char)EOF)
-            break;
         if((current_str = next_str) == NULL)
+            break;
+        if (*next_str == (char)EOF)
             break;
     }
     free(str_addr);
@@ -2967,9 +2972,9 @@ static int is_single_config_format(const char *nxt_str)
         buf = strstr(current_str, "File");
         if (buf != NULL)
             ret = 0;
-        if ((*next_str == (char)EOF) || (count == 2))
-            break;
         if((current_str = next_str) == NULL)
+            break;
+        if ((*next_str == (char)EOF) || (count == 2))
             break;
     }
     free(str_addr);
@@ -3396,13 +3401,15 @@ char **nxt_str, int verb_index, int ctrl_list_type)
                       &list->playback_dev_name);
             if (ret < 0)
                 break;
-            ALOGV("Device name of playback is %s\n",
-                list->playback_dev_name);
+            if(list->playback_dev_name)
+               ALOGV("Device name of playback is %s\n",
+                      list->playback_dev_name);
         } else if (strcasestr(current_str, "CapturePCM") != NULL) {
             ret = snd_ucm_extract_dev_name(current_str,
                       &list->capture_dev_name);
             if (ret < 0)
                 break;
+            if(list->capture_dev_name)
             ALOGV("Device name of capture is %s\n", list->capture_dev_name);
         } else if (strcasestr(current_str, "ACDBID") != NULL) {
             ret = snd_ucm_extract_acdb(current_str, &list->acdb_id,
@@ -3802,6 +3809,11 @@ void snd_ucm_free_mixer_list(snd_use_case_mgr_t **uc_mgr)
 
     pthread_mutex_lock(&(*uc_mgr)->card_ctxt_ptr->card_lock);
     verb_list = (*uc_mgr)->card_ctxt_ptr->use_case_verb_list;
+    if(!((*uc_mgr)->card_ctxt_ptr->verb_list)) {
+        pthread_mutex_unlock(&(*uc_mgr)->card_ctxt_ptr->card_lock);
+        return -EINVAL;
+    }
+
     while(strncmp((*uc_mgr)->card_ctxt_ptr->verb_list[verb_index],
           SND_UCM_END_OF_LIST, 3)) {
         ctrl_list = verb_list[verb_index].verb_ctrls;

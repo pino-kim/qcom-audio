@@ -551,6 +551,7 @@ int play_raw(const char *fg, int rate, int ch, const char *device, const char *f
 {
     int fd;
     unsigned flag = 0;
+    char *cformat = NULL;
 
     if(!fn) {
         fd = fileno(stdin);
@@ -568,8 +569,12 @@ int play_raw(const char *fg, int rate, int ch, const char *device, const char *f
     else if (!strncmp(fg, "N", sizeof("N")))
         flag = PCM_NMMAP;
 
-    fprintf(stderr, "aplay: Playing '%s': format %s ch = %d\n",
-        fn, get_format_desc(format), ch );
+    cformat = get_format_desc(format);
+    if(cformat == NULL)
+       return -EINVAL;
+    if(fn != NULL)
+       fprintf(stderr, "aplay: Playing '%s': format %s ch = %d\n",
+               fn, cformat, ch );
     return play_file(rate, ch, fd, flag, device, 0);
 }
 
@@ -578,6 +583,7 @@ int play_wav(const char *fg, int rate, int ch, const char *device, const char *f
     struct wav_header hdr;
     int fd;
     unsigned flag = 0;
+    char *cformat = NULL;
 
     if (pcm_flag) {
         if(!fn) {
@@ -605,16 +611,19 @@ int play_wav(const char *fg, int rate, int ch, const char *device, const char *f
         if ((hdr.riff_id != ID_RIFF) ||
             (hdr.riff_fmt != ID_WAVE) ||
             (hdr.fmt_id != ID_FMT)) {
-            fprintf(stderr, "Aplay:aplay: '%s' is not a riff/wave file\n", fn);
+            if (fn != NULL)
+              fprintf(stderr, "Aplay:aplay: '%s' is not a riff/wave file\n", fn);
             return -EINVAL;
         }
         if ((hdr.audio_format != FORMAT_PCM) ||
             (hdr.fmt_sz != 16)) {
-            fprintf(stderr, "Aplay:aplay: '%s' is not pcm format\n", fn);
+            if(fn != NULL)
+               fprintf(stderr, "Aplay:aplay: '%s' is not pcm format\n", fn);
             return -EINVAL;
         }
         if (hdr.bits_per_sample != 16) {
-            fprintf(stderr, "Aplay:aplay: '%s' is not 16bit per sample\n", fn);
+            if(fn != NULL)
+               fprintf(stderr, "Aplay:aplay: '%s' is not 16bit per sample\n", fn);
             return -EINVAL;
         }
     } else {
@@ -629,7 +638,10 @@ ignore_header:
         flag = PCM_MMAP;
     else if (!strncmp(fg, "N", sizeof("N")))
         flag = PCM_NMMAP;
-    fprintf(stderr, "aplay: Playing '%s':%s\n", fn, get_format_desc(format) );
+    cformat = get_format_desc(format);
+    if(cformat == NULL || fn == NULL)
+       return -EINVAL;
+    fprintf(stderr, "aplay: Playing '%s':%s\n", fn, cformat );
 
     return play_file(hdr.sample_rate, hdr.num_channels, fd, flag, device, hdr.data_sz);
 }
@@ -684,6 +696,7 @@ int main(int argc, char **argv)
     char *filename;
     char *ptr;
     int rc = 0;
+    char *cformat = NULL;
 
     if (argc <2) {
           printf("\nUsage: aplay [options] <file>\n"
@@ -703,9 +716,13 @@ int main(int argc, char **argv)
                 "     LB, RB, FLC, FRC, RLC, RRC, CVH, MS\n"
                 "<file> \n");
            fprintf(stderr, "Formats Supported:\n");
-           for (i = 0; i <= SNDRV_PCM_FORMAT_LAST; ++i)
-               if (get_format_name(i))
-                   fprintf(stderr, "%s ", get_format_name(i));
+           for (i = 0; i <= SNDRV_PCM_FORMAT_LAST; ++i) {
+               cformat = get_format_name(i);
+               if (cformat == NULL)
+                   return -EINVAL;
+               else
+                   fprintf(stderr, "%s ", cformat);
+           }
            fprintf(stderr, "\nSome of these may not be available on selected hardware\n");
            return 0;
      }
@@ -772,10 +789,15 @@ int main(int argc, char **argv)
                 "     LB, RB, FLC, FRC, RLC, RRC, CVH, MS\n"
                 "<file> \n");
            fprintf(stderr, "Formats Supported:\n");
-           for (i = 0; i < SNDRV_PCM_FORMAT_LAST; ++i)
-               if (get_format_name(i))
-                   fprintf(stderr, "%s ", get_format_name(i));
+           cformat = NULL;
+           for (i = 0; i < SNDRV_PCM_FORMAT_LAST; ++i) {
+               cformat = get_format_name(i);
+               if (cformat == NULL)
+                   return -EINVAL;
+               else
+                   fprintf(stderr, "%s ", cformat);
            fprintf(stderr, "\nSome of these may not be available on selected hardware\n");
+           }
           return -EINVAL;
        }
 
@@ -793,7 +815,9 @@ int main(int argc, char **argv)
     }
 
     if (pcm_flag) {
-   if (format == SNDRV_PCM_FORMAT_S16_LE)
+        if (filename == NULL)
+            return -EINVAL;
+        if (format == SNDRV_PCM_FORMAT_S16_LE)
              rc = play_wav(mmap, rate, ch, device, filename);
          else
              rc = play_raw(mmap, rate, ch, device, filename);

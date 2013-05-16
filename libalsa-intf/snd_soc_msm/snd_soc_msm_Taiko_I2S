@@ -43,6 +43,27 @@ EndSection
 
 }
 
+SectionUseCase."HiFi2" {
+Comment "Music playback use case for MM2 FE"
+SectionVerb
+	Name "HiFi2"
+
+	EnableSequence
+		'MI2S_RX Audio Mixer MultiMedia2':1:1
+	EndSequence
+
+	DisableSequence
+		'MI2S_RX Audio Mixer MultiMedia2':1:0
+	EndSequence
+
+	# ALSA PCMs
+	CapturePCM 1
+	PlaybackPCM 1
+
+EndSection
+
+}
+
 SectionUseCase."Voice Call IP" {
 Comment "VOIP Call use case"
 SectionVerb
@@ -59,8 +80,8 @@ SectionVerb
 	EndSequence
 
 	# ALSA PCMs
-	PlaybackPCM 1
-	CapturePCM 1
+	PlaybackPCM 2
+	CapturePCM 2
 
 EndSection
 }
@@ -81,8 +102,8 @@ SectionVerb
 	EndSequence
 
 	# ALSA PCMs
-	PlaybackPCM 2
-	CapturePCM 2
+	PlaybackPCM 3
+	CapturePCM 3
 
 EndSection
 }
@@ -103,8 +124,8 @@ SectionVerb
 	EndSequence
 
 	# ALSA PCMs
-	PlaybackPCM 4
-	capturePCM 4
+	PlaybackPCM 5
+	capturePCM 5
 
 EndSection
 }
@@ -670,6 +691,24 @@ SectionModifier
 EndSection
 
 SectionModifier
+	Name "Play Music2"
+	Comment "Modifier for music playback MM2"
+
+	EnableSequence
+		'MI2S_RX Audio Mixer MultiMedia2':1:1
+	EndSequence
+
+	DisableSequence
+		'MI2S_RX Audio Mixer MultiMedia2':1:0
+	EndSequence
+
+	# ALSA PCMs
+	CapturePCM 1
+	PlaybackPCM 1
+
+EndSection
+
+SectionModifier
 	Name "Capture Music"
 
 	EnableSequence
@@ -700,8 +739,8 @@ SectionModifier
 	EndSequence
 
 	# ALSA PCMs
-	CapturePCM 2
-	PlaybackPCM 2
+	CapturePCM 3
+	PlaybackPCM 3
 
 EndSection
 
@@ -719,8 +758,8 @@ SectionModifier
 	EndSequence
 
        # ALSA PCMs
-	PlaybackPCM 1
-	CapturePCM 1
+	PlaybackPCM 2
+	CapturePCM 2
 
 EndSection
 
@@ -728,7 +767,7 @@ SectionModifier
 	Name "Play VoLTE"
 
 	EnableSequence
-		'SMI2S_RX_Voice Mixer VoLTE':1:1
+		'MI2S_RX_Voice Mixer VoLTE':1:1
 		'VoLTE_Tx Mixer MI2S_TX_VoLTE':1:1
 	EndSequence
 
@@ -738,8 +777,8 @@ SectionModifier
 	EndSequence
 
 	# ALSA PCMs
-	PlaybackPCM 4
-	capturePCM 4
+	PlaybackPCM 5
+	capturePCM 5
 
 EndSection
 

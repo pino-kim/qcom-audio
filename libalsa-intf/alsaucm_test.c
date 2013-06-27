@@ -43,6 +43,7 @@
 
 #include "alsa_ucm.h"
 #include "msm8960_use_cases.h"
+#include "acdb-loader.h"
 
 /* Function prototypes */
 static void print_help_menu(void);
@@ -94,6 +95,10 @@ static void alsaucm_test_cmd_svr(void)
     char ch;
     char *exit_str = "quit";
 
+    if ((acdb_loader_init_ACDB()) < 0) {
+	fprintf(stderr, "Failed to initialize ACDB\n");
+        return 0;
+    }
     if (mknod("/data/alsaucm_test", S_IFIFO | 0666, 0) == 0) {
         fd = open("/data/alsaucm_test", O_RDONLY);
         while (1) {
@@ -129,6 +134,7 @@ static void alsaucm_test_cmd_svr(void)
     } else {
         fprintf(stderr, "alsaucm_test: Failed to create server\n");
     }
+    acdb_loader_deallocate_ACDB();
 }
 
 

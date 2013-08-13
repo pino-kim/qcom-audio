@@ -57,8 +57,8 @@ SectionVerb
 	EndSequence
 
 	# ALSA PCMs
-	CapturePCM 1
-	PlaybackPCM 1
+	CapturePCM 9
+	PlaybackPCM 9
 
 EndSection
 
@@ -80,8 +80,8 @@ SectionVerb
 	EndSequence
 
 	# ALSA PCMs
-	PlaybackPCM 2
-	CapturePCM 2
+	PlaybackPCM 1
+	CapturePCM 1
 
 EndSection
 }
@@ -102,8 +102,8 @@ SectionVerb
 	EndSequence
 
 	# ALSA PCMs
-	PlaybackPCM 3
-	CapturePCM 3
+	PlaybackPCM 2
+	CapturePCM 2
 
 EndSection
 }
@@ -124,8 +124,8 @@ SectionVerb
 	EndSequence
 
 	# ALSA PCMs
-	PlaybackPCM 5
-	capturePCM 5
+	PlaybackPCM 4
+	capturePCM 4
 
 EndSection
 }
@@ -703,8 +703,8 @@ SectionModifier
 	EndSequence
 
 	# ALSA PCMs
-	CapturePCM 1
-	PlaybackPCM 1
+	CapturePCM 9
+	PlaybackPCM 9
 
 EndSection
 
@@ -739,8 +739,8 @@ SectionModifier
 	EndSequence
 
 	# ALSA PCMs
-	CapturePCM 3
-	PlaybackPCM 3
+	CapturePCM 2
+	PlaybackPCM 2
 
 EndSection
 
@@ -758,8 +758,8 @@ SectionModifier
 	EndSequence
 
        # ALSA PCMs
-	PlaybackPCM 2
-	CapturePCM 2
+	PlaybackPCM 1
+	CapturePCM 1
 
 EndSection
 
@@ -777,8 +777,8 @@ SectionModifier
 	EndSequence
 
 	# ALSA PCMs
-	PlaybackPCM 5
-	capturePCM 5
+	PlaybackPCM 4
+	capturePCM 4
 
 EndSection
 

@@ -509,6 +509,32 @@ SectionDevice
 EndSection
 
 SectionDevice
+	Name "CSD TTY Handset Rx"
+	Comment "CSD TTY HCO Handset Rx device"
+
+	EnableSequence
+		'SLIM RX1 MUX':0:AIF1_PB
+		'MI2S_RX Channels':0:One
+		'RX1 MIX1 INP1':0:RX1
+		'CLASS_H_DSM MUX':0:DSM_HPHL_RX1
+		'RX1 Digital Volume':1:67
+		'DAC1 Switch':1:1
+	EndSequence
+
+	DisableSequence
+		'SLIM RX1 MUX':0:ZERO
+		'CLASS_H_DSM MUX':0:ZERO
+		'RX1 MIX1 INP1':0:ZERO
+		'RX1 Digital Volume':1:0
+		'DAC1 Switch':1:0
+	EndSequence
+
+	ACDBID  37:1
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionDevice
 	Name "TTY Handset Analog Tx"
 	Comment "TTY Handset Analog Tx device"
 
@@ -535,6 +561,30 @@ EndSection
 SectionDevice
 	Name "TTY Handset Tx"
 	Comment "TTY VCO Handset Tx device"
+
+	EnableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:1
+		'MI2S_TX Channels':0:One
+		'SLIM TX7 MUX':0:DEC7
+		'DEC7 MUX':0:DMIC1
+		'DEC7 Volume':1:67
+	EndSequence
+
+	DisableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:0
+		'SLIM TX7 MUX':0:ZERO
+		'DEC7 MUX':0:ZERO
+		'DEC7 Volume':1:0
+	EndSequence
+
+	ACDBID  36:2
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionDevice
+	Name "CSD TTY Handset Tx"
+	Comment "CSD TTY VCO Handset Tx device"
 
 	EnableSequence
 		'AIF1_CAP Mixer SLIM TX7':1:1
@@ -603,6 +653,60 @@ SectionDevice
 	DisableSequence
 		'AIF1_CAP Mixer SLIM TX7':1:0
 		'TTY Mode':0:ZERO
+		'SLIM TX7 MUX':0:ZERO
+		'DEC5 MUX':0:ZERO
+		'ADC2 Volume':1:0
+		'DEC5 Volume':1:0
+	EndSequence
+
+	ACDBID	16:2
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionDevice
+	Name "CSD TTY Headset Rx"
+	Comment "CSD TTY Headset Rx device"
+
+	EnableSequence
+		'SLIM RX1 MUX':0:AIF1_PB
+		'MI2S_RX Channels':0:One
+		'RX1 MIX1 INP1':0:RX1
+		'CLASS_H_DSM MUX':0:DSM_HPHL_RX1
+		'HPHL DAC Switch':1:1
+		'RX1 Digital Volume':1:67
+		'HPHL Volume':1:80
+	EndSequence
+
+	DisableSequence
+		'SLIM RX1 MUX':0:ZERO
+		'RX1 MIX1 INP1':0:ZERO
+		'CLASS_H_DSM MUX':0:ZERO
+		'HPHL DAC Switch':1:0
+		'RX1 Digital Volume':1:0
+		'HPHL Volume':1:0
+	EndSequence
+
+	ACDBID	17:1
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionDevice
+	Name "CSD TTY Headset Tx"
+	Comment "CSD TTY Headset Tx device"
+
+	EnableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:1
+		'MI2S_TX Channels':0:One
+		'SLIM TX7 MUX':0:DEC5
+		'DEC5 MUX':0:ADC2
+		'DEC5 Volume':1:67
+		'ADC2 Volume':1:100
+	EndSequence
+
+	DisableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:0
 		'SLIM TX7 MUX':0:ZERO
 		'DEC5 MUX':0:ZERO
 		'ADC2 Volume':1:0

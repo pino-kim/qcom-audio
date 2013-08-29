@@ -477,6 +477,29 @@ SectionDevice
 EndSection
 
 SectionDevice
+	Name "CSD TTY Handset Rx"
+	Comment "CSD TTY HCO Handset Rx device"
+
+	EnableSequence
+		'SLIM RX1 MUX':0:AIF1_PB
+		'PRI_RX Channels':0:One
+		'RX1 MIX1 INP1':0:RX1
+		'EAR PA Gain':0:POS_2_DB
+		'DAC1 Switch':1:1
+	EndSequence
+
+	DisableSequence
+		'SLIM RX1 MUX':0:ZERO
+		'RX1 MIX1 INP1':0:ZERO
+		'DAC1 Switch':1:0
+	EndSequence
+
+	ACDBID  37:1
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionDevice
 	Name "ANC Handset"
 	Comment "ANC Handset Rx device"
 
@@ -862,6 +885,32 @@ SectionDevice
 EndSection
 
 SectionDevice
+	Name "CSD TTY Handset Tx"
+	Comment "CSD TTY VCO Handset Analog Tx device"
+
+	EnableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:1
+		'PRI_TX Channels':0:One
+		'SLIM TX7 MUX':0:DEC7
+		'DEC7 MUX':0:ADC1
+		'ADC1 Volume':1:100
+		'MICBIAS1 CAPLESS Switch':1:1
+	EndSequence
+
+	DisableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:0
+		'SLIM TX7 MUX':0:ZERO
+		'DEC7 MUX':0:ZERO
+		'ADC1 Volume':1:0
+		'MICBIAS1 CAPLESS Switch':1:0
+	EndSequence
+
+	ACDBID  36:2
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionDevice
 	Name "DMIC Broadside"
 	Comment "Dual MIC Broadside Tx device"
 
@@ -1027,6 +1076,54 @@ SectionDevice
 	DisableSequence
 		'AIF1_CAP Mixer SLIM TX7':1:0
 		'TTY Mode':0:ZERO
+		'SLIM TX7 MUX':0:ZERO
+		'DEC8 MUX':0:ZERO
+		'ADC2 Volume':1:0
+	EndSequence
+
+	ACDBID	16:2
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionDevice
+	Name "CSD TTY Headset Rx"
+	Comment "CSD TTY Headset Rx device"
+
+	EnableSequence
+		'SLIM RX1 MUX':0:AIF1_PB
+		'PRI_RX Channels':0:One
+		'RX1 MIX1 INP1':0:RX1
+		'HPHL DAC Switch':1:1
+		'HPHL Volume':1:80
+	EndSequence
+
+	DisableSequence
+		'SLIM RX1 MUX':0:ZERO
+		'RX1 MIX1 INP1':0:ZERO
+		'HPHL DAC Switch':1:0
+		'HPHL Volume':1:0
+	EndSequence
+
+	ACDBID	17:1
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionDevice
+	Name "CSD TTY Headset Tx"
+	Comment "CSD TTY Headset Tx device"
+
+	EnableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:1
+		'PRI_TX Channels':0:One
+		'SLIM TX7 MUX':0:DEC8
+		'DEC8 MUX':0:ADC2
+		'ADC2 Volume':1:100
+	EndSequence
+
+	DisableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:0
 		'SLIM TX7 MUX':0:ZERO
 		'DEC8 MUX':0:ZERO
 		'ADC2 Volume':1:0

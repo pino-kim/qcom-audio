@@ -7,11 +7,11 @@ SectionVerb
 	Name "HiFi"
 
 	EnableSequence
-		'MI2S_RX Audio Mixer MultiMedia1':1:1
+		'PRI_MI2S_RX Audio Mixer MultiMedia1':1:1
 	EndSequence
 
 	DisableSequence
-		'MI2S_RX Audio Mixer MultiMedia1':1:0
+		'PRI_MI2S_RX Audio Mixer MultiMedia1':1:0
 	EndSequence
 
 	# ALSA PCMs
@@ -28,11 +28,11 @@ SectionVerb
 	Name "HiFi Rec"
 
 	EnableSequence
-		'MultiMedia1 Mixer MI2S_TX':1:1
+		'MultiMedia1 Mixer PRI_MI2S_TX':1:1
 	EndSequence
 
 	DisableSequence
-		'MultiMedia1 Mixer MI2S_TX':1:0
+		'MultiMedia1 Mixer PRI_MI2S_TX':1:0
 	EndSequence
 
 	# ALSA PCMs
@@ -49,11 +49,11 @@ SectionVerb
 	Name "HiFi2"
 
 	EnableSequence
-		'MI2S_RX Audio Mixer MultiMedia2':1:1
+		'PRI_MI2S_RX Audio Mixer MultiMedia2':1:1
 	EndSequence
 
 	DisableSequence
-		'MI2S_RX Audio Mixer MultiMedia2':1:0
+		'PRI_MI2S_RX Audio Mixer MultiMedia2':1:0
 	EndSequence
 
 	# ALSA PCMs
@@ -70,13 +70,13 @@ SectionVerb
 	Name "Voice Call IP"
 
 	EnableSequence
-		'MI2S_RX_Voice Mixer Voip':1:1
-		'Voip_Tx Mixer MI2S_TX_Voip':1:1
+		'PRI_MI2S_RX_Voice Mixer Voip':1:1
+		'Voip_Tx Mixer PRI_MI2S_TX_Voip':1:1
 	EndSequence
 
 	DisableSequence
-		'MI2S_RX_Voice Mixer Voip':1:0
-		'Voip_Tx Mixer MI2S_TX_Voip':1:0
+		'PRI_MI2S_RX_Voice Mixer Voip':1:0
+		'Voip_Tx Mixer PRI_MI2S_TX_Voip':1:0
 	EndSequence
 
 	# ALSA PCMs
@@ -92,13 +92,13 @@ SectionVerb
 	Name "Voice Call"
 
 	EnableSequence
-		'MI2S_RX_Voice Mixer CSVoice':1:1
-		'Voice_Tx Mixer MI2S_TX_Voice':1:1
+		'PRI_MI2S_RX_Voice Mixer CSVoice':1:1
+		'Voice_Tx Mixer PRI_MI2S_TX_Voice':1:1
 	EndSequence
 
 	DisableSequence
-		'MI2S_RX_Voice Mixer CSVoice':1:0
-		'Voice_Tx Mixer MI2S_TX_Voice':1:0
+		'PRI_MI2S_RX_Voice Mixer CSVoice':1:0
+		'Voice_Tx Mixer PRI_MI2S_TX_Voice':1:0
 	EndSequence
 
 	# ALSA PCMs
@@ -114,13 +114,13 @@ SectionVerb
 	Name "VoLTE"
 
 	EnableSequence
-		'MI2S_RX_Voice Mixer VoLTE':1:1
-		'VoLTE_Tx Mixer MI2S_TX_VoLTE':1:1
+		'PRI_MI2S_RX_Voice Mixer VoLTE':1:1
+		'VoLTE_Tx Mixer PRI_MI2S_TX_VoLTE':1:1
 	EndSequence
 
 	DisableSequence
-		'MI2S_RX_Voice Mixer VoLTE':1:0
-		'VoLTE_Tx Mixer MI2S_TX_VoLTE':1:0
+		'PRI_MI2S_RX_Voice Mixer VoLTE':1:0
+		'VoLTE_Tx Mixer PRI_MI2S_TX_VoLTE':1:0
 	EndSequence
 
 	# ALSA PCMs
@@ -153,7 +153,7 @@ SectionDevice
 
 	ACDBID	7:1
 	EffectsMixerCTL "SRS TruMedia"
-	EC_REF_RXMixerCTL "MI2S_RX"
+	EC_REF_RXMixerCTL "PRI_MI2S_RX"
 
 EndSection
 
@@ -288,7 +288,7 @@ SectionDevice
 
 	ACDBID	15:1
 	EffectsMixerCTL "SRS TruMedia"
-	EC_REF_RXMixerCTL "MI2S_RX"
+	EC_REF_RXMixerCTL "PRI_MI2S_RX"
 
 EndSection
 
@@ -325,7 +325,7 @@ SectionDevice
 
 	ACDBID	10:1
 	EffectsMixerCTL "SRS TruMedia"
-	EC_REF_RXMixerCTL "MI2S_RX"
+	EC_REF_RXMixerCTL "PRI_MI2S_RX"
 
 EndSection
 
@@ -426,7 +426,7 @@ SectionDevice
 
 	ACDBID	10:1
 	EffectsMixerCTL "SRS TruMedia"
-	EC_REF_RXMixerCTL "MI2S_RX"
+	EC_REF_RXMixerCTL "PRI_MI2S_RX"
 
 EndSection
 
@@ -781,11 +781,11 @@ SectionModifier
 	Comment "Modifier for music playback"
 
 	EnableSequence
-		'MI2S_RX Audio Mixer MultiMedia1':1:1
+		'PRI_MI2S_RX Audio Mixer MultiMedia1':1:1
 	EndSequence
 
 	DisableSequence
-		'MI2S_RX Audio Mixer MultiMedia1':1:0
+		'PRI_MI2S_RX Audio Mixer MultiMedia1':1:0
 	EndSequence
 
 	# ALSA PCMs
@@ -799,11 +799,11 @@ SectionModifier
 	Comment "Modifier for music playback MM2"
 
 	EnableSequence
-		'MI2S_RX Audio Mixer MultiMedia2':1:1
+		'PRI_MI2S_RX Audio Mixer MultiMedia2':1:1
 	EndSequence
 
 	DisableSequence
-		'MI2S_RX Audio Mixer MultiMedia2':1:0
+		'PRI_MI2S_RX Audio Mixer MultiMedia2':1:0
 	EndSequence
 
 	# ALSA PCMs
@@ -816,11 +816,11 @@ SectionModifier
 	Name "Capture Music"
 
 	EnableSequence
-		'MultiMedia1 Mixer MI2S_TX':1:1
+		'MultiMedia1 Mixer PRI_MI2S_TX':1:1
 	EndSequence
 
 	DisableSequence
-		'MultiMedia1 Mixer MI2S_TX':1:0
+		'MultiMedia1 Mixer PRI_MI2S_TX':1:0
 	EndSequence
 
 	# ALSA PCMs
@@ -833,13 +833,13 @@ SectionModifier
 	Name "Play Voice"
 
 	EnableSequence
-		'MI2S_RX_Voice Mixer CSVoice':1:1
-		'Voice_Tx Mixer MI2S_TX_Voice':1:1
+		'PRI_MI2S_RX_Voice Mixer CSVoice':1:1
+		'Voice_Tx Mixer PRI_MI2S_TX_Voice':1:1
 	EndSequence
 
 	DisableSequence
-		'MI2S_RX_Voice Mixer CSVoice':1:0
-		'Voice_Tx Mixer MI2S_TX_Voice':1:0
+		'PRI_MI2S_RX_Voice Mixer CSVoice':1:0
+		'Voice_Tx Mixer PRI_MI2S_TX_Voice':1:0
 	EndSequence
 
 	# ALSA PCMs
@@ -852,13 +852,13 @@ SectionModifier
 	Name "Play VOIP"
 
 	EnableSequence
-		'MI2S_RX_Voice Mixer Voip':1:1
-		'Voip_Tx Mixer MI2S_TX_Voip':1:1
+		'PRI_MI2S_RX_Voice Mixer Voip':1:1
+		'Voip_Tx Mixer PRI_MI2S_TX_Voip':1:1
 	EndSequence
 
 	DisableSequence
-		'MI2S_RX_Voice Mixer Voip':1:0
-		'Voip_Tx Mixer MI2S_TX_Voip':1:0
+		'PRI_MI2S_RX_Voice Mixer Voip':1:0
+		'Voip_Tx Mixer PRI_MI2S_TX_Voip':1:0
 	EndSequence
 
        # ALSA PCMs
@@ -871,13 +871,13 @@ SectionModifier
 	Name "Play VoLTE"
 
 	EnableSequence
-		'MI2S_RX_Voice Mixer VoLTE':1:1
-		'VoLTE_Tx Mixer MI2S_TX_VoLTE':1:1
+		'PRI_MI2S_RX_Voice Mixer VoLTE':1:1
+		'VoLTE_Tx Mixer PRI_MI2S_TX_VoLTE':1:1
 	EndSequence
 
 	DisableSequence
-		'MI2S_RX_Voice Mixer VoLTE':1:0
-		'VoLTE_Tx Mixer MI2S_TX_VoLTE':1:0
+		'PRI_MI2S_RX_Voice Mixer VoLTE':1:0
+		'VoLTE_Tx Mixer PRI_MI2S_TX_VoLTE':1:0
 	EndSequence
 
 	# ALSA PCMs

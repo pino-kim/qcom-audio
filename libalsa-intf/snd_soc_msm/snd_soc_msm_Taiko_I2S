@@ -440,7 +440,7 @@ SectionDevice
 		'SLIM TX7 MUX':0:DEC5
 		'DEC5 MUX':0:ADC2
 		'DEC5 Volume':1:67
-		'ADC2 Volume':1:100
+		'ADC2 Volume':1:65
 		'IIR1 INP1 MUX':0:DEC5
 	EndSequence
 
@@ -647,7 +647,7 @@ SectionDevice
 		'SLIM TX7 MUX':0:DEC5
 		'DEC5 MUX':0:ADC2
 		'DEC5 Volume':1:67
-		'ADC2 Volume':1:100
+		'ADC2 Volume':1:65
 	EndSequence
 
 	DisableSequence
@@ -702,7 +702,7 @@ SectionDevice
 		'SLIM TX7 MUX':0:DEC5
 		'DEC5 MUX':0:ADC2
 		'DEC5 Volume':1:67
-		'ADC2 Volume':1:100
+		'ADC2 Volume':1:65
 	EndSequence
 
 	DisableSequence
@@ -758,7 +758,7 @@ SectionDevice
 		'SLIM TX7 MUX':0:DEC5
 		'DEC5 MUX':0:ADC2
 		'DEC5 Volume':1:67
-		'ADC2 Volume':1:100
+		'ADC2 Volume':1:65
 		'IIR1 INP1 MUX':0:DEC5
 	EndSequence
 

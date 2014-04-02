@@ -38,7 +38,7 @@ AC_SUBST([ACDBLOADER_LIBS])
 AC_ARG_WITH(sanitized-headers,
         AS_HELP_STRING([--with-sanitized-headers=DIR],
                 [Specify the location of the sanitized Linux headers]),
-        [CPPFLAGS="$CPPFLAGS -idirafter $withval"])
+        [CPPFLAGS="$CPPFLAGS -isystem $withval"])
 
 AC_ARG_WITH([glib],
       AC_HELP_STRING([--with-glib],

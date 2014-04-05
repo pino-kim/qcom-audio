@@ -180,7 +180,7 @@ SectionDevice
 		'DEC10 MUX':0:ZERO
 	EndSequence
 
-	ACDBID	6:2
+	ACDBID	41:2
 	EffectsMixerCTL "SRS TruMedia"
 
 EndSection

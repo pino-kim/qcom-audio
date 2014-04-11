@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011-2014, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -721,21 +721,14 @@ int use_case_index)
                     tx_id = DEVICE_SPEAKER_TX_FV5_ACDB_ID;
                 }
 
-                if ((rx_id != uc_mgr->current_rx_device) ||
-                    (tx_id != uc_mgr->current_tx_device)) {
-                    uc_mgr->current_rx_device = rx_id;
-                    uc_mgr->current_tx_device = tx_id;
-                    ALOGD("Voice acdb: rx id %d tx id %d",
-                          uc_mgr->current_rx_device,
-                          uc_mgr->current_tx_device);
-                    if (!uc_mgr->isFusion3Platform)
-                        acdb_loader_send_voice_cal(uc_mgr->current_rx_device,
-                                                    uc_mgr->current_tx_device);
-                } else {
-                    ALOGV("Voice acdb: Required acdb already pushed \
-                         rx id %d tx id %d", uc_mgr->current_rx_device,
-                         uc_mgr->current_tx_device);
-                }
+                uc_mgr->current_rx_device = rx_id;
+                uc_mgr->current_tx_device = tx_id;
+                ALOGD("Voice acdb: rx id %d tx id %d",
+                      uc_mgr->current_rx_device,
+                      uc_mgr->current_tx_device);
+                if (!uc_mgr->isFusion3Platform)
+                    acdb_loader_send_voice_cal(uc_mgr->current_rx_device,
+                                               uc_mgr->current_tx_device);
             }
             free(ident_value);
             ident_value = NULL;

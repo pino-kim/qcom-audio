@@ -31,10 +31,6 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 PKG_PROG_PKG_CONFIG
 
-PKG_CHECK_MODULES([ACDBLOADER], [acdbloader])
-AC_SUBST([ACDBLOADER_CFLAGS])
-AC_SUBST([ACDBLOADER_LIBS])
-
 AC_ARG_WITH(sanitized-headers,
         AS_HELP_STRING([--with-sanitized-headers=DIR],
                 [Specify the location of the sanitized Linux headers]),
@@ -57,6 +53,18 @@ if (test "x${with_glib}" = "xyes"); then
 fi
 
 AM_CONDITIONAL(USE_GLIB, test "x${with_glib}" = "xyes")
+
+AC_ARG_WITH([acdb],
+      AC_HELP_STRING([--with-acdb],
+         [enable alsa-intf with acdbloader. Use this when building alsa-intf with acdbloader.]))
+
+if (test "x${with_acdb}" = "xyes"); then
+        PKG_CHECK_MODULES([ACDBLOADER], [acdbloader])
+        AC_SUBST([ACDBLOADER_CFLAGS])
+        AC_SUBST([ACDBLOADER_LIBS])
+fi
+
+AM_CONDITIONAL(USE_QCOM_ACDB, test "x${with_acdb}" = "xyes")
 
 AC_SUBST([CFLAGS])
 AC_SUBST([CC])

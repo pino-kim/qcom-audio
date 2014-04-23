@@ -4,11 +4,9 @@ AM_CFLAGS = -Wundef \
         -g -O0 \
         -fno-inline \
         -fno-short-enums \
-        -fpic \
-        -DQC_PROP
+        -fpic
 
-AM_CPPFLAGS = -I. \
-               $(ACDBLOADER_CFLAGS)
+AM_CPPFLAGS = -I.
 
 c_sources = alsa_mixer.c \
             alsa_pcm.c \
@@ -37,9 +35,16 @@ dist_libalsa_intf_DATA    = snd_soc_msm/snd_soc_msm \
                             snd_soc_msm/snd_soc_msm_Tapan \
                             snd_soc_msm/snd_soc_msm_TapanLite \
                             snd_soc_msm/snd_soc_msm_Tapan_SKUF
+
+if USE_QCOM_ACDB
+libalsa_intf_la_CFLAGS = $(AM_CFLAGS) -DUSE_GLIB @GLIB_CFLAGS@ -DCONFIG_DIR=\"/etc/snd_soc_msm/\"
+libalsa_intf_la_CPPFLAGS = $(AM_CPPFLAGS) $(ACDBLOADER_CFLAGS) -DQC_PROP -DUSE_GLIB @GLIB_CFLAGS@
+libalsa_intf_la_LDFLAGS = $(ACDBLOADER_LIBS) -lm -lpthread @GLIB_LIBS@ -shared -version-info 1:0:0
+else
 libalsa_intf_la_CFLAGS = $(AM_CFLAGS) -DUSE_GLIB @GLIB_CFLAGS@ -DCONFIG_DIR=\"/etc/snd_soc_msm/\"
 libalsa_intf_la_CPPFLAGS = $(AM_CPPFLAGS) -DUSE_GLIB @GLIB_CFLAGS@
-libalsa_intf_la_LDFLAGS = $(ACDBLOADER_LIBS) -lm -lpthread @GLIB_LIBS@ -shared -version-info 1:0:0
+libalsa_intf_la_LDFLAGS = -lm -lpthread @GLIB_LIBS@ -shared -version-info 1:0:0
+endif
 
 requiredlibs = libalsa_intf.la
 
@@ -55,4 +60,9 @@ arec_SOURCES = arec.c
 arec_LDADD = -lpthread $(requiredlibs)
 
 alsaucm_test_SOURCES = alsaucm_test.c
+if USE_QCOM_ACDB
+alsaucm_test_LDADD = -lpthread $(requiredlibs) $(ACDBLOADER_LIBS)
+alsaucm_test_CPPFLAGS = -DQC_PROP $(ACDBLOADER_CFLAGS)
+else
 alsaucm_test_LDADD = -lpthread $(requiredlibs)
+endif

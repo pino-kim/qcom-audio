@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012, 2014 The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -43,8 +43,12 @@
 
 #include "alsa_ucm.h"
 #include "msm8960_use_cases.h"
-#include "acdb-loader.h"
-
+#if defined(QC_PROP)
+	#include "acdb-loader.h"
+#else
+	#define acdb_loader_init_ACDB() 0
+	#define acdb_loader_deallocate_ACDB() 0
+#endif
 /* Function prototypes */
 static void print_help_menu(void);
 static void alsaucm_test_cmd_svr(void);

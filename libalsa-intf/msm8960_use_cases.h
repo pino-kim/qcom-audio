@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011-2014, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -192,6 +192,7 @@ static const char *card_list[] = {
     "snd_soc_msm_Tapan",
     "snd_soc_msm_TapanLite",
     "snd_soc_msm_Tapan_SKUF",
+    "snd_soc_msm_Tomtom_I2S",
 };
 
 typedef struct card_mapping {
@@ -213,6 +214,7 @@ static card_mapping_t card_mapping_list[] = {
     {"snd_soc_msm_Tapan", 0},
     {"snd_soc_msm_TapanLite", 0},
     {"snd_soc_msm_Tapan_SKUF", 0},
+    {"snd_soc_msm_Tomtom_I2S", 0},
 };
 
 /* New use cases, devices and modifiers added

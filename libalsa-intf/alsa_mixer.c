@@ -1,6 +1,6 @@
 /*
 ** Copyright 2010, The Android Open-Source Project
-** Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+** Copyright (c) 2011-2014, The Linux Foundation. All rights reserved.
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -446,6 +446,71 @@ void mixer_ctl_get(struct mixer_ctl *ctl, unsigned *value)
         ALOGV(" ???");
     }
     ALOGV("\n");
+}
+
+struct mixer_ctl *mixer_get_ctl_by_name(struct mixer *mixer, const char *name)
+{
+    unsigned int n;
+
+    if (!mixer)
+        return NULL;
+
+    for (n = 0; n < mixer->count; n++)
+        if (!strcmp(name, (char*)mixer->info[n].id.name))
+            return mixer->ctl + n;
+
+    return NULL;
+}
+
+void mixer_ctl_update(struct mixer_ctl *ctl)
+{
+    ioctl(ctl->mixer->fd, SNDRV_CTL_IOCTL_ELEM_INFO, ctl->info);
+}
+
+unsigned int mixer_ctl_get_num_values(struct mixer_ctl *ctl)
+{
+    if (!ctl)
+        return 0;
+
+    return ctl->info->count;
+}
+
+int mixer_ctl_get_array(struct mixer_ctl *ctl, void *array, size_t count)
+{
+    struct snd_ctl_elem_value ev;
+    int ret;
+    size_t size;
+    void *source;
+
+    if (!ctl || (count > ctl->info->count) || !count || !array)
+        return -EINVAL;
+
+    memset(&ev, 0, sizeof(ev));
+    ev.id.numid = ctl->info->id.numid;
+
+    ret = ioctl(ctl->mixer->fd, SNDRV_CTL_IOCTL_ELEM_READ, &ev);
+    if (ret < 0)
+        return ret;
+
+    switch (ctl->info->type) {
+    case SNDRV_CTL_ELEM_TYPE_BOOLEAN:
+    case SNDRV_CTL_ELEM_TYPE_INTEGER:
+        size = sizeof(ev.value.integer.value[0]);
+        source = ev.value.integer.value;
+        break;
+
+    case SNDRV_CTL_ELEM_TYPE_BYTES:
+        size = sizeof(ev.value.bytes.data[0]);
+        source = ev.value.bytes.data;
+        break;
+
+    default:
+        return -EINVAL;
+    }
+
+    memcpy(array, source, size * count);
+
+    return 0;
 }
 
 static long scale_int(struct snd_ctl_elem_info *ei, unsigned _percent)

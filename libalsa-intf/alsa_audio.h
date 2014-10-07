@@ -1,6 +1,6 @@
 /*
 ** Copyright 2010, The Android Open-Source Project
-** Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+** Copyright (c) 2011-2014, The Linux Foundation. All rights reserved.
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -183,6 +183,10 @@ int mixer_ctl_select(struct mixer_ctl *ctl, const char *value);
 void mixer_ctl_get(struct mixer_ctl *ctl, unsigned *value);
 int mixer_ctl_set_value(struct mixer_ctl *ctl, int count, char ** argv);
 
+unsigned int mixer_ctl_get_num_values(struct mixer_ctl *ctl);
+struct mixer_ctl *mixer_get_ctl_by_name(struct mixer *mixer, const char *name);
+void mixer_ctl_update(struct mixer_ctl *ctl);
+int mixer_ctl_get_array(struct mixer_ctl *ctl, void *array, size_t count);
 
 #define MAX_NUM_CODECS 32
 

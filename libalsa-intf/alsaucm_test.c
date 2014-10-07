@@ -91,6 +91,49 @@ static struct cmd cmds[] = {
     { UCM_UNKNOWN, NULL }
 };
 
+#define CVD_VERSION_MIXER_CTL           "CVD Version"
+#define MAX_CVD_VERSION_STRING_SIZE     100
+
+static void get_cvd_version(char *cvd_version)
+{
+    int ret = 0;
+    int count;
+    struct mixer_ctl *ctl;
+    struct mixer *mixer;
+    const char* device = "/dev/snd/controlC0";
+
+    mixer = mixer_open(device);
+    if (!mixer) {
+        fprintf(stderr, "fail to open mixer\n");
+
+       return;
+    }
+
+    ctl = mixer_get_ctl_by_name(mixer, CVD_VERSION_MIXER_CTL);
+    if (!ctl) {
+        fprintf(stderr, "fail to get mixer ctl\n");
+
+        goto done;
+     }
+     mixer_ctl_update(ctl);
+
+     count = mixer_ctl_get_num_values(ctl);
+
+     if (count > MAX_CVD_VERSION_STRING_SIZE)
+         count = MAX_CVD_VERSION_STRING_SIZE;
+
+     ret = mixer_ctl_get_array(ctl, cvd_version, count);
+     if (ret != 0) {
+         fprintf(stderr, "fail to get mixer_ctl_get_array\n");
+
+         goto done;
+     }
+
+done:
+       mixer_close(mixer);
+       return;
+}
+
 static void alsaucm_test_cmd_svr(void)
 {
     int fd;
@@ -98,11 +141,23 @@ static void alsaucm_test_cmd_svr(void)
     char cmdstr[256] = {'\0'};
     char ch;
     char *exit_str = "quit";
+    char *cvd_version = NULL;
 
-    if ((acdb_loader_init_ACDB()) < 0) {
-	fprintf(stderr, "Failed to initialize ACDB\n");
+    cvd_version = calloc(1, MAX_CVD_VERSION_STRING_SIZE);
+    if (!cvd_version)
+        fprintf(stderr, "fail to allocate cvd_version\n");
+    else
+        get_cvd_version(cvd_version);
+
+    if ((acdb_loader_init_v2(NULL, cvd_version)) < 0) {
+        fprintf(stderr, "Failed to initialize ACDB\n");
+        if (cvd_version)
+            free(cvd_version);
         return 0;
     }
+    if (cvd_version)
+        free(cvd_version);
+
     if (mknod("/data/alsaucm_test", S_IFIFO | 0666, 0) == 0) {
         fd = open("/data/alsaucm_test", O_RDONLY);
         while (1) {
@@ -138,6 +193,7 @@ static void alsaucm_test_cmd_svr(void)
     } else {
         fprintf(stderr, "alsaucm_test: Failed to create server\n");
     }
+
     acdb_loader_deallocate_ACDB();
 }
 

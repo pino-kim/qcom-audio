@@ -185,17 +185,17 @@ SectionDevice
 EndSection
 
 SectionDevice
-	Name "Speaker DMIC Broadside"
-	Comment "Dual MIC Broadside Tx device"
+	Name "Speaker DMIC Endfire"
+	Comment "Dual MIC Endfire Tx device"
 
 	EnableSequence
 		'AIF1_CAP Mixer SLIM TX7':1:1
 		'AIF1_CAP Mixer SLIM TX8':1:1
 		'SLIM TX7 MUX':0:DEC7
 		'DEC7 MUX':0:DMIC1
-		'SLIM TX8 MUX':0:DEC8
-		'DEC8 MUX':0:DMIC2
-		'MI2S_TX Channels':0:Two
+		'SLIM TX8 MUX':0:DEC10
+		'DEC10 MUX':0:DMIC3
+		'SLIM_0_TX Channels':0:Two
 	EndSequence
 
 	DisableSequence
@@ -204,10 +204,10 @@ SectionDevice
 		'SLIM TX7 MUX':0:ZERO
 		'DEC7 MUX':0:ZERO
 		'SLIM TX8 MUX':0:ZERO
-		'DEC8 MUX':0:ZERO
+		'DEC10 MUX':0:ZERO
 	EndSequence
 
-	ACDBID	12:2
+	ACDBID  43:2
 	EffectsMixerCTL "SRS TruMedia"
 
 EndSection
@@ -285,7 +285,7 @@ SectionDevice
 		'DAC1 Switch':1:0
 	EndSequence
 
-	ACDBID	15:1
+	ACDBID	14:1
 	EffectsMixerCTL "SRS TruMedia"
 	EC_REF_RXMixerCTL "PRI_MI2S_RX"
 
@@ -477,6 +477,30 @@ SectionDevice
 	EndSequence
 
 	ACDBID	4:2
+	EffectsMixerCTL "SRS TruMedia"
+
+EndSection
+
+SectionDevice
+	Name "Line"
+	Comment "Speaker Tx device"
+
+	EnableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:1
+		'MI2S_TX Channels':0:One
+		'SLIM TX7 MUX':0:DEC10
+		'DEC10 MUX':0:DMIC3
+		'DEC10 Volume':1:67
+	EndSequence
+
+	DisableSequence
+		'AIF1_CAP Mixer SLIM TX7':1:0
+		'SLIM TX7 MUX':0:ZERO
+		'DEC10 MUX':0:ZERO
+		'DEC10 Volume':1:0
+	EndSequence
+
+	ACDBID  11:2
 	EffectsMixerCTL "SRS TruMedia"
 
 EndSection

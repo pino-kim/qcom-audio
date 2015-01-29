@@ -149,7 +149,7 @@ static void alsaucm_test_cmd_svr(void)
     else
         get_cvd_version(cvd_version);
 
-    if ((acdb_loader_init_v2(NULL, cvd_version)) < 0) {
+    if ((acdb_loader_init_v2(NULL, cvd_version, 0)) < 0) {
         fprintf(stderr, "Failed to initialize ACDB\n");
         if (cvd_version)
             free(cvd_version);

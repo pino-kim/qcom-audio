@@ -1,6 +1,6 @@
 /*
 ** Copyright 2010, The Android Open-Source Project
-** Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+** Copyright (c) 2011-2013, 2015 The Linux Foundation. All rights reserved.
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -999,7 +999,7 @@ int pcm_set_channel_map(struct pcm *pcm, struct mixer *mixer,
         for(i=0; i< max_channels; i++) {
             set_values[i] = (char*)malloc(4*sizeof(char));
             if(set_values[i]) {
-                sprintf(set_values[i],"%d",chmap[i]);
+                snprintf(set_values[i], 4*sizeof(char), "%d", chmap[i]);
             } else {
                 ALOGE("memory allocation for set channel map failed");
                 return -1;
@@ -1010,8 +1010,8 @@ int pcm_set_channel_map(struct pcm *pcm, struct mixer *mixer,
         return -1;
     }
     strlcpy(control_name, "Playback Channel Map", sizeof(control_name));
-    sprintf(device_num, "%d", pcm->device_no);
-    strcat(control_name, device_num);
+    snprintf(device_num, sizeof(device_num), "%d", pcm->device_no);
+    strlcat(control_name, device_num, sizeof(control_name));
     ALOGV("pcm_set_channel_map: control name:%s", control_name);
     ctl = mixer_get_control(mixer, control_name, 0);
     if(ctl == NULL) {

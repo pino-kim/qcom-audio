@@ -1,6 +1,6 @@
 /*
 ** Copyright 2010, The Android Open-Source Project
-** Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+** Copyright (c) 2011-2013, 2015 The Linux Foundation. All rights reserved.
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -697,6 +697,7 @@ int main(int argc, char **argv)
     char *ptr;
     int rc = 0;
     char *cformat = NULL;
+    char *temp_ptr;
 
     if (argc <2) {
           printf("\nUsage: aplay [options] <file>\n"
@@ -759,14 +760,14 @@ int main(int argc, char **argv)
        case 'X':
           set_channel_map = 1; i = 0;
           memset(channel_map, 0, sizeof(channel_map));
-          ptr = strtok(optarg, ",");
+          ptr = strtok_r(optarg, ",", &temp_ptr);
           while((ptr != NULL) && (i < sizeof(channel_map))) {
               channel_map[i] = get_channel_map_val(ptr);
               if (channel_map[i] < 0 || channel_map[i] > 16) {
                   set_channel_map = 0;
                   break;
               }
-              ptr = strtok(NULL,","); i++;
+              ptr = strtok_r(NULL, ",", &temp_ptr); i++;
           }
           break;
        default:

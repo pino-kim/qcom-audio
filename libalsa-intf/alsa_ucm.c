@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011-2015, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -582,6 +582,10 @@ const char *use_case)
 
     if ((!strncmp(use_case, SND_USE_CASE_VERB_VOICECALL,
         strlen(SND_USE_CASE_VERB_VOICECALL))) ||
+        (!strncmp(use_case, SND_USE_CASE_VERB_VOICE_CALL_MULTIMODE1,
+        strlen(SND_USE_CASE_VERB_VOICE_CALL_MULTIMODE1))) ||
+        (!strncmp(use_case, SND_USE_CASE_VERB_VOICE_CALL_MULTIMODE2,
+        strlen(SND_USE_CASE_VERB_VOICE_CALL_MULTIMODE2))) ||
         (!strncmp(use_case, SND_USE_CASE_VERB_SGLTECALL,
         strlen(SND_USE_CASE_VERB_SGLTECALL))) ||
         (!strncmp(use_case, SND_USE_CASE_VERB_VOLTE,
@@ -590,6 +594,10 @@ const char *use_case)
         strlen(SND_USE_CASE_VERB_IP_VOICECALL))) ||
         (!strncmp(use_case, SND_USE_CASE_MOD_PLAY_VOICE,
         strlen(SND_USE_CASE_MOD_PLAY_VOICE))) ||
+        (!strncmp(use_case, SND_USE_CASE_MOD_PLAY_VOICE_MULTIMODE1,
+        strlen(SND_USE_CASE_MOD_PLAY_VOICE_MULTIMODE1))) ||
+        (!strncmp(use_case, SND_USE_CASE_MOD_PLAY_VOICE_MULTIMODE2,
+        strlen(SND_USE_CASE_MOD_PLAY_VOICE_MULTIMODE2))) ||
         (!strncmp(use_case, SND_USE_CASE_MOD_PLAY_SGLTE,
         strlen(SND_USE_CASE_MOD_PLAY_SGLTE))) ||
         (!strncmp(use_case, SND_USE_CASE_MOD_PLAY_VOLTE,
@@ -635,6 +643,12 @@ int use_case_index)
 	(!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
         SND_USE_CASE_VERB_VOICECALL, strlen(SND_USE_CASE_VERB_VOICECALL))) ||
         (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
+        SND_USE_CASE_VERB_VOICE_CALL_MULTIMODE1,
+        strlen(SND_USE_CASE_VERB_VOICE_CALL_MULTIMODE1))) ||
+        (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
+        SND_USE_CASE_VERB_VOICE_CALL_MULTIMODE2,
+        strlen(SND_USE_CASE_VERB_VOICE_CALL_MULTIMODE2))) ||
+        (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
         SND_USE_CASE_VERB_SGLTECALL, strlen(SND_USE_CASE_VERB_SGLTECALL))) ||
         (!strncmp(uc_mgr->card_ctxt_ptr->current_verb,
         SND_USE_CASE_VERB_IP_VOICECALL,
@@ -652,6 +666,10 @@ int use_case_index)
                     strlen(SND_USE_CASE_MOD_PLAY_VOLTE))) ||
 		    (!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_VOICE,
                     strlen(SND_USE_CASE_MOD_PLAY_VOICE))) ||
+                    (!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_VOICE_MULTIMODE1,
+                    strlen(SND_USE_CASE_MOD_PLAY_VOICE_MULTIMODE1))) ||
+                    (!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_VOICE_MULTIMODE2,
+                    strlen(SND_USE_CASE_MOD_PLAY_VOICE_MULTIMODE2))) ||
                     (!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_SGLTE,
                     strlen(SND_USE_CASE_MOD_PLAY_SGLTE))) ||
                     (!strncmp(ident_value, SND_USE_CASE_MOD_PLAY_VOIP,
@@ -976,6 +994,10 @@ int getUseCaseType(const char *useCase)
         return CAP_TX;
     } else if (!strncmp(useCase, SND_USE_CASE_VERB_VOICECALL,
             MAX_LEN(useCase,SND_USE_CASE_VERB_VOICECALL)) ||
+        !strncmp(useCase, SND_USE_CASE_VERB_VOICE_CALL_MULTIMODE1,
+            MAX_LEN(useCase,SND_USE_CASE_VERB_VOICE_CALL_MULTIMODE1)) ||
+        !strncmp(useCase, SND_USE_CASE_VERB_VOICE_CALL_MULTIMODE2,
+            MAX_LEN(useCase,SND_USE_CASE_VERB_VOICE_CALL_MULTIMODE2)) ||
         !strncmp(useCase, SND_USE_CASE_VERB_SGLTECALL,
             MAX_LEN(useCase,SND_USE_CASE_VERB_SGLTECALL)) ||
         !strncmp(useCase, SND_USE_CASE_VERB_IP_VOICECALL,
@@ -992,6 +1014,10 @@ int getUseCaseType(const char *useCase)
             MAX_LEN(useCase,SND_USE_CASE_VERB_INCALL_REC)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_PLAY_VOICE,
             MAX_LEN(useCase,SND_USE_CASE_MOD_PLAY_VOICE)) ||
+        !strncmp(useCase, SND_USE_CASE_MOD_PLAY_VOICE_MULTIMODE1,
+            MAX_LEN(useCase,SND_USE_CASE_MOD_PLAY_VOICE_MULTIMODE1)) ||
+        !strncmp(useCase, SND_USE_CASE_MOD_PLAY_VOICE_MULTIMODE2,
+            MAX_LEN(useCase,SND_USE_CASE_MOD_PLAY_VOICE_MULTIMODE2)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_PLAY_SGLTE,
             MAX_LEN(useCase,SND_USE_CASE_MOD_PLAY_SGLTE)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_PLAY_VOIP,

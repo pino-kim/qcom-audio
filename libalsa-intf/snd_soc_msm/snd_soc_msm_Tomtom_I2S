@@ -107,6 +107,50 @@ SectionVerb
 EndSection
 }
 
+SectionUseCase."Voice Call Multimode1" {
+Comment "Voice Call Multimode1 use case"
+SectionVerb
+	Name "Voice Call Multimode1"
+
+	EnableSequence
+		'PRI_MI2S_RX_Voice Mixer VoiceMMode1':1:1
+		'VoiceMMode1_Tx Mixer PRI_MI2S_TX_MMode1':1:1
+	endsequence
+
+	disablesequence
+		'PRI_MI2S_RX_Voice Mixer VoiceMMode1':1:0
+		'VoiceMMode1_Tx Mixer PRI_MI2S_TX_MMode1':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 17
+	CapturePCM 17
+
+EndSection
+}
+
+SectionUseCase."Voice Call Multimode2" {
+Comment "Voice Call Multimode2 use case"
+SectionVerb
+	Name "Voice Call Multimode2"
+
+	EnableSequence
+		'PRI_MI2S_RX_Voice Mixer VoiceMMode2':1:1
+		'VoiceMMode2_Tx Mixer PRI_MI2S_TX_MMode2':1:1
+	EndSequence
+
+	DisableSequence
+		'PRI_MI2S_RX_Voice Mixer VoiceMMode2':1:0
+		'VoiceMMode2_Tx Mixer PRI_MI2S_TX_MMode2':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 18
+	CapturePCM 18
+
+EndSection
+}
+
 SectionUseCase."VoLTE" {
 Comment "VoLTE use case"
 SectionVerb
@@ -870,6 +914,44 @@ SectionModifier
 	# ALSA PCMs
 	CapturePCM 2
 	PlaybackPCM 2
+
+EndSection
+
+SectionModifier
+	Name "Play Voice Multimode1"
+
+	EnableSequence
+		'PRI_MI2S_RX_Voice Mixer VoiceMMode1':1:1
+		'VoiceMMode1_Tx Mixer PRI_MI2S_TX_MMode1':1:1
+	EndSequence
+
+	DisableSequence
+		'PRI_MI2S_RX_Voice Mixer VoiceMMode1':1:0
+		'VoiceMMode1_Tx Mixer PRI_MI2S_TX_MMode1':1:0
+	EndSequence
+
+	# ALSA PCMs
+	CapturePCM 17
+	PlaybackPCM 17
+
+EndSection
+
+SectionModifier
+	Name "Play Voice Multimode2"
+
+	EnableSequence
+		'PRI_MI2S_RX_Voice Mixer VoiceMMode2':1:1
+		'VoiceMMode2_Tx Mixer PRI_MI2S_TX_MMode2':1:1
+	EndSequence
+
+	DisableSequence
+		'PRI_MI2S_RX_Voice Mixer VoiceMMode2':1:0
+		'VoiceMMode2_Tx Mixer PRI_MI2S_TX_MMode2':1:0
+	EndSequence
+
+	# ALSA PCMs
+	CapturePCM 18
+	PlaybackPCM 18
 
 EndSection
 

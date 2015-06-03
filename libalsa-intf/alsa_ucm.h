@@ -106,6 +106,8 @@ extern "C" {
 #define SND_USE_CASE_VERB_IP_VOICECALL		"Voice Call IP"
 #define SND_USE_CASE_VERB_ANALOG_RADIO		"FM Analog Radio"
 #define SND_USE_CASE_VERB_DIGITAL_RADIO		"FM Digital Radio"
+#define SND_USE_CASE_VERB_AFE_LOOPBACK 		"AFE Loopback"
+
 /* add new verbs to end of list */
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011-2015, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -595,7 +595,9 @@ const char *use_case)
         (!strncmp(use_case, SND_USE_CASE_MOD_PLAY_VOLTE,
         strlen(SND_USE_CASE_MOD_PLAY_VOLTE))) ||
         (!strncmp(use_case, SND_USE_CASE_MOD_PLAY_VOIP,
-        strlen(SND_USE_CASE_MOD_PLAY_VOIP)))) {
+        strlen(SND_USE_CASE_MOD_PLAY_VOIP))) ||
+        (!strncmp(use_case, SND_USE_CASE_VERB_AFE_LOOPBACK,
+        strlen(SND_USE_CASE_VERB_AFE_LOOPBACK)))) {
         ALOGV("check_devices_for_voice_call(): voice cap detected\n");
         list_size =
         snd_ucm_get_size_of_list(uc_mgr->card_ctxt_ptr->dev_list_head);
@@ -735,7 +737,12 @@ int use_case_index)
         }
     } else {
         ALOGV("No voice use case found");
-        uc_mgr->current_rx_device = -1; uc_mgr->current_tx_device = -1;
+        if(strncmp(uc_mgr->card_ctxt_ptr->current_verb,
+                   SND_USE_CASE_VERB_AFE_LOOPBACK,
+                   strlen(SND_USE_CASE_VERB_AFE_LOOPBACK)))
+        {
+          uc_mgr->current_rx_device = -1; uc_mgr->current_tx_device = -1;
+        }
         ret = -ENODEV;
     }
     return ret;
@@ -836,13 +843,18 @@ const char *use_case, int enable, int ctrl_list_type, int uc_index)
             ALOGD("Set mixer controls for %s enable %d", use_case, enable);
             if ((ctrl_list[uc_index].acdb_id >= 0) && ctrl_list[uc_index].capability) {
                 if (enable) {
-                    snd_use_case_apply_voice_acdb(uc_mgr, uc_index);
-                    ALOGD("acdb_id %d cap %d enable %d",
-                                        ctrl_list[uc_index].acdb_id,
-                            ctrl_list[uc_index].capability, enable);
-                    acdb_loader_send_audio_cal(
-                            ctrl_list[uc_index].acdb_id,
-                            ctrl_list[uc_index].capability);
+                    if (strncmp(uc_mgr->card_ctxt_ptr->current_verb,
+                                SND_USE_CASE_VERB_AFE_LOOPBACK,
+                                strlen(SND_USE_CASE_VERB_AFE_LOOPBACK))) {
+
+                       snd_use_case_apply_voice_acdb(uc_mgr, uc_index);
+                       ALOGD("acdb_id %d cap %d enable %d",
+                             ctrl_list[uc_index].acdb_id,
+                             ctrl_list[uc_index].capability, enable);
+                       acdb_loader_send_audio_cal(
+                             ctrl_list[uc_index].acdb_id,
+                             ctrl_list[uc_index].capability);
+                    }
                 }
             }
             if (enable) {
@@ -1007,7 +1019,9 @@ int getUseCaseType(const char *useCase)
         !strncmp(useCase, SND_USE_CASE_VERB_VOLTE,
             MAX_LEN(useCase,SND_USE_CASE_VERB_VOLTE)) ||
         !strncmp(useCase, SND_USE_CASE_MOD_PLAY_VOLTE,
-            MAX_LEN(useCase, SND_USE_CASE_MOD_PLAY_VOLTE))) {
+            MAX_LEN(useCase, SND_USE_CASE_MOD_PLAY_VOLTE))||
+        !strncmp(useCase, SND_USE_CASE_VERB_AFE_LOOPBACK,
+            MAX_LEN(useCase, SND_USE_CASE_VERB_AFE_LOOPBACK))){
         return CAP_VOICE;
     } else {
         ALOGE("unknown use case %s, returning voice capablity", useCase);

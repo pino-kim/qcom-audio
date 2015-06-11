@@ -173,6 +173,26 @@ SectionVerb
 EndSection
 }
 
+SectionUseCase."AFE Loopback" {
+Comment "AFE Loopback use case"
+SectionVerb
+	Name "AFE Loopback"
+
+	EnableSequence
+		'PRI_MI2S_RX Port Mixer PRI_MI2S_TX':1:1
+	EndSequence
+
+	DisableSequence
+		'PRI_MI2S_RX Port Mixer PRI_MI2S_TX':1:0
+	EndSequence
+
+	# ALSA PCMs
+	PlaybackPCM 3
+	capturePCM 15
+
+EndSection
+}
+
 SectionDevice
 	Name "Earpiece"
 	Comment "Handset Rx device"

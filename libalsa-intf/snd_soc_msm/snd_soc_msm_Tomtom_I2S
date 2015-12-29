@@ -674,16 +674,17 @@ SectionDevice
 	EnableSequence
 		'AIF1_CAP Mixer SLIM TX7':1:1
 		'MI2S_TX Channels':0:One
-		'SLIM TX7 MUX':0:DEC10
-		'DEC10 MUX':0:DMIC3
-		'DEC10 Volume':1:67
+		'SLIM TX7 MUX':0:DEC8
+		'DEC8 MUX':0:ADC5
+		'DEC8 Volume':1:67
+		'ADC5 Volume':1:67
 	EndSequence
 
 	DisableSequence
 		'AIF1_CAP Mixer SLIM TX7':1:0
 		'SLIM TX7 MUX':0:ZERO
-		'DEC10 MUX':0:ZERO
-		'DEC10 Volume':1:0
+		'DEC8 MUX':0:ZERO
+		'DEC8 Volume':1:0
 	EndSequence
 
 	ACDBID  36:2
@@ -698,16 +699,17 @@ SectionDevice
 	EnableSequence
 		'AIF1_CAP Mixer SLIM TX7':1:1
 		'MI2S_TX Channels':0:One
-		'SLIM TX7 MUX':0:DEC10
-		'DEC10 MUX':0:DMIC3
-		'DEC10 Volume':1:67
+		'SLIM TX7 MUX':0:DEC8
+		'DEC8 MUX':0:ADC5
+		'DEC8 Volume':1:67
+		'ADC5 Volume':1:67
 	EndSequence
 
 	DisableSequence
 		'AIF1_CAP Mixer SLIM TX7':1:0
 		'SLIM TX7 MUX':0:ZERO
-		'DEC10 MUX':0:ZERO
-		'DEC10 Volume':1:0
+		'DEC8 MUX':0:ZERO
+		'DEC8 Volume':1:0
 	EndSequence
 
 	ACDBID  36:2

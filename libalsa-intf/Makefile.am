@@ -35,7 +35,8 @@ dist_libalsa_intf_DATA    = snd_soc_msm/snd_soc_msm \
                             snd_soc_msm/snd_soc_msm_Tapan \
                             snd_soc_msm/snd_soc_msm_TapanLite \
                             snd_soc_msm/snd_soc_msm_Tapan_SKUF \
-                            snd_soc_msm/snd_soc_msm_Tomtom_I2S
+                            snd_soc_msm/snd_soc_msm_Tomtom_I2S \
+                            snd_soc_msm/snd_soc_msm_Tasha_I2S
 
 if USE_QCOM_ACDB
 libalsa_intf_la_CFLAGS = $(AM_CFLAGS) -DUSE_GLIB @GLIB_CFLAGS@ -DCONFIG_DIR=\"/etc/snd_soc_msm/\"

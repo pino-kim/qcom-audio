@@ -216,7 +216,7 @@ static card_mapping_t card_mapping_list[] = {
     {"snd_soc_msm_TapanLite", 0},
     {"snd_soc_msm_Tapan_SKUF", 0},
     {"snd_soc_msm_Tomtom_I2S", 0},
-    {"and_soc_msm_Tasha_I2S", 0},
+    {"snd_soc_msm_Tasha_I2S", 0},
 };
 
 /* New use cases, devices and modifiers added

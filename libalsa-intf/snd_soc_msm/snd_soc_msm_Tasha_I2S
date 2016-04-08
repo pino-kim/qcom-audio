@@ -216,25 +216,23 @@ SectionDevice
 	Comment "Speaker Rx device"
 
 	EnableSequence
-		'SLIM RX0 MUX':0:AIF_MIX1_PB
+		'SLIM RX0 MUX':0:AIF1_PB
 		'MI2S_RX Channels':0:One
 		'RX INT7_1 MIX1 INP0':0:RX0
 		'COMP7 Switch':1:1
 		'SpkrLeft COMP Switch':1:1
 		'SpkrLeft BOOST Switch':1:1
-		'SpkrLeft VISENSE Switch':1:1
 		'SpkrLeft SWR DAC_Port Switch':1:1
 	EndSequence
 
 	DisableSequence
 		'SLIM RX0 MUX':0:ZERO
-                'MI2S_RX Channels':0:ZERO
-                'RX INT7_1 MIX1 INP0':0:ZERO
-                'COMP7 Switch':1:0
-                'SpkrLeft COMP Switch':1:0
-                'SpkrLeft BOOST Switch':1:0
-                'SpkrLeft VISENSE Switch':1:0
-                'SpkrLeft SWR DAC_Port Switch':1:0
+		'MI2S_RX Channels':0:ZERO
+		'RX INT7_1 MIX1 INP0':0:ZERO
+		'COMP7 Switch':1:0
+		'SpkrLeft COMP Switch':1:0
+		'SpkrLeft BOOST Switch':1:0
+		'SpkrLeft SWR DAC_Port Switch':1:0
 	EndSequence
 
 	ACDBID	14:1
@@ -251,7 +249,7 @@ SectionDevice
 		'SLIM RX0 MUX':0:AIF1_PB
 		'SLIM RX1 MUX':0:AIF1_PB
 		'MI2S_RX Channels':0:Two
-                'RX INT1_1 MIX1 INP0':0:RX0
+		'RX INT1_1 MIX1 INP0':0:RX0
 		'RX INT2_1 MIX1 INP0':0:RX1
 		'RX INT1 DEM MUX':0:CLSH_DSM_OUT
 		'RX INT2 DEM MUX':0:CLSH_DSM_OUT
@@ -339,6 +337,7 @@ SectionDevice
 		'SLIM TX6 MUX':0:DEC6
 		'ADC MUX6':0:AMIC
 		'AMIC MUX6':0:ADC2
+		'ADC2 Volume':1:60
 	EndSequence
 
 	DisableSequence
@@ -347,6 +346,7 @@ SectionDevice
 		'SLIM TX6 MUX':0:ZERO
 		'ADC MUX6':0:ZERO
 		'AMIC MUX6':0:ZERO
+		'ADC2 Volume':1:0
 	EndSequence
 
 	ACDBID	8:2
@@ -372,7 +372,6 @@ SectionDevice
 		'SLIM TX6 MUX':0:ZERO
 		'ADC MUX6':0:ZERO
 		'DMIC MUX6':0:ZERO
-		'IIR0 INP0 MUX':0:ZERO
 	EndSequence
 
 	ACDBID	4:2
@@ -385,21 +384,19 @@ SectionDevice
 	Comment "Speaker Tx device"
 
 	EnableSequence
-		'AIF1_CAP Mixer SLIM TX7':1:1
-                'MI2S_TX Channels':0:One
-                'SLIM TX7 MUX':0:DEC7
-                'ADC MUX7':0:DMIC
-                'DMIC MUX7':0:DMIC2
-                'IIR0 INP0 MUX':0:DEC7
+		'AIF1_CAP Mixer SLIM TX6':1:1
+		'MI2S_TX Channels':0:One
+		'SLIM TX6 MUX':0:DEC6
+		'ADC MUX6':0:DMIC
+		'DMIC MUX6':0:DMIC2
 	EndSequence
 
 	DisableSequence
-		'AIF1_CAP Mixer SLIM TX7':1:0
-                'MI2S_TX Channels':0:ZERO
-                'SLIM TX7 MUX':0:ZERO
-                'ADC MUX7':0:ZERO
-                'DMIC MUX7':0:ZERO
-                'IIR0 INP0 MUX':0:ZERO
+		'AIF1_CAP Mixer SLIM TX6':1:0
+		'MI2S_TX Channels':0:ZERO
+		'SLIM TX6 MUX':0:ZERO
+		'ADC MUX6':0:ZERO
+		'DMIC MUX6':0:ZERO
 	EndSequence
 
 	ACDBID  11:2
@@ -412,7 +409,7 @@ SectionDevice
 	Comment "CSD TTY HCO Handset Rx device"
 
 	EnableSequence
-		'SLIM RX0 MUX':0:AIF_MIX1_PB
+		'SLIM RX0 MUX':0:AIF1_PB
                 'MI2S_RX Channels':0:One
                 'RX INT0_1 MIX1 INP0':0:RX0
                 'RX INT0 DEM MUX':0:CLSH_DSM_OUT
@@ -462,7 +459,7 @@ SectionDevice
 	Comment "CSD TTY Headset Rx device"
 
 	EnableSequence
-		'SLIM RX0 MUX':0:AIF_MIX1_PB
+		'SLIM RX0 MUX':0:AIF1_PB
 		'MI2S_RX Channels':0:One
 		'RX INT1_1 MIX1 INP0':0:RX0
 		'RX INT1 DEM MUX':0:CLSH_DSM_OUT
@@ -486,22 +483,20 @@ SectionDevice
 	Comment "CSD TTY Headset Tx device"
 
 	EnableSequence
-		'AIF1_CAP Mixer SLIM TX0':1:1
+		'AIF1_CAP Mixer SLIM TX6':1:1
 		'MI2S_TX Channels':0:One
-		'SLIM TX5 MUX':0:DEC5
-		'ADC MUX5':0:AMIC
-		'AMIC MUX5':0:ADC6
-		'IIR0 INP0 MUX':0:DEC5
-		'ADC2 Volume':1:12
+		'SLIM TX6 MUX':0:DEC6
+		'ADC MUX6':0:AMIC
+		'AMIC MUX6':0:ADC2
+		'ADC2 Volume':1:60
 	EndSequence
 
 	DisableSequence
-		'AIF1_CAP Mixer SLIM TX0':1:0
-                'SLIM TX5 MUX':0:ZERO
-                'ADC MUX5':0:ZERO
-                'AMIC MUX5':0:ZERO
-                'IIR0 INP0 MUX':0:ZERO
-                'ADC2 Volume':1:0
+		'AIF1_CAP Mixer SLIM TX6':1:0
+		'SLIM TX6 MUX':0:ZERO
+		'ADC MUX6':0:ZERO
+		'AMIC MUX6':0:ZERO
+		'ADC2 Volume':1:0
 	EndSequence
 
 	ACDBID	16:2

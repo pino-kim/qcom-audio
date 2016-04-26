@@ -260,10 +260,10 @@ SectionDevice
 	DisableSequence
 		'SLIM RX0 MUX':0:ZERO
                 'SLIM RX1 MUX':0:ZERO
-                'RX INT1_1 MUX':0:RX0
-                'RX INT2_1 MUX':0:RX1
-                'RX INT1 DEM MUX':0:CLSH_DSM_OUT
-                'RX INT2 DEM MUX':0:CLSH_DSM_OUT
+                'RX INT1_1 MIX1 INP0':0:ZERO
+                'RX INT2_1 MIX1 INP0':0:ZERO
+                'RX INT1 DEM MUX':0:ZERO
+                'RX INT2 DEM MUX':0:ZERO
                 'COMP1 Switch':1:0
                 'COMP2 Switch':1:0
 	EndSequence
@@ -304,10 +304,10 @@ SectionDevice
 	DisableSequence
 		'SLIM RX0 MUX':0:ZERO
 		'SLIM RX1 MUX':0:ZERO
-		'RX INT1_1 MUX':0:RX0
-		'RX INT2_1 MUX':0:RX1
-		'RX INT1 DEM MUX':0:CLSH_DSM_OUT
-		'RX INT2 DEM MUX':0:CLSH_DSM_OUT
+		'RX INT1_1 MIX1 INP0':0:ZERO
+		'RX INT2_1 MIX1 INP0':0:ZERO
+		'RX INT1 DEM MUX':0:ZERO
+		'RX INT2 DEM MUX':0:ZERO
 		'COMP1 Switch':1:0
 		'COMP2 Switch':1:0
 		'IIR0 Band1':2:0x0 0x0 0x0 0x0 0x0

@@ -433,20 +433,19 @@ SectionDevice
 	Comment "CSD TTY VCO Handset Tx device"
 
 	EnableSequence
-		'AIF1_CAP Mixer SLIM TX7':1:1
-                'MI2S_TX Channels':0:One
-                'SLIM TX7 MUX':0:DEC7
-                'ADC MUX7':0:DMIC
-                'DMIC MUX7':0:DMIC0
-                'IIR0 INP0 MUX':0:DEC7
+		'AIF1_CAP Mixer SLIM TX6':1:1
+		'MI2S_TX Channels':0:One
+		'SLIM TX6 MUX':0:DEC6
+		'ADC MUX6':0:DMIC
+		'DMIC MUX6':0:DMIC0
 	EndSequence
 
 	DisableSequence
-		'AIF1_CAP Mixer SLIM TX7':1:0
-                'SLIM TX7 MUX':0:ZERO
-                'ADC MUX7':0:ZERO
-                'DMIC MUX7':0:ZERO
-                'IIR0 INP0 MUX':0:ZERO
+		'AIF1_CAP Mixer SLIM TX6':1:0
+		'MI2S_TX Channels':0:ZERO
+		'SLIM TX6 MUX':0:ZERO
+		'ADC MUX6':0:ZERO
+		'DMIC MUX6':0:ZERO
 	EndSequence
 
 	ACDBID  36:2
@@ -460,17 +459,25 @@ SectionDevice
 
 	EnableSequence
 		'SLIM RX0 MUX':0:AIF1_PB
-		'MI2S_RX Channels':0:One
+		'SLIM RX1 MUX':0:AIF1_PB
+		'MI2S_RX Channels':0:Two
 		'RX INT1_1 MIX1 INP0':0:RX0
+		'RX INT2_1 MIX1 INP0':0:RX1
 		'RX INT1 DEM MUX':0:CLSH_DSM_OUT
+		'RX INT2 DEM MUX':0:CLSH_DSM_OUT
 		'COMP1 Switch':1:1
+		'COMP2 Switch':1:1
 	EndSequence
 
 	DisableSequence
 		'SLIM RX0 MUX':0:ZERO
+                'SLIM RX1 MUX':0:ZERO
                 'RX INT1_1 MIX1 INP0':0:ZERO
+                'RX INT2_1 MIX1 INP0':0:ZERO
                 'RX INT1 DEM MUX':0:ZERO
+                'RX INT2 DEM MUX':0:ZERO
                 'COMP1 Switch':1:0
+                'COMP2 Switch':1:0
 	EndSequence
 
 	ACDBID	17:1

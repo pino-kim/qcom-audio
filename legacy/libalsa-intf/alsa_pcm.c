@@ -850,3 +850,44 @@ int pcm_ready(struct pcm *pcm)
 {
     return pcm->fd >= 0;
 }
+
+int pcm_status(struct pcm *pcm)
+{
+	struct  snd_pcm_status status;
+
+	if (pcm == &bad_pcm)
+		return -1;	
+
+        if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_STATUS, &status) < 0) {
+                ALOGE("SNDRV_PCM_IOCTL_STATUS failed\n");
+                return -1;
+        }
+
+        return status.state;
+}
+
+int pcm_drop(struct pcm *pcm)
+{
+	if(pcm->flags & PCM_NNMAP)
+	{
+		if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_DROP) < 0) {
+			ALOGE("SNDRV_PCM_IOCTL_DROP failed\n");
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
+int pcm_drain(struct pcm *pcm)
+{
+	if (pcm->flags & PCM_NNMAP)
+	{
+		if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_DRAIN) < 0) {
+			ALOGE("SNDRV_PCM_IOCTL_DRAIN failed\n");
+			return -1;
+		}
+	}
+
+	return 0;
+}

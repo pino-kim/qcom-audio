@@ -851,19 +851,30 @@ int pcm_ready(struct pcm *pcm)
     return pcm->fd >= 0;
 }
 
-int pcm_status(struct pcm *pcm)
+struct pcm_status *pcm_get_status(struct pcm *pcm)
 {
+	struct  pcm_status *pcm_status;
 	struct  snd_pcm_status status;
 
 	if (pcm == &bad_pcm)
-		return -1;	
+		return -1;
+
+	pcm_status = calloc(1, sizeof(struct pcm_status));
+	if(!pcm_status) {
+		free(pcm_status);
+		return -1;
+	}
 
         if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_STATUS, &status) < 0) {
                 ALOGE("SNDRV_PCM_IOCTL_STATUS failed\n");
                 return -1;
         }
 
-        return status.state;
+	pcm_status->state = status.status;
+	pcm_status->avail = status.avail;
+	pcm_status->avail_max = status.avail_max;
+	
+        return pcm_status;
 }
 
 int pcm_drop(struct pcm *pcm)

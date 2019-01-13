@@ -44,6 +44,12 @@ struct pcm {
     int start;
 };
 
+struct pcm_status {
+    snd_pcm_state_t state;          /* stream state */
+    snd_pcm_uframes_t avail;        /* number of frames available */
+    snd_pcm_uframes_t avail_max;    /* max frames available on hw since last status */
+};
+
 enum decoder_alias {
     FORMAT_MP3,
     FORMAT_AC3_PASS_THROUGH = 2,
@@ -137,7 +143,7 @@ const char *get_format_desc(int format);
 struct pcm *pcm_open(unsigned flags, char *device);
 int pcm_close(struct pcm *pcm);
 int pcm_ready(struct pcm *pcm);
-int pcm_status(struct pcm *pcm);
+struct pcm_status *pcm_get_status(struct pcm *pcm);
 int pcm_drop(struct pcm *pcm);
 int pcm drain(struct pcm *pcm);
 int mmap_buffer(struct pcm *pcm);

@@ -879,7 +879,7 @@ struct pcm_status *pcm_get_status(struct pcm *pcm)
 
 int pcm_drop(struct pcm *pcm)
 {
-	if(pcm->flags & PCM_NNMAP)
+	if(pcm->flags & PCM_NMMAP)
 	{
 		if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_DROP) < 0) {
 			ALOGE("SNDRV_PCM_IOCTL_DROP failed\n");
@@ -892,7 +892,7 @@ int pcm_drop(struct pcm *pcm)
 
 int pcm_drain(struct pcm *pcm)
 {
-	if (pcm->flags & PCM_NNMAP)
+	if (pcm->flags & PCM_NMMAP)
 	{
 		if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_DRAIN) < 0) {
 			ALOGE("SNDRV_PCM_IOCTL_DRAIN failed\n");

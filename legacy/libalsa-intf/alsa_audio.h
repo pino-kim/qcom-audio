@@ -146,6 +146,7 @@ int pcm_ready(struct pcm *pcm);
 struct pcm_status *pcm_get_status(struct pcm *pcm);
 int pcm_drop(struct pcm *pcm);
 int pcm drain(struct pcm *pcm);
+int pcm_chk_underruns(struct pcm *pcm);
 int mmap_buffer(struct pcm *pcm);
 u_int8_t *dst_address(struct pcm *pcm);
 int sync_ptr(struct pcm *pcm);

@@ -902,3 +902,12 @@ int pcm_drain(struct pcm *pcm)
 
 	return 0;
 }
+
+int pcm_chk_underruns(struct pcm *pcm)
+{
+	int underruns;
+
+	underruns = pcm->underruns;
+
+	return underruns;
+}

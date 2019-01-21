@@ -888,6 +888,29 @@ struct pcm_status *pcm_get_status(struct pcm *pcm)
         return pcm_status;
 }
 
+int pcm_set_nonblock(pcm *pcm, int nonblock)
+{
+	int err;
+	
+	/* Defualt pcm_open is nonblocking mode */
+	if (nonblock == BLOCK_MODE) {
+		pcm->hw_p |= SNDRV_PCM_HW_PARAMS_NO_PERIOD_WAKEUP;
+	} else if (nonblock == NONBLOCK_MODE) {
+		pcm->hw_p &= ~SNDRV_PCM_HW_PARAMS_NO_PERIOD_WAKEUP;
+	} else {
+		ALOGE("pcm_set_nonblock() : wrong mode value\n"); 
+ 		return -EINVAL;
+	}
+	
+	err = param_set_hw_refine(&pcm, &pcm->hw_p);
+	if(err < 0) {
+		ALOGE("pcm_set_nonblock() : ioctl fail\n");    
+		return -err;
+	}
+
+	return 0;
+}
+
 int pcm_drop(struct pcm *pcm)
 {
 	if(pcm->flags & PCM_NMMAP)

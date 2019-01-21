@@ -85,6 +85,9 @@ enum decoder_alias {
 
 #define TIMEOUT_INFINITE  -1
 
+#define NONBLOCK_MODE 1
+#define BLOCK_MODE 0
+
 /* Acquire/release a pcm channel.
  * Returns non-zero on error
  */
@@ -144,6 +147,7 @@ struct pcm *pcm_open(unsigned flags, char *device);
 int pcm_close(struct pcm *pcm);
 int pcm_ready(struct pcm *pcm);
 struct pcm_status *pcm_get_status(struct pcm *pcm);
+int pcm_set_nonblock(pcm *pcm, int nonblock)
 int pcm_drop(struct pcm *pcm);
 int pcm drain(struct pcm *pcm);
 int pcm_chk_underruns(struct pcm *pcm);

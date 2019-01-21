@@ -317,9 +317,17 @@ static void info_dump(struct snd_pcm_info *info)
     ALOGV("subdevices_count = %d\n", info->subdevices_count);
     ALOGV("subdevices_avail = %d\n", info->subdevices_avail);
 }
+
+static void status_dump(struct pcm_status *status) 
+{
+	ALOGV("state = %d\n", status->state);
+	ALOGV("avail = %lu\n", status->avail);
+	ALOGV("avail_max = %lu\n", status->avail_max);
+}
 #else
 void param_dump(struct snd_pcm_hw_params *p) {}
 static void info_dump(struct snd_pcm_info *info) {}
+static void status_dump(struct pcm_status *status) {}
 #endif
 
 int param_set_hw_refine(struct pcm *pcm, struct snd_pcm_hw_params *params)
@@ -870,9 +878,12 @@ struct pcm_status *pcm_get_status(struct pcm *pcm)
                 return -1;
         }
 
-	pcm_status->state = status.status;
+	pcm_status->state = status.state;
 	pcm_status->avail = status.avail;
 	pcm_status->avail_max = status.avail_max;
+
+	if (pcm->flags & DEBUG_ON)
+		status_dump(&pcm_status);
 	
         return pcm_status;
 }
